@@ -45,6 +45,18 @@ test('sessions remain memory-only; offline never connects; session transport fie
     assert(!args.join(' ').includes(session.endpoint));
 });
 
+test('optional RTC endpoint is validated and preserved in frozen memory-only session', () => {
+    const rtcEndpoint = 'wss://rtc.example/v1/native/rtc';
+    const result = validateSession({ ...session, rtcEndpoint });
+    assert.equal(result.rtcEndpoint, rtcEndpoint);
+    assert(Object.isFrozen(result));
+    assert(!Object.hasOwn(validateSession(session), 'rtcEndpoint'));
+    for (const value of ['ws://rtc.example/a', 'wss://u:p@rtc.example/a', `${rtcEndpoint}?token=x`, `${rtcEndpoint}#x`, '', null]) {
+        assert.throws(() => validateSession({ ...session, rtcEndpoint: value }));
+    }
+    assert(!engineArguments('baseq3', result).join(' ').includes(rtcEndpoint));
+});
+
 test('IDBFS serializes dirty writes arriving during save; failed writes retry', async () => {
     const callbacks = [], statuses = [];
     const store = persistence({ syncfs: (populate, cb) => callbacks.push({ populate, cb }) }, s => statuses.push(s));

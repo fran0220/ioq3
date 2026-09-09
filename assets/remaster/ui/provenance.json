@@ -1,0 +1,12 @@
+{
+  "asset": "hangar.webp",
+  "purpose": "PC remaster menu, settings and loading background; no baked text or controls",
+  "source": "Amp Painter",
+  "generatedAt": "2026-09-09",
+  "attachment": "https://ampcode.com/user-content/attachments/7bc4ec8ea30265b0f246ee7b150a7fa85841f89b547d38005967714580bac127-file.png",
+  "prompt": "Original industrial graphite/ivory/cyan/orange arena hangar. Dark left 60 percent negative space; architectural detail on right. No text, numbers, logos, controls or humans. Not copying Quake characters or logos.",
+  "processing": "ImageMagick WebP quality 88; no synthetic graphics added",
+  "sha256": "d3209e66b400495348fb142d1b634c96246350972a2f6a42a3c7543013a019ea",
+  "cost": "Tool did not return a cost or provider task ID; not recorded as zero",
+  "authorization": "User explicitly requested Painter-generated UI visuals; original generated environment, not commercial game data"
+}

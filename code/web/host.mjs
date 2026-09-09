@@ -25,6 +25,10 @@ export function validateManifest(manifest) {
 export function validateSession(session) {
     if (session == null) return null;
     const endpoint = new URL(session.endpoint);
+    const rtc = session.rtcEndpoint === undefined ? null : new URL(session.rtcEndpoint);
+    if (rtc && (typeof session.rtcEndpoint !== 'string' || rtc.protocol !== 'wss:' || rtc.username || rtc.password || rtc.search || rtc.hash)) {
+        throw new Error('Invalid native RTC endpoint.');
+    }
     if (endpoint.protocol !== 'wss:' || endpoint.username || endpoint.password || endpoint.search || endpoint.hash
         || typeof session.token !== 'string' || !session.token || typeof session.sessionId !== 'string'
         || !session.sessionId || session.maxDatagramBytes !== 16384 || session.reconnectGraceMs !== 15000
@@ -33,6 +37,7 @@ export function validateSession(session) {
         throw new Error('Invalid or expired native multiplayer session.');
     }
     return Object.freeze({ endpoint: endpoint.href, token: session.token, sessionId: session.sessionId,
+        ...(rtc ? { rtcEndpoint: rtc.href } : {}),
         expiresAt: session.expiresAt, maxDatagramBytes: 16384, reconnectGraceMs: 15000 });
 }
 
