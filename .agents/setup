@@ -4,10 +4,9 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SECONDS=0
 
-# Debian 12 provides CMake >= 3.25. Include the external-library CI
-# dependencies and optional FreeType support, not cross-compilation SDKs.
+# Debian 12 provides CMake >= 3.25. Preserve the native development toolchain.
 packages=(
-  build-essential cmake ninja-build pkg-config gdb
+  build-essential cmake ninja-build pkg-config gdb git python3 ca-certificates xz-utils
   libsdl2-dev zlib1g-dev libjpeg-dev libopenal-dev
   libogg-dev libvorbis-dev libopus-dev libopusfile-dev
   libcurl4-openssl-dev libfreetype6-dev
@@ -27,8 +26,33 @@ else
   echo "[setup ${SECONDS}s] All system dependencies already installed; skipping apt"
 fi
 
+# Match Web CI exactly. Keep the SDK outside the source tree and preserve its cache.
+sdk="$HOME/.cache/ioq3/emsdk"
+if [[ ! -d "$sdk/.git" ]]; then
+  mkdir -p "$(dirname "$sdk")"
+  git clone --quiet --depth 1 --branch 3.1.58 https://github.com/emscripten-core/emsdk.git "$sdk"
+fi
+echo "[setup ${SECONDS}s] Checking Emscripten 3.1.58"
+"$sdk/emsdk" install 3.1.58
+"$sdk/emsdk" activate 3.1.58
+# New non-interactive login shells (including supervised services) need the SDK too.
+marker='# ioq3 pinned Emscripten environment'
+if ! grep -Fqx "$marker" "$HOME/.bash_profile" 2>/dev/null; then
+  cat >> "$HOME/.bash_profile" <<EOF
+
+$marker
+if [[ "\$PWD" == "$repo_root" || "\$PWD" == "$repo_root/"* ]]; then
+  source "$sdk/emsdk_env.sh" >/dev/null 2>&1
+fi
+EOF
+fi
+# Activation does not change this setup process.
+source "$sdk/emsdk_env.sh" >/dev/null 2>&1
+
 # Keep orb configuration separate from developers' existing build directories.
 # Do not compile on activation: Ninja retains incremental outputs in snapshots.
 echo "[setup ${SECONDS}s] Configuring native Debug build"
 cmake -S "$repo_root" -B "$repo_root/build-orb" -G Ninja -DCMAKE_BUILD_TYPE=Debug
-echo "[setup ${SECONDS}s] Ready: cmake --build build-orb --parallel 2"
+echo "[setup ${SECONDS}s] Configuring Web Release build"
+emcmake cmake -S "$repo_root" -B "$repo_root/build-web" -G Ninja -DCMAKE_BUILD_TYPE=Release
+echo "[setup ${SECONDS}s] Ready: cmake --build build-web --parallel 2 (or build-orb for native)"
