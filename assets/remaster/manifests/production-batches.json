@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "campaign": "pc-wasm-full-remaster",
+  "authorization": "User authorized original remake/publication and unlimited generation; supplied third-party inputs still need provenance",
+  "full_source_status": "missing",
+  "ui_owner": "M1; assets/remaster/ui excluded from this tool/workstream",
+  "paid_submission_enabled": false,
+  "paid_submission_policy": "Planning tool never submits. Existing task/receipt match means restore/resume only. New production needs measured reference and art approval, not another budget approval.",
+  "grouping": "Group related source paths into measured module/material/character/weapon families before commissioning; one file is not one paid task.",
+  "required_gates": ["source-baseline", "measurements", "provenance", "prototype", "blender", "format", "visual", "web-hdr", "web-ldr", "gameplay", "archive"],
+  "gate_contracts": {
+    "source-baseline": "Full authorized source set/version and VFS priority independently verified; demo/partial can never pass",
+    "measurements": "Pinned BSP/entity bounds plus reviewed connector/clearance drawings or explicit original specification; no perspective-image dimension inference",
+    "provenance": "Input/output hashes, owner/license/source, generation identity/model/task/request, actual cost or explicitly unreconciled cost",
+    "prototype": "Consistent front/back/left/right/top views, scale silhouette and team visibility inspected; every environment component starts here",
+    "blender": "Source GLB/master retained; topology/UV/material/scale checked; rig/weight/animation reviewed for articulated assets; non-3D audio uses explicitly reviewed N/A with evidence",
+    "format": "Engine-exported bytes loaded; static MD3 surface limits, character IQM contract, BSP/AAS and material/codec contracts checked",
+    "visual": "Comparison screenshots inspected at near/mid/far and movement; no texture noise, holes, silhouette drift, shimmer or accidental collision concealment",
+    "web-hdr": "Real WASM HDR map+asset rendering, no loader/default material/context-loss errors; evidence pins runtime PK3 hash",
+    "web-ldr": "Real WASM LDR same representative states and pinned hash; desktop GL is insufficient",
+    "gameplay": "Collision, pickups, spawn/teleport/jump/doors, weapon timing, animation events and bot reachability validated where applicable; N/A requires reviewer evidence",
+    "archive": "Source and recovery snapshot hash verify plus restore drill; separate off-orb durable copy acknowledged"
+  },
+  "batches": [
+    {
+      "id": "map-logic",
+      "selectors": ["maps/*.bsp", "maps/*.aas", "maps/*.map"],
+      "depends_on": [],
+      "scope": "All arenas and game modes; preserve brushes, collision, entities, triggers, item/spawn positions, portals, routes and timing separately from visual meshes",
+      "outputs": ["BSP46", "matching AAS", "entity/logic-lump hash report", "measured module/clearance specification"],
+      "format_gap": "BSP inventory does not reconstruct editable MAP brushes; compiler/AAS rebuild and bot-route equivalence require map workstream",
+      "measurement": "BSP world/submodel bounds and entity origins are executable reference; measure actual connector planes/clearance before generating"
+    },
+    {
+      "id": "environment-structure",
+      "selectors": ["textures/*", "models/mapobjects/*"],
+      "exclude_selectors": ["textures/skies/*", "textures/liquids/*"],
+      "depends_on": ["map-logic"],
+      "scope": "Floors, walls, ceilings, corners, trim, stairs, ramps, bridges, platforms, door frames/leaves, arches, grates, pillars, lights, vents, pipes, cables, machinery, statues and decals; family reuse across every supplied map",
+      "outputs": ["orthographic prototype set", "generated GLB", "Blender master", "static MD3 or compiler-consumed mesh", "diffuse TGA/JPG", "shader", "collision separation report"],
+      "format_gap": "Static MD3 tested only; compiler mesh ingestion/LOD/collision authoring remains separate. GLB/glTF is source, never direct engine delivery",
+      "measurement": "Map-specific BSP/brush/connector specification, grid and pivot; pillar sample 40 units/m is not universal evidence"
+    },
+    {
+      "id": "environment-sky-liquid",
+      "selectors": ["env/*", "textures/skies/*", "textures/liquids/*"],
+      "depends_on": ["map-logic"],
+      "scope": "Skyboxes, fog, water, slime, lava, portals, reflective/translucent surfaces and hazard boundaries",
+      "outputs": ["prototype scene views", "Blender scene/material master", "six-face sky textures", "traditional animated shader stages", "HDR/LDR exposure comparison"],
+      "format_gap": "PBR must be baked/re-authored: no automatic roughness/metallic/emission equivalence; Q3 surface/content flags remain gameplay-owned",
+      "measurement": "Actual sky/fog/brush extents and hazard planes; shader time scale recorded"
+    },
+    {
+      "id": "characters",
+      "selectors": ["models/players/*", "models/heads/*", "scripts/*.bot", "scripts/bots.txt", "botfiles/*"],
+      "depends_on": ["map-logic"],
+      "scope": "Every player/bot body, head, team/alternate skin, first-person hands; idle/run/walk/back/crouch/jump/land/swim/turn/gesture/pain/death/attack/weapon-switch animations",
+      "outputs": ["front/back/side neutral-pose prototypes", "generated GLB", "retopologized weighted Blender rig", "IQM2", "skin/material maps", "animation semantic/frame/event table", "attachment/socket transforms"],
+      "format_gap": "IQM-first; exporter/rig-retarget/game animation binding is NOT implemented by static tool. Generation does not guarantee topology, weights, motions or Q3 semantic compatibility; retain MD3 tags and animation.cfg as references, no MD3 character batch",
+      "measurement": "Source bounds/eye height/hitbox and actual tag transforms; root motion must not override authoritative player physics"
+    },
+    {
+      "id": "weapons",
+      "selectors": ["models/weapons*/*", "models/ammo/*"],
+      "depends_on": ["characters"],
+      "scope": "Every weapon world/pickup/first-person mesh, hands, barrel, flash socket, projectile and ammo; idle/fire/recoil/reload-if-original/switch event alignment",
+      "outputs": ["dimensioned prototype views", "generated GLB", "Blender articulated master", "engine model with tags or verified IQM attachment contract", "event timing table", "world/view/FOV comparison"],
+      "format_gap": "One-frame static exporter cannot export animated weapons or tags. Need explicit animated/tag exporter or verified IQM client binding; avoid inventing reload/gameplay loops absent from original",
+      "measurement": "Source tag_weapon/tag_flash/tag_barrel transforms, first-person FOV and projectile origin; mesh scale never changes damage/recoil timing"
+    },
+    {
+      "id": "pickups-objectives",
+      "selectors": ["models/powerups/*", "models/flags/*", "models/misc/*"],
+      "depends_on": ["map-logic"],
+      "scope": "Health, armor, powerups, objectives/flags, holdables, gibs and gameplay markers; distinct team silhouettes",
+      "outputs": ["prototype views", "generated GLB", "Blender master", "static MD3 or verified animated export", "pickup/respawn visual event mapping"],
+      "format_gap": "Flags/cloth and animated pickups require animation exporter; static MD3 valid only for genuinely static subparts",
+      "measurement": "Entity item origin, bob/rotation range, collision/pickup volume from gameplay source"
+    },
+    {
+      "id": "effects",
+      "selectors": ["gfx/*", "sprites/*", "models/teleporter/*", "models/weaphits/*", "models/gibs/*"],
+      "depends_on": ["weapons", "environment-structure"],
+      "scope": "Muzzle flashes, impacts, trails, beams, explosions, smoke, sparks, blood, teleport/spawn/pickup/respawn effects, damage overlays; UI excluded",
+      "outputs": ["effect storyboard/prototype", "Blender sprite/mesh source where applicable", "TGA sprite/frame atlas or MD3 mesh", "shader stages", "timing/blend/sort/depth specification"],
+      "format_gap": "Q3 particles/effect events remain code-owned; shader blending/depth/overdraw must be tuned in browser, not inferred from still-image API",
+      "measurement": "Original lifetime/velocity/radius/attachment and multiplayer event cadence; readable without hiding opponents"
+    },
+    {
+      "id": "audio",
+      "selectors": ["sound/*", "music/*"],
+      "depends_on": ["weapons", "characters", "map-logic"],
+      "scope": "Weapon fire/impact/explosion/flyby, footsteps by material, jumps/land/pain/death/voice, pickups, doors/lifts/water/ambience, announcer/team events and music loops",
+      "outputs": ["cue sheet with source path/event", "lossless production master", "engine PCM WAV or verified OGG", "loop/loudness/peak/channel/rate report", "listening and spatial mix review"],
+      "format_gap": "No audio generation/voice cloning/automatic mastering implemented or claimed. Verify origin/voice rights and codec support; audio uses cue prototypes, not meaningless image-to-3D",
+      "measurement": "Original cue lengths, loop points and event scheduling; positional mono versus music stereo explicitly tested"
+    },
+    {
+      "id": "shared-materials",
+      "selectors": ["scripts/*.shader", "scripts/*.arena", "scripts/arenas.txt"],
+      "depends_on": ["environment-structure", "environment-sky-liquid", "effects"],
+      "scope": "Shader name compatibility, texture/sky dependencies, animation stages and map metadata; shared reusable material families",
+      "outputs": ["resolved shader dependency report", "traditional material baseline", "optional GL2 normal/specular pass", "unique VFS override manifest"],
+      "format_gap": "Inventory parses common image directives, not all shader semantics; actual material compilation/default-texture log and runtime tracing required",
+      "measurement": "Source UV density, stage frequencies, blend/depth/sort and lightmap convention"
+    }
+  ],
+  "excluded_selectors": ["assets/remaster/ui/*", "menu/*", "ui/*", "icons/*", "video/*", "levelshots/*", "gfx/2d/*", "gfx/hud/*", "vm/*", "demos/*", "*.cfg", "*.txt", "*.config", "*.dat", "*.ico"],
+  "exclusion_policy": "UI/icons/menu cinematics assigned M1; VM/game/config/replay data owned by engine workstream. Report exclusions explicitly; do not count them as remade. Nested animation.cfg remains character input.",
+  "unclassified_policy": "Any unmatched source path remains visible and blocks claiming all source paths assigned"
+}

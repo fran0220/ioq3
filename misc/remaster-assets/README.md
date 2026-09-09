@@ -4,6 +4,100 @@ This directory owns the image → generated GLB → Blender → **static** MD3/T
 sample pipeline. Characters remain IQM-first in the engine workstream. It does
 not publish a game, alter Gateway channels/accounts, or implement the web client.
 
+## Authorized source inventory and production work packages (offline)
+
+`inventory.py`, `batches.py` and `archive.py` use Python's standard library only.
+They do not download commercial assets, extract ZIP paths, call generation APIs
+or submit paid work. Keep local source manifests and generated detailed reports
+under ignored `assets/remaster/work/`; they can include original entity data.
+Do not commit or publish Demo assets, EULA, or extracted map/entity reports.
+
+Create `sources.json` beside your explicitly supplied local PK3s:
+
+```json
+{
+  "scope": "demo",
+  "authorization": "User supplied/authorized local inspection only; record actual scope",
+  "archives": [
+    {"path": "pak0.pk3", "sha256": "<actual 64-character lowercase SHA256>",
+     "provenance": "<supplier/version/source URL and applicable rights record>"}
+  ]
+}
+```
+
+List archives in **low-to-high VFS priority**. Every input hash is verified; all
+overridden versions remain in the report. Duplicate/case-conflicting paths inside
+one archive, traversal, oversized members and mismatched hashes stop scanning.
+The scopes are `demo`, `partial`, `full-user-declared`; the last is an attestation,
+not proof. No scan ever sets `full_game_complete=true` or calls Demo full coverage.
+PK3 priority, loose files, active game directory and runtime registration traces
+must match the actual engine before making release claims.
+
+```sh
+D=assets/remaster/work/demo-input
+python misc/remaster-assets/inventory.py scan --sources "$D/sources.json" --output "$D/inventory.json"
+python misc/remaster-assets/inventory.py dependencies --inventory "$D/inventory.json" --root maps/q3dm1.bsp --output "$D/map-dependencies.json"
+python misc/remaster-assets/batches.py plan --inventory "$D/inventory.json" --manifest assets/remaster/manifests/production-batches.json --map maps/q3dm1.bsp --output "$D/first-map-plan.json"
+python misc/remaster-assets/inventory.py coverage --inventory "$D/inventory.json" --replacements "$D/replacements.json" --output "$D/coverage.json"
+python misc/remaster-assets/batches.py gate --plan "$D/first-map-plan.json" --evidence "$D/evidence.json" --output "$D/gates.json"
+```
+
+The map must exist and have parsed BSP46 model bounds. The plan carries actual
+entity origins, bounds and logic-lump hashes, not dimensions guessed from a
+prototype. Bounds are **not connector drawings**: brush/clearance measurements
+remain required. Inventory reads BSP/AAS header, shaders/image/sky/animation
+references, MD3 frames/tags (including zero-surface attachment models), IQM2
+materials/animation metadata, skin files, animation.cfg rows and WAV metadata.
+Unknown formats are still hashed; this is not a full validator for every format.
+The dependency command walks transitive model→shader→texture/script references.
+Dynamic QVM/code registrations, skin/LOD selection and sound aliases need runtime
+capture. Missing references can be editor-only or already baked into BSP; do not
+equate every global shader reference to an in-game failure. Ambiguous definitions
+and image alternatives stay visible instead of pretending engine order is known.
+
+Coverage mappings contain `inventory_sha256` (the scan's `canonical_sha256`) and
+`replacements`: each has `source_path`, `source_sha256`, `asset_id`, and `gates`.
+Each gate is `{ "passed": true, "evidence": "review/log reference" }`. Counts are
+per inventoried source path, never per entire game or automatically accepted art.
+The batch manifest defines full environment/character/weapon/pickup/effect/audio
+families, prerequisites, output contracts, unimplemented format work and gates.
+Expansion is reference assignment, **not one paid job per file**. UI/icons/menu
+cinematics go to M1; configuration/VM/replay exclusions are listed, not counted as
+remade. Unclassified files remain blockers. Overlapping material families must
+share a single measured asset specification before commissioning.
+
+`batches.py gate` returns exit 2 until all requirements have evidence. Its input
+pins `plan_sha256` = SHA256 of `json.dumps(plan, sort_keys=True).encode()` and has
+`batches: {batch_id: {gate_name: {passed, evidence, reviewer}}}`. Demo/partial fails
+even with every checkbox filled. Unresolved dependency dispositions are keyed by
+SHA256 of `json.dumps(edge, sort_keys=True).encode()` under
+`dependency_dispositions`; allowed classifications are `compile-only`,
+`baked-into-bsp`, `runtime-resolved`, each with reviewer and concrete evidence.
+There is no silent ignore list. Review evidence must include artifact hashes;
+these attestations require human audit, not trust in automated visual QA.
+Budget is already approved; source/art/runtime gates are not budget approvals.
+
+## Private source/recovery archival (offline)
+
+```sh
+S=assets/remaster/work/source-archive
+python misc/remaster-assets/archive.py snapshot --store "$S" --work assets/remaster/work/energy-pillar-v2 --receipt assets/remaster/receipts/energy-pillar-v2.json
+# Use the exact snapshots/<hash>.json path printed above:
+python misc/remaster-assets/archive.py verify --store "$S" --snapshot "$S/snapshots/<hash>.json"
+python misc/remaster-assets/archive.py restore --store "$S" --snapshot "$S/snapshots/<hash>.json" --work assets/remaster/work/restored-energy-pillar-v2
+```
+
+Snapshots validate receipt hashes, preserve task/request/operation IDs and copy
+source/master/runtime files **and private state/request/response data** to deduped
+SHA256 blobs. Store permissions are private. Do not publish or commit the store:
+requests/responses can include signed URLs and source payloads. A snapshot is
+written only after blobs; interruption leaves reusable blobs, not a valid partial
+snapshot. Restore preflights all hashes/conflicts and is idempotent; it never
+overwrites different work or invokes generation. Use the matching committed
+production manifest when resuming. Existing pipeline receipt/task guards remain
+in force. Local verify/restore does **not** prove off-orb backup; retain a separate
+durable copy and verify its hashes before marking archival complete.
+
 ## Environment and identity
 
 Python 3.11, Pillow 11.3.0 (`uv run --with pillow==11.3.0 python …`), and Blender
