@@ -21,31 +21,36 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 list(APPEND CLIENT_LINK_OPTIONS
     -sTOTAL_MEMORY=256MB
     -sSTACK_SIZE=5MB
-    -sMIN_WEBGL_VERSION=1
+    -sMIN_WEBGL_VERSION=2
     -sMAX_WEBGL_VERSION=2
-    -sEXPORTED_RUNTIME_METHODS=FS,addRunDependency,removeRunDependency
+    -sEXPORTED_RUNTIME_METHODS=FS,IDBFS,callMain
+    -sEXPORTED_FUNCTIONS=_main,_OG_WebLoseFocus,_OG_WebResumeAudio
+    -lidbfs.js
     -sEXIT_RUNTIME=1
     -sEXPORT_ES6
     -sEXPORT_NAME=${CLIENT_NAME}
 )
 
-option(EMSCRIPTEN_PRELOAD_FILE "Preload game files into .data file" OFF)
-
+# Production loads verified assets through game-manifest.json, keeping read-only
+# packages separate from the persistent player home. Do not silently ignore a
+# developer's old preload option.
 if(EMSCRIPTEN_PRELOAD_FILE)
-    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${BASEGAME}")
-        message(FATAL_ERROR "No files in '${BASEGAME}' directory for emscripten to preload.")
-    endif()
-    list(APPEND CLIENT_LINK_OPTIONS --preload-file "${BASEGAME}")
+    message(FATAL_ERROR "Use code/web/make-manifest.mjs instead of EMSCRIPTEN_PRELOAD_FILE")
 endif()
 
 list(APPEND POST_CONFIGURE_FUNCTIONS deploy_shell_files)
 
 function(deploy_shell_files)
+    target_sources(${CLIENT_BINARY} PRIVATE ${SOURCE_DIR}/web/web_bridge.c)
     configure_file(${SOURCE_DIR}/web/client.html.in
-        ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${CLIENT_NAME}.html @ONLY)
-
-    if(NOT EMSCRIPTEN_PRELOAD_FILE)
+        ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/index.html @ONLY)
+    foreach(file host.mjs app.mjs shell.css)
+        configure_file(${SOURCE_DIR}/web/${file}
+            ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${file} COPYONLY)
+    endforeach()
+    # Preserve a locally prepared manifest during incremental reconfiguration.
+    if(NOT EXISTS ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/game-manifest.json)
         configure_file(${SOURCE_DIR}/web/client-config.json
-            ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${CLIENT_NAME}-config.json COPYONLY)
+            ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/game-manifest.json COPYONLY)
     endif()
 endfunction()

@@ -1,0 +1,23 @@
+/* SPDX-License-Identifier: GPL-2.0-or-later */
+:root { color-scheme: dark; font-family: system-ui, sans-serif; background: #101318; color: #edf0f4; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; }
+canvas { display: block; width: 100vw; height: 100vh; outline: none; background: #090b0f; }
+#status-panel { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: min(640px, 90vw); padding: 36px; background: #191f29; border: 1px solid #384252; border-radius: 8px; }
+.eyebrow { color: #98adca; font-size: 12px; letter-spacing: .12em; }
+h1 { margin: 16px 0 28px; font-size: 34px; }
+#status { font-size: 20px; font-weight: 600; }
+#detail { line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.note { color: #a5adba; font-size: 13px; line-height: 1.5; margin-top: 28px; }
+button { font: inherit; color: #f5f7fa; background: #2b3d55; border: 1px solid #607594; border-radius: 4px; padding: 10px 16px; cursor: pointer; }
+button:hover { background: #3b5271; }
+button:focus-visible { outline: 3px solid #90bbf9; outline-offset: 3px; }
+#controls { position: fixed; bottom: 12px; left: 12px; right: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px; background: #101318e8; font-size: 12px; }
+[hidden] { display: none !important; }
+/* The platform owns loading/error overlays. Never cover it with a second splash. */
+html[data-embedded="true"] #status-panel { display: none; }
+body[data-state="ready"] #status-panel { display: none; }
+/* loading.fail is intentionally ignored by OG after ready; runtime recovery is ours. */
+html[data-embedded="true"] body[data-ready="true"][data-state="failed"] #status-panel { display: block; }
+body[data-captured="true"] #controls { display: none; }
+body[data-state="failed"] #status { color: #ffc19b; }

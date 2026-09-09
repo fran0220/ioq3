@@ -1,0 +1,42 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Controlled WASM / IDBFS fixture — not a playable game</title>
+<h1>Real WASM / IDBFS fixture</h1>
+<p>This exercises engine loading and persistent storage only. No game data is supplied.</p>
+<pre id="result">Running…</pre>
+<button id="write" disabled>Write asymmetric settings fixture</button>
+<button id="remove" disabled>Remove fixture</button>
+<a href="./runtime.html">Reload to verify persisted bytes</a>
+<canvas id="canvas" width="320" height="180"></canvas>
+<script type="module">
+import factory from '../ioquake3.js';
+import { persistence, HOME } from '../host.mjs';
+const result = document.querySelector('#result');
+const module = await factory({ noInitialRun: true, canvas: document.querySelector('canvas'),
+    locateFile: file => new URL('../' + file, location.href).href });
+module.FS.mkdirTree(HOME);
+module.FS.mount(module.IDBFS, {}, HOME);
+const store = persistence(module.FS, state => result.dataset.save = state);
+await store.restore();
+const path = HOME + '/baseq3/m1-browser-test.cfg';
+const expected = 'seta sensitivity "7.25"\nbind MOUSE2 "+moveup"\n';
+let restored = '';
+try { restored = module.FS.readFile(path, { encoding: 'utf8' }); } catch {}
+result.textContent = JSON.stringify({ wasm: true, idbfs: true, restored, matches: restored === expected });
+result.dataset.complete = 'true';
+document.querySelector('#write').disabled = false;
+document.querySelector('#remove').disabled = false;
+document.querySelector('#write').onclick = async () => {
+    module.FS.mkdirTree(HOME + '/baseq3');
+    module.FS.writeFile(path, expected);
+    store.changed();
+    await store.flush();
+    result.textContent = 'Saved. Reload to verify persistence.';
+};
+document.querySelector('#remove').onclick = async () => {
+    try { module.FS.unlink(path); } catch {}
+    store.changed();
+    await store.flush();
+    result.textContent = 'Fixture removed.';
+};
+</script>
