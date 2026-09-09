@@ -2,9 +2,16 @@
 
 This repository is an Origin Game game project. Its Amp project is
 `doufunao/ioq3`; the platform source of truth is `fran0220/origingame`.
-The current task is project preparation, not publication. Do not publish a
-game, invoke paid model/artwork generation, or deploy platform infrastructure
-without explicit authorization.
+The current task is a complete PC-browser WASM remaster and release, not a
+Three.js rewrite or mobile port. On 2026-09-09 the user confirmed that the
+original maps/characters have remake and publication authorization, authorized
+paid asset generation with no budget ceiling, and authorized necessary changes
+to the Origin Game project to support complete multiplayer service. Carry this
+authorization forward; do not repeatedly ask for the same approvals. Keep
+generation provenance, task IDs and cost records, and avoid duplicate paid
+submissions. Validate changes before release and preserve existing services.
+The user's rights confirmation is not a claim that source game data is already
+present in this checkout or that every third-party dependency has been audited.
 
 ## Publishing identity and environment
 
@@ -44,6 +51,6 @@ The current Web template disables networking; the AI Gateway is not a Quake
 multiplayer transport.
 
 ioq3 engine code is GPL-licensed, but commercial Quake 3 game data is not
-provided or licensed by this repository. Establish redistribution rights for
-all game assets and publish the appropriate license/source information;
+provided or licensed by this repository. Record the user's authorization and
+retain provenance for all game assets and appropriate license/source information;
 do not blindly use the deploy helper's default protected license mode.
