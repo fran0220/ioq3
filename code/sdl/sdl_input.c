@@ -33,6 +33,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../client/client.h"
 #include "../sys/sys_local.h"
 
+#ifdef __EMSCRIPTEN__
+#include "../web/web_bridge.h"
+#endif
+
 #if !SDL_VERSION_ATLEAST(2, 0, 17)
 #define KMOD_SCROLL KMOD_RESERVED
 #endif
@@ -1248,6 +1252,14 @@ void IN_Frame( void )
 	// update isFullscreen since it might of changed since the last vid_restart
 	cls.glconfig.isFullscreen = Cvar_VariableIntegerValue( "r_fullscreen" ) != 0;
 
+#ifdef __EMSCRIPTEN__
+	if ( OG_WebMenuOpen() )
+	{
+		// Keep DOM controls clickable across frames, including fullscreen.
+		IN_DeactivateMouse( qfalse );
+	}
+	else
+#endif
 	if( !cls.glconfig.isFullscreen && ( Key_GetCatcher( ) & KEYCATCH_CONSOLE ) )
 	{
 		// Console is down in windowed mode
