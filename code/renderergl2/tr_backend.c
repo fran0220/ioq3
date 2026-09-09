@@ -1277,8 +1277,16 @@ void RB_ShowImages( void ) {
 
 		{
 			vec4_t quadVerts[4];
+			qboolean shadowCompare = image == tr.sunShadowDepthImage[0]
+				|| image == tr.sunShadowDepthImage[1]
+				|| image == tr.sunShadowDepthImage[2]
+				|| image == tr.sunShadowDepthImage[3];
 
 			GL_BindToTMU(image, TB_COLORMAP);
+			// The preview uses sampler2D, not sampler2DShadow. Restore comparison
+			// immediately afterwards so the actual sunlight pass is unchanged.
+			if (shadowCompare)
+				qglTextureParameteriEXT(image->texnum, GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
 
 			VectorSet4(quadVerts[0], x, y, 0, 1);
 			VectorSet4(quadVerts[1], x + w, y, 0, 1);
@@ -1286,6 +1294,8 @@ void RB_ShowImages( void ) {
 			VectorSet4(quadVerts[3], x, y + h, 0, 1);
 
 			RB_InstantQuad(quadVerts);
+			if (shadowCompare)
+				qglTextureParameteriEXT(image->texnum, GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
 		}
 	}
 

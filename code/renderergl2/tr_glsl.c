@@ -267,7 +267,10 @@ static void GLSL_GetShaderHeader( GLenum shaderType, const GLchar *extra, char *
 
 		if (qglesMajorVersion >= 2)
 		{
-			Q_strcat(dest, size, "precision mediump float;\n");
+			// ES3 guarantees fragment highp. World-space lighting and HDR need
+			// its range; the mediump path also crashes SwiftShader on map startup.
+			// Keep the separate ES2 header below unchanged.
+			Q_strcat(dest, size, "precision highp float;\n");
 			Q_strcat(dest, size, "precision mediump sampler2DShadow;\n");
 		}
 
