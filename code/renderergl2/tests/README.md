@@ -143,10 +143,20 @@ Observed with `--use-angle=swiftshader --enable-unsafe-swiftshader`:
 - The old demo lacks some assets referenced by current QVMs, producing missing
   sound/music warnings. Audio completeness was not established.
 
+Subsequent real-WASM input and snapshot tests in
+[`misc/tests/gameplay`](../../../misc/tests/gameplay/README.md) passed movement,
+mouse turn, jump/landing, pickup, firing/hit, death/respawn and two Bot rounds
+through fraglimit=3, score screen and restart. HDR/LDR `vid_restart` each passed
+with actual post-restart turn input, as did q3tourney2/q3dm17/q3dm1 switching
+and forced context loss followed by full page reload. These use a documented
+test-only inventory-header overlay to match old Demo bot scripts to current
+QVMs. See the gameplay RESULTS for evidence and failed experiments; no new
+renderer or gameplay-rule patch was needed for this validation stage.
+
 **Not yet verified:** every production GLSL/material permutation, full-resolution
 FBO allocation under memory pressure, HDR exposure/tonemapping/bloom visual
 correctness against a reference, real GLES2 hardware, Firefox/Edge/Safari and
-physical GPUs, forced context-loss recovery / vid_restart, actual platform
-iframe, sustained input/gameplay and performance. Demo startup is not the
+physical GPUs, in-place context restoration, actual platform iframe,
+long-session gameplay and performance. The finite Demo baseline is not the
 all-maps/modes/bots/multiplayer release matrix. Capability-test PASS and this
 software-renderer scene test do not establish that the game is ready to ship.
