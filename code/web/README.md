@@ -115,6 +115,13 @@ settings fixture, reload and require `wasm:true,idbfs:true,matches:true`; then
 remove it. This is real WASM/IDBFS, not gameplay verification. The test route is
 served only by the test server and is never copied into the Web release.
 
+`bash code/web/tests/browser.sh "$TEST_SERVER_URL"` runs these checks using the
+installed agent-browser and closes its session afterward. It also tests native
+browser fullscreen, Pointer Lock and AudioContext resume with `/tests/controls.html`:
+that route uses an explicitly fake engine to exercise the real production host
+DOM/event handlers. It does not certify the C audio backend or gameplay. Append
+`?hold` to that fixture URL to inspect the standalone loading layout.
+
 Also exercise the root page with the empty manifest, missing/corrupt assets,
 module/network failures and multiple tabs. Capture and inspect loading/error
 states. A usable menu, actual audio output, gameplay mouse capture and first-frame

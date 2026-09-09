@@ -28,6 +28,7 @@ export function validateSession(session) {
     if (endpoint.protocol !== 'wss:' || endpoint.username || endpoint.password || endpoint.search || endpoint.hash
         || typeof session.token !== 'string' || !session.token || typeof session.sessionId !== 'string'
         || !session.sessionId || session.maxDatagramBytes !== 16384 || session.reconnectGraceMs !== 15000
+        || typeof session.expiresAt !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/.test(session.expiresAt)
         || !Number.isFinite(Date.parse(session.expiresAt)) || Date.parse(session.expiresAt) <= Date.now()) {
         throw new Error('Invalid or expired native multiplayer session.');
     }

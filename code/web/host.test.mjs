@@ -17,6 +17,7 @@ test('manifest confines unique hashed assets to the basegame, never player stora
         assert.throws(() => validateManifest({ ...manifest, files: [{ ...file, path }] }));
     }
     assert.throws(() => validateManifest({ ...manifest, files: [file, file] }));
+    assert.throws(() => validateManifest({ ...manifest, basegame: undefined }));
     assert.throws(() => validateManifest({ ...manifest, basegame: 'home' }));
     assert.throws(() => validateManifest({ ...manifest, files: [{ ...file, sha256: '' }] }));
 });
@@ -35,6 +36,8 @@ test('sessions remain memory-only; offline never connects; session transport fie
     assert.throws(() => validateSession({ ...session, endpoint: 'ws://native.example/socket' }));
     assert.throws(() => validateSession({ ...session, endpoint: `${session.endpoint}?token=secret` }));
     assert.throws(() => validateSession({ ...session, expiresAt: '2020-01-01' }));
+    assert.throws(() => validateSession({ ...session, expiresAt: 9999 }));
+    assert.throws(() => validateSession({ ...session, expiresAt: '2999-01-01' }));
     assert(!engineArguments('baseq3', null).includes('+connect'));
     const args = engineArguments('baseq3', session);
     assert.deepEqual(args.slice(-2), ['+connect', 'origingame']);
