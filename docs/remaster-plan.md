@@ -1,6 +1,6 @@
 # PC Web WASM 全面重制实施计划
 
-状态：实施已获授权，正在启动并行工作包；尚未完成 Web 可玩验证、资产重制或上线。
+状态：实施已获授权；Web 基座、传输桥及首件资产流水线已落地，正在进行真实地图集成；完整重制与游戏上线尚未完成。
 日期：2026-09-09。目标仓库：fran0220/ioq3；发布平台：Origin Game。
 
 配套工作包：[引擎与玩法](plans/wasm-engine-remaster.md)、[全资产生产](plans/remaster-asset-pipeline.md)、[发布与长期验收](plans/remaster-release-validation.md)。本文为主计划；工作包保留的不同性能数字和技术建议属于实验候选，以本文统一决策为准。
@@ -25,14 +25,15 @@
 
 ## 2. 当前事实与不能预设的能力
 
-- 工作区没有发现 PK3、BSP、MD3、IQM 或 glTF 游戏资产。Web 示例配置里的 pak 路径不是已提供的数据。
-- `.agents/setup` 目前只配置 native Debug；Web CI 固定 Emscripten 3.1.58。本轮检查没有找到 PATH 中的 emcc。
-- `cmake/platforms/emscripten.cmake` 已有 Web 构建，当前为 256MB 内存、允许 WebGL1–2、关闭独立服务端构建。
-- `code/web/client.html.in` 是示例启动页，默认 `net_enabled 0`，还不是经过平台验证的正式启动器。
+- 完整原作数据仍未交付。已取得 id Software 官方 Demo 发行目录镜像作为本地技术参考，包含 q3dm1/q3dm7/q3dm17/q3tourney2 的 BSP/AAS；它不是完整原作或重制发布包，不加入 Git，也不以 Demo 许可替代最终发布来源记录。
+- `.agents/setup` 已固定安装 Emscripten 3.1.58；native Debug 与 Web Release 均已实际完整构建通过。
+- Web 构建当前固定 WebGL2、256MB WASM 内存；独立 Linux x64 dedicated server 另行构建。仍需测量真实整局的总内存峰值。
+- 正式启动器已实现 manifest 字节/SHA 校验、IDBFS 恢复/串行保存、首个功能帧通知、输入/音频与失败重载。宿主无会话时离线，有会话时通过内存中的只读对象启用房间传输；生产平台嵌入和实际游戏输入仍需联合验收。
 - GL2 有法线/高光贴图、实验性 PBR、HDR、阴影等代码；文档说明部分特性不支持 OpenGL ES。需分别证明 WebGL2 可用性，不能照搬原生特性清单。
-- 已核对 `tr_extensions.c`：GLES 分支提前 `goto done`，跳过后面的 framebufferObject、textureFloat 等初始化；`tr_fbo.c` 的 FBO/HDR 依赖这些能力。M2 必须补齐 ES3 能力接入并做运行验证，不只是修改画质 cvar；实际浏览器上下文版本也尚未验证。
+- GLES3 FBO/VAO 与 float 目标已实现真实能力探测/降级，Mesa GLES2/3、desktop GL 与 Chromium WebGL2 能力测试通过。整机 Demo 初始化可完成 FBO/115 GLSL/UI VM，但实际首帧出现 context loss，正在修复；能力探针通过不代表地图渲染通过。GLES MSAA 仍关闭等待各格式 sample/resolve 验证。
 - 模型加载器支持 IQM，但玩家表现仍有 MD3 分段和 tag 约定。支持格式不代表支持新角色动画体系，更不代表直接支持生成服务返回的 GLB。
-- Origin Game 网关是制作/AI 服务，不是 Quake UDP 联机服务器；生成接口存在不证明当前账号、模型额度或输出质量。
+- 首件原创立柱风格样件已完成 GPT Image 2→Hunyuan→Blender→MD3/PK3，见 [生产记录](../assets/remaster/receipts/energy-pillar-v2-review.md)。成功请求实际费用合计 $0.519076；旧失败请求仍待核账。原型/GLB/Blender 源已跨线程转存并核 hash，但持久外部归档未完成。样件尚未引擎验收，噪点、发光条边缘与背面面板仍需美术打磨。
+- Origin Game AI 网关不承载 Quake UDP。单独的原生房间服务与 WSS→UDP 桥正在集成；客户端 11 项协议测试通过，不等于多人实战通过。原生 Demo q3dm1 已实际加载 AAS、运行两名 Bot，并通过真实 UDP getstatus 返回地图和玩家。
 
 ## 3. 系统边界
 
@@ -149,7 +150,7 @@ Hunyuan texture-only 等工作流可能重建 UV，且要求无骨架输入；�
 
 ## 7. 并行线程与集成规则
 
-三个 high 线程已完成引擎、资产、上线验收规划，主线程已读取并整合其交付。当前没有资产生产或部署任务在后台运行，也没有创建自动调度。
+三个 high 线程已完成引擎、资产、上线验收规划，主线程已读取并整合其交付。实现阶段已并行运行 Web 宿主、渲染、资产和 Origin Game 联机工作包，按各自目录提交并由主线程集成。没有创建自动调度；线程完成消息用于交付衔接。
 
 后续实现按文件所有权拆分：引擎渲染；浏览器启动/平台；离线资产工具；内容资产批次；测试/发布。`cgame`、共享接口、根 CMake 与 setup 由主线程协调，不允许两个线程同时随意修改。
 
