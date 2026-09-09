@@ -2,6 +2,52 @@
 #include "../client/client.h"
 #include "web_bridge.h"
 #include <emscripten.h>
+#include <math.h>
+
+/* Numeric allowlist only: browser UI cannot submit arbitrary console commands. */
+static const char *webSettings[] = { "s_volume", "s_musicvolume", "sensitivity", "m_pitch", "cg_fov" };
+static const double webMin[] = { 0, 0, 0.1, -0.1, 60 };
+static const double webMax[] = { 1, 1, 30, 0.1, 140 };
+static int webMenuOpen;
+
+int OG_WebMenuOpen(void) { return webMenuOpen; }
+
+EMSCRIPTEN_KEEPALIVE int OG_WebUIState(void)
+{
+    if (!com_cl_running || !com_cl_running->integer || !uivm) return 0;
+    if (clc.state == CA_DISCONNECTED) return 1;
+    if (clc.state == CA_ACTIVE) return 2;
+    return 3;
+}
+
+EMSCRIPTEN_KEEPALIVE double OG_WebSetting(int id)
+{
+    char value[64];
+    int state = OG_WebUIState();
+    if ((state != 1 && state != 2) || id < 0 || id >= ARRAY_LEN(webSettings)) return NAN;
+    Cvar_VariableStringBuffer(webSettings[id], value, sizeof(value));
+    return value[0] ? atof(value) : NAN;
+}
+
+EMSCRIPTEN_KEEPALIVE int OG_WebSetSetting(int id, double value)
+{
+    if (!isfinite(OG_WebSetting(id)) || !isfinite(value) || value < webMin[id] || value > webMax[id]) return 0;
+    if (id == 3 && fabs(value) < 0.001) return 0;
+    Cvar_Set2(webSettings[id], va("%.6f", value), qfalse);
+    return fabs(OG_WebSetting(id) - value) < 0.00001;
+}
+
+EMSCRIPTEN_KEEPALIVE int OG_WebMenu(int open)
+{
+    /* Recovery detaches DOM ownership without touching a failed UI VM. */
+    if (open == 3) { webMenuOpen = 0; return 1; }
+    int state = OG_WebUIState();
+    if ((state != 1 && state != 2) || open < 0 || open > 2) return 0;
+    webMenuOpen = open == 1;
+    Key_ClearStates();
+    VM_Call(uivm, UI_SET_ACTIVE_MENU, open ? (state == 2 ? UIMENU_INGAME : UIMENU_MAIN) : UIMENU_NONE);
+    return 1;
+}
 
 EM_JS(void, OG_WebFrame, (int playable, int configChanged), {
     if (Module['onEngineFrame']) {
