@@ -10,6 +10,7 @@ packages=(
   libsdl2-dev zlib1g-dev libjpeg-dev libopenal-dev
   libogg-dev libvorbis-dev libopus-dev libopusfile-dev
   libcurl4-openssl-dev libfreetype6-dev
+  blender
 )
 missing=()
 for package in "${packages[@]}"; do
@@ -25,6 +26,23 @@ if ((${#missing[@]})); then
 else
   echo "[setup ${SECONDS}s] All system dependencies already installed; skipping apt"
 fi
+
+# Asset tools use Debian 12's Blender 3.4.1; newer importers need separate validation.
+# Blender may load /usr/local Python instead of Debian's Python. Ask the actual
+# runtime rather than installing NumPy into whichever python happens to be on PATH.
+echo "[setup ${SECONDS}s] Checking Blender and its Python dependencies"
+blender_python="$(blender --background --factory-startup --threads 2 --python-exit-code 1 \
+  --python-expr 'import bpy, sys; assert bpy.app.version == (3, 4, 1), bpy.app.version; print("IOQ3_PYTHON=" + sys.prefix + "/bin/python3")' \
+  | sed -n 's/^IOQ3_PYTHON=//p')"
+test -x "$blender_python"
+# The 3.4.1 glTF importer uses np.bool, removed in NumPy 1.24. uv is supplied by
+# the orb image; its warm install checks the pin without downloading again.
+uv pip install --python "$blender_python" numpy==1.23.5
+blender --background --factory-startup --threads 2 --python-exit-code 1 \
+  --python-expr 'import numpy; assert numpy.__version__ == "1.23.5", numpy.__version__; print("Blender NumPy " + numpy.__version__)'
+# Prewarm only the local test dependency, never invoke a generation pipeline.
+# CPU selection / disabled denoising belong to blender_static.py, not user prefs.
+uv run --with pillow==11.3.0 python -c 'import PIL; assert PIL.__version__ == "11.3.0"'
 
 # Match Web CI exactly. Keep the SDK outside the source tree and preserve its cache.
 sdk="$HOME/.cache/ioq3/emsdk"
