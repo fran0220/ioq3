@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later
  * Read-only server-snapshot observer. Never compiled into release builds.
- * This observes authoritative snapshots, not cgame prediction or commands. */
+ * Observes authoritative snapshots and client command timing, not prediction. */
 #include "client.h"
 
 #ifdef IOQ3_WEB_TEST_OBSERVER
@@ -40,19 +40,26 @@ static char *WebTestString(char *out, const char *in)
 EMSCRIPTEN_KEEPALIVE const char *OG_WebTestSnapshot(void)
 {
 	const playerState_t *ps = &cl.snap.ps;
+	const usercmd_t *cmd = &cl.cmds[cl.cmdNumber & CMD_MASK];
 	char *out = webTestJSON;
 	int i;
 	const int ids[] = { CS_SERVERINFO, CS_INTERMISSION, CS_SCORES1, CS_SCORES2 };
 	const char *names[] = { "serverInfo", "intermission", "scores1", "scores2" };
 
-	out += sprintf(out, "{\"schemaVersion\":1,\"state\":%d,\"keyCatcher\":%d,\"snap\":{"
+	out += sprintf(out, "{\"schemaVersion\":1,\"state\":%d,\"keyCatcher\":%d,"
+		"\"client\":{\"serverTime\":%d,\"serverTimeDelta\":%d,\"cmdNumber\":%d,"
+		"\"cmd\":{\"serverTime\":%d,\"angles\":[%d,%d,%d],\"buttons\":%d,"
+		"\"forwardmove\":%d,\"rightmove\":%d,\"upmove\":%d}},\"snap\":{"
 		"\"valid\":%s,\"messageNum\":%d,\"serverTime\":%d,\"ps\":{"
-		"\"clientNum\":%d,\"origin\":[%.9g,%.9g,%.9g],"
+		"\"commandTime\":%d,\"clientNum\":%d,\"origin\":[%.9g,%.9g,%.9g],"
 		"\"velocity\":[%.9g,%.9g,%.9g],\"viewangles\":[%.9g,%.9g,%.9g],"
 		"\"pm_type\":%d,\"groundEntityNum\":%d,\"weapon\":%d,\"weaponTime\":%d,"
 		"\"stats\":{\"health\":%d,\"armor\":%d,\"weapons\":%d},\"ammo\":[",
-		clc.state, Key_GetCatcher(), cl.snap.valid ? "true" : "false", cl.snap.messageNum, cl.snap.serverTime,
-		ps->clientNum, ps->origin[0], ps->origin[1], ps->origin[2],
+		clc.state, Key_GetCatcher(), cl.serverTime, cl.serverTimeDelta, cl.cmdNumber,
+		cmd->serverTime, cmd->angles[0], cmd->angles[1], cmd->angles[2], cmd->buttons,
+		cmd->forwardmove, cmd->rightmove, cmd->upmove,
+		cl.snap.valid ? "true" : "false", cl.snap.messageNum, cl.snap.serverTime,
+		ps->commandTime, ps->clientNum, ps->origin[0], ps->origin[1], ps->origin[2],
 		ps->velocity[0], ps->velocity[1], ps->velocity[2],
 		ps->viewangles[0], ps->viewangles[1], ps->viewangles[2],
 		ps->pm_type, ps->groundEntityNum, ps->weapon, ps->weaponTime,

@@ -19,6 +19,12 @@ int main(void) {
     playerState_t *ps = &cl.snap.ps;
     clc.state = CA_ACTIVE;
     cl.snap.valid = qtrue; cl.snap.messageNum = 17; cl.snap.serverTime = 2350;
+    ps->commandTime = 2317;
+    cl.serverTime = 2373; cl.serverTimeDelta = -109; cl.cmdNumber = CMD_BACKUP + 3;
+    cl.cmds[0].serverTime = 11;
+    usercmd_t *cmd = &cl.cmds[3];
+    cmd->serverTime = 2361; cmd->angles[0] = 123; cmd->angles[1] = 65000; cmd->angles[2] = -31;
+    cmd->buttons = 5; cmd->forwardmove = -127; cmd->rightmove = 19; cmd->upmove = 127;
     ps->clientNum = 2; ps->origin[0] = -12.25f; ps->origin[1] = 31.5f; ps->origin[2] = 87;
     ps->velocity[2] = 270; ps->viewangles[1] = 73.25f;
     ps->stats[STAT_HEALTH] = 83; ps->stats[STAT_ARMOR] = 21; ps->stats[STAT_WEAPONS] = 68;
@@ -33,8 +39,10 @@ int main(void) {
     cl.parseEntities[0].pos.trBase[1] = -9.75f; cl.parseEntities[0].weapon = 5;
     cl.parseEntities[1].eType = ET_PLAYER; cl.parseEntities[1].number = 8;
     playerState_t before = *ps;
+    clientActive_t clientBefore = cl;
     puts(OG_WebTestSnapshot());
     if (memcmp(&before, ps, sizeof(before))) return 2;
+    if (memcmp(&clientBefore, &cl, sizeof(cl))) return 3;
     cl.parseEntitiesNum = cl.snap.parseEntitiesNum + MAX_PARSE_ENTITIES;
     puts(OG_WebTestSnapshot());
     cl.snap.valid = qfalse;
@@ -59,7 +67,12 @@ int main(void) {
         self.assertEqual(data["keyCatcher"], 1)
         self.assertEqual(data["snap"]["messageNum"], 17)
         self.assertEqual(data["snap"]["serverTime"], 2350)
+        self.assertEqual(data["client"], {
+            "serverTime": 2373, "serverTimeDelta": -109, "cmdNumber": 67,
+            "cmd": {"serverTime": 2361, "angles": [123, 65000, -31], "buttons": 5,
+                    "forwardmove": -127, "rightmove": 19, "upmove": 127}})
         ps = data["snap"]["ps"]
+        self.assertEqual(ps["commandTime"], 2317)
         self.assertEqual(ps["origin"], [-12.25, 31.5, 87])
         self.assertEqual(ps["stats"], {"health": 83, "armor": 21, "weapons": 68})
         self.assertEqual(ps["persistant"], {"score": -3, "killed": 4, "hits": 97})
