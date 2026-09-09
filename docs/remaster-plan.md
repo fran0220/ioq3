@@ -32,8 +32,9 @@
 - GL2 有法线/高光贴图、实验性 PBR、HDR、阴影等代码；文档说明部分特性不支持 OpenGL ES。需分别证明 WebGL2 可用性，不能照搬原生特性清单。
 - GLES3 FBO/VAO 与 float 目标已实现真实能力探测/降级，Mesa GLES2/3、desktop GL 与 Chromium WebGL2 能力测试通过。整机 Demo 初始化可完成 FBO/115 GLSL/UI VM，但实际首帧出现 context loss，正在修复；能力探针通过不代表地图渲染通过。GLES MSAA 仍关闭等待各格式 sample/resolve 验证。
 - 模型加载器支持 IQM，但玩家表现仍有 MD3 分段和 tag 约定。支持格式不代表支持新角色动画体系，更不代表直接支持生成服务返回的 GLB。
-- 首件原创立柱风格样件已完成 GPT Image 2→Hunyuan→Blender→MD3/PK3，见 [生产记录](../assets/remaster/receipts/energy-pillar-v2-review.md)。成功请求实际费用合计 $0.519076；旧失败请求仍待核账。原型/GLB/Blender 源已跨线程转存并核 hash，但持久外部归档未完成。样件尚未引擎验收，噪点、发光条边缘与背面面板仍需美术打磨。
-- Origin Game AI 网关不承载 Quake UDP。单独的原生房间服务与 WSS→UDP 桥正在集成；客户端 11 项协议测试通过，不等于多人实战通过。原生 Demo q3dm1 已实际加载 AAS、运行两名 Bot，并通过真实 UDP getstatus 返回地图和玩家。
+- 首件原创立柱风格样件已完成 GPT Image 2→Hunyuan→Blender→MD3/PK3，见 [生产记录](../assets/remaster/receipts/energy-pillar-v2-review.md)。成功请求实际费用合计 $0.519076；旧失败请求仍待核账。原型/GLB/Blender 源已跨线程转存并核 hash，但持久外部归档未完成。主线程修正了格式上限与引擎上限的契约：每 surface ≤999 顶点、≤5999 索引；新版为 1800 三角形、6 surfaces。真实 native GL2 能加载/绘制；旧版负控被同一引擎明确拒绝。Web 验收未通过，噪点、发光条边缘与背面面板仍需美术打磨。
+- Origin Game AI 网关不承载 Quake UDP。独立原生房间服务、WSS→UDP 与 loading.fail 已部署，见平台 [验收提交](https://github.com/fran0220/origingame/commit/2f8393deefae3205242ca5c5b184a7c9c464a921)。真实 Chromium 执行本仓库传输代码，经公开 TLS 向原生 q3dm1 收发 status/challenge 成功；这不是多人完整比赛。受控 200ms RTT/每向 3% 丢包条件下，WSS p99 包龄 464ms、原始 UDP 207ms，WebRTC 无序路径仍需实现/验收。测试房间/会话已清理，没有留存可玩房间或有效凭据。
+- 主线程复跑 18 项宿主/网络单测、生产帧/存档 C 函数测试及 23 项资产测试（含真实 Blender）通过；真实浏览器 SDL2 缓冲尺寸/边角像素/resize、IDBFS 跨页恢复、宿主控件夹具、失败重载/多标签锁检查通过。完整游戏输入、声音、渲染和平台比赛闭环仍是独立门禁。原生 Demo q3dm1 实际加载 AAS、两名 Bot 拾取/击杀并能 UDP 查询，不以此替代 Web 玩法回归。
 
 ## 3. 系统边界
 
