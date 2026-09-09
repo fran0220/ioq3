@@ -34,6 +34,7 @@ CVAR(r_ext_direct_state_access)
 
 static const char *missingProc;
 static qboolean hideFloat, failStatus, failAllocation;
+static GLenum failFormat;
 static int disabledEffects;
 static CheckFramebufferStatusproc *realStatus;
 static TexImage2Dproc *realImage;
@@ -46,7 +47,8 @@ static GLenum APIENTRY TestStatus(GLenum target)
 static void APIENTRY TestImage(GLenum target, GLint level, GLint internalFormat,
 	GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void *data)
 {
-	realImage(target, level, failAllocation ? 0 : internalFormat, width, height, border, format, type, data);
+	realImage(target, level, failAllocation || failFormat == internalFormat ? 0 : internalFormat,
+		width, height, border, format, type, data);
 }
 
 static void *TestGetProc(const char *name)
@@ -111,11 +113,13 @@ int main(int argc, char **argv)
 	const byte source[8] = { 0, 51, 153, 255, 255, 102, 204, 0 };
 	const float expected[8] = { 0, .2f, .6f, 1, 1, .4f, .8f, 0 };
 	float converted[9];
+	float readback[8];
 	int i;
-	(void)argc; (void)argv;
+	qboolean es2 = argc > 1 && !strcmp(argv[1], "--gles2");
+	qboolean desktop = argc > 1 && !strcmp(argv[1], "--desktop");
 	assert(SDL_Init(SDL_INIT_VIDEO) == 0);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, desktop ? SDL_GL_CONTEXT_PROFILE_CORE : SDL_GL_CONTEXT_PROFILE_ES);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, es2 ? 2 : 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
 	window = SDL_CreateWindow("GL2 capability test", 0, 0, 64, 64, SDL_WINDOW_OPENGL);
@@ -131,14 +135,35 @@ int main(int argc, char **argv)
 	QGL_ARB_vertex_array_object_PROCS;
 #undef GLE
 	printf("GL_VERSION=%s\n", qglGetString(GL_VERSION));
-	assert(strstr((const char *)qglGetString(GL_VERSION), "OpenGL ES 3"));
-	qglesMajorVersion = 3;
+	if (desktop)
+		sscanf((const char *)qglGetString(GL_VERSION), "%d.%d", &qglMajorVersion, &qglMinorVersion);
+	else
+		sscanf((const char *)qglGetString(GL_VERSION), "OpenGL ES %d.%d", &qglesMajorVersion, &qglesMinorVersion);
 	realStatus = qglCheckFramebufferStatus;
 	realImage = qglTexImage2D;
 	qglTexImage2D = TestImage;
 	ri.Printf = Print;
 	ri.Error = Com_Error;
 	ri.Cvar_Set = Set;
+
+	if (es2 || desktop)
+	{
+		Init();
+		if (es2)
+		{
+			assert(qglesMajorVersion == 2);
+			assert(!glRefConfig.framebufferObject && !glRefConfig.vertexArrayObject && !glRefConfig.textureFloat);
+		}
+		else
+		{
+			assert(qglMajorVersion >= 3 && !qglesMajorVersion);
+			assert(glRefConfig.framebufferObject && glRefConfig.vertexArrayObject && glRefConfig.textureFloat);
+			assert(glRefConfig.framebufferMultisample);
+		}
+		printf("PASS: %s capability initialization regression\n", es2 ? "GLES2" : "desktop GL");
+		goto cleanup;
+	}
+	assert(qglesMajorVersion >= 3);
 
 	// Distinct read/draw and nonzero texture/VAO bindings detect incomplete
 	// state restoration; default-zero bindings would hide this bug.
@@ -168,6 +193,10 @@ int main(int argc, char **argv)
 		qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		qglFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 		assert(qglCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+		qglBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffers[0]);
+		qglReadPixels(0, 0, 1, 2, GL_RGBA, GL_FLOAT, readback);
+		for (i = 0; i < 8; i++) assert(fabsf(readback[i] - expected[i]) < .001f);
+		qglBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffers[1]);
 		assert(qglGetError() == GL_NO_ERROR);
 	}
 
@@ -191,6 +220,13 @@ int main(int argc, char **argv)
 	hideFloat = qtrue; Init();
 	assert(glRefConfig.framebufferObject && !glRefConfig.textureFloat && disabledEffects == 2);
 	hideFloat = qfalse;
+	// Each float attachment must pass separately. ES3 texture support or a
+	// successful RGBA16F probe must not hide a failed R32F target.
+	failFormat = GL_RGBA16F; Init();
+	assert(glRefConfig.framebufferObject && !glRefConfig.textureFloat && disabledEffects == 2);
+	failFormat = GL_R32F; Init();
+	assert(glRefConfig.framebufferObject && !glRefConfig.textureFloat && disabledEffects == 2);
+	failFormat = 0;
 	failStatus = qtrue; Init();
 	assert(!glRefConfig.framebufferObject && !glRefConfig.framebufferBlit && !glRefConfig.textureFloat);
 	failStatus = qfalse;
@@ -225,6 +261,7 @@ int main(int argc, char **argv)
 	qglDeleteTextures(1, &texture);
 	qglDeleteVertexArrays(1, &vao);
 	printf("PASS: GLES3 capabilities, bindings, float conversion, DSA/blit/readback and failure fallbacks\n");
+cleanup:
 	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);
 	SDL_Quit();

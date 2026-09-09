@@ -11,6 +11,8 @@ cc -g -O1 -ffunction-sections -fdata-sections $(sdl2-config --cflags) \
   code/renderergl2/tr_image.c code/qcommon/q_shared.c \
   -Wl,--gc-sections $(sdl2-config --libs) -lm -o /tmp/gl2-gles-test
 SDL_VIDEODRIVER=offscreen /tmp/gl2-gles-test
+SDL_VIDEODRIVER=offscreen MESA_GLES_VERSION_OVERRIDE=2.0 /tmp/gl2-gles-test --gles2
+SDL_VIDEODRIVER=offscreen /tmp/gl2-gles-test --desktop
 ```
 
 On a machine without SDL's offscreen GLES driver, use a desktop session or
@@ -37,16 +39,20 @@ An exit status from emcc alone is not a browser test.
 
 - `cmake --build build-orb --parallel 2`: full native Debug build passed.
 - Native test: Mesa OpenGL ES 3.2, SDL offscreen, passed.
+- Regression initialization in an actual Mesa GLES 2.0 context (version override)
+  and desktop GL 4.5 compatibility context passed. These are initialization
+  checks, not full GLES2/desktop gameplay or physical GPU checks.
 - Browser test: the same C program compiled using Emscripten 3.1.58, Chromium
   WebGL2 with ANGLE SwiftShader, passed. This is software rendering, not a
   performance or vendor GPU compatibility claim.
 - Tests check nonzero, distinct read/draw framebuffer and texture/VAO bindings
   survive initialization, actual DSA renderbuffer allocation, FBO completion,
   color blit and asymmetric pixel readback, RGBA8-to-float conversion including
-  its output boundary, and floating texture allocation when supported.
+  its output boundary, and floating texture allocation/readback when supported.
 - Failure injection covers missing FBO/VAO functions, incomplete FBO, real GL
-  allocation errors, hidden float-renderability extension and disabled cvars.
-  The ES2 guard is tested on the ES3 context; **actual ES2 gameplay is not tested**.
+  allocation errors, separate RGBA16F and R32F allocation failures (RGBA8 must
+  remain usable), hidden float-renderability extension and disabled cvars.
+  The ES2 guard is also tested after ES3 initialization to catch stale flags.
 
 ## Capability contract and remaining validation
 
