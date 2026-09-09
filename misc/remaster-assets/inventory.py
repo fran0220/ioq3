@@ -270,12 +270,15 @@ def scan(spec, base):
             continue
         targets = []
         # Shader directives resolve images, not another shader with that name.
-        if not edge['from'].startswith('shader:') and ref in definitions:
-            targets = ['shader:' + ref]
+        stem = str(PurePosixPath(ref).with_suffix('')) if PurePosixPath(ref).suffix else ref
+        material = edge['reason'] in {'bsp-shader', 'md3-shader', 'iqm-material', 'skin-material',
+                                     'entity-shader', 'entity-targetShaderName', 'entity-targetShaderNewName'}
+        # R_FindShaderEx strips extensions before looking up shader text.
+        if material and stem in definitions:
+            targets = ['shader:' + stem]
         elif ref in files:
             targets = [ref]
         elif PurePosixPath(ref).suffix in {'', '.tga', '.jpg', '.jpeg', '.png', '.pcx', '.bmp'}:
-            stem = str(PurePosixPath(ref).with_suffix('')) if PurePosixPath(ref).suffix else ref
             targets = [stem + ext for ext in ('.tga', '.jpg', '.jpeg', '.png', '.pcx', '.bmp') if stem + ext in files]
         edge.update(status='resolved' if len(targets) == 1 else 'ambiguous' if targets else 'missing', targets=targets)
     for name, scripts in definitions.items():

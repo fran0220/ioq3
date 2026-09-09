@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-09",
+  "purpose": "Offline inventory/batch/coverage and recoverable archive validation; not final game release acceptance",
+  "tests": {
+    "command": "RUN_BLENDER_TESTS=1 uv run --with pillow==11.3.0 python -m unittest discover -s misc/remaster-assets -v",
+    "passed": 36,
+    "failed": 0,
+    "includes_real_blender": true,
+    "fixtures": "Synthetic binary/ZIP fixtures only; no Demo source committed"
+  },
+  "demo_parser_rehearsal": {
+    "scope": "demo-only-not-full-game",
+    "provenance": "Linux Q3A Demo1.11-6, official id distribution mirrored by GWDG; supplied by main thread, private parsing authorized only",
+    "source_url": "https://ftp.gwdg.de/pub/misc/ftp.idsoftware.com/idstuff/quake3/linux/linuxq3ademo-1.11-6.x86.gz.sh",
+    "pk3_sha256": "e77abad2466f45a0a7ea018445528f9b95a0fe7789fa1abc1a7718bbf0754b08",
+    "local_input": "assets/remaster/work/demo-input/pak0.pk3",
+    "eula": "assets/remaster/work/demo-input/Q3A_EULA.txt",
+    "source_and_detailed_reports_committed": false,
+    "inventory_canonical_sha256": "93d5886a218e46b90af7df39d9de5e93706b82fe2aee725627154807b095fc9d",
+    "files": 1274,
+    "dependencies": 6433,
+    "dependency_status": {"resolved": 3473, "missing": 2255, "builtin": 699, "ambiguous": 5, "invalid-reference": 1},
+    "parser_errors": 0,
+    "duplicate_shader_warnings": 5,
+    "first_map": "maps/q3dm1.bsp",
+    "first_map_closure_nodes": 147,
+    "first_map_closure_edges": 264,
+    "first_map_unresolved_edges": 19,
+    "dependency_interpretation": "Conservative graph includes unused/editor/compile-time or BSP-baked references. Missing is not a claim of actual runtime failure. Every disposition needs engine evidence/reviewer.",
+    "first_map_plan_path": "assets/remaster/work/demo-input/first-map-plan.json",
+    "first_map_plan_file_sha256": "cb453a6b2c0e73d51eaf9172d8296e4a0174436e3d83b035c4f9b6d6fc24a1f8",
+    "batch_input_counts": {
+      "map-logic": 8,
+      "environment-structure": 360,
+      "environment-sky-liquid": 8,
+      "characters": 165,
+      "weapons": 76,
+      "pickups-objectives": 93,
+      "effects": 72,
+      "audio": 249,
+      "shared-materials": 28
+    },
+    "ui_engine_excluded_files": 215,
+    "unclassified_files": 0,
+    "replacement_mapping_count": 0,
+    "accepted_replacement_count": 0,
+    "full_game_complete": false,
+    "production_gate_exit_code": 2,
+    "production_gate_passed": false
+  },
+  "local_archive": {
+    "store": "assets/remaster/work/source-archive",
+    "private_do_not_publish": true,
+    "snapshots": [
+      {"revision": "energy-pillar-v1-publisher-rejected", "snapshot_sha256": "1a0c896fe4110ec2b2292d4b150442dd70313976340fa0be60fa06b9dcd90ce7", "verified_files": 2},
+      {"revision": "energy-pillar-v1-default-rejected", "snapshot_sha256": "824115e3f1a336c13492854b388020c8721968336570124e49ae7e3319119f28", "verified_files": 2},
+      {"revision": "energy-pillar-v2", "snapshot_sha256": "df09626c5962858e3fbfff1903050465ee0aeaeffa9cdbfe936728f9aed8760a", "verified_files": 16}
+    ],
+    "recovery_state_request_response_preserved": true,
+    "v2_restore_drill": "Restored to separate ignored work directory; pipeline package ran without network and reproduced original PK3 hash",
+    "restored_pk3_sha256": "0b30c9f6d82fbf72155557bc2b9e9cac6de6d6724567ec1b1400cb5cb99646dc",
+    "off_orb_durable_archive_verified": false,
+    "source_handoff": "Main thread previously confirmed prototype/GLB/updated Blender master hash-matched copies; private recovery snapshot external backup still pending",
+    "new_paid_submissions": 0,
+    "new_generation_cost_usd": 0,
+    "successful_existing_generation_cost_usd": 0.519076,
+    "earlier_failed_request_fees": "Unreconciled; not assumed zero"
+  },
+  "pillar_acceptance": {
+    "runtime_pk3_changed_this_stage": false,
+    "main_thread_report": "Native GL2 A/B and subsequent WASM HDR/LDR testmodel loads/screenshots passed",
+    "report_source": "https://ampcode.com/threads/T-01a08650-c386-7680-a9f9-744898e9a239",
+    "final_collision_and_art_acceptance": false,
+    "art_limitations": "Texture noise and fragmented rear-panel appearance remain unaccepted; this stage did not claim a visual fix or replace the tested package"
+  },
+  "remaining_dependencies": [
+    "Full authorized original source set and independent version/priority attestation; Demo cannot substitute",
+    "Measured BSP/brush/entity connector and clearance specifications for first production module family",
+    "Dynamic code/QVM registration trace and reviewed disposition of conservative dependency gaps",
+    "IQM rig/animation/attachment export plus client semantic binding, animated weapon/tag export, map/AAS compiler integration and audio production",
+    "Human prototype/topology/material/motion/listening review and gameplay/collision/browser performance gates",
+    "Verified off-orb private recovery/source archival"
+  ]
+}

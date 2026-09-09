@@ -71,6 +71,22 @@ class InventoryTests(unittest.TestCase):
         mapping['inventory_sha256'] = 'wrong'
         with self.assertRaises(ValueError): coverage(inv, mapping)
 
+    def test_material_extension_shader_lookup_does_not_capture_sound(self):
+        files = dict(self.files)
+        files['models/test.skin'] = b'body,textures/test.tga\n'
+        files['scripts/test.shader'] += b' sound/miss1 { { map textures/test.tga } }'
+        files['sound/miss1.tga'] = b'not sound'
+        # Replace the model entity reference with a missing sound with same stem
+        # as both a shader and an image; neither is a valid WAV dependency.
+        files['maps/test.bsp'] = bsp().replace(b'"model" "models/test.md3"', b'"noise" "sound/miss1.wav"')
+        # Keep the BSP byte layout intact using equal-length replacement above.
+        self.assertEqual(len(files['maps/test.bsp']), len(bsp()))
+        inv = self.scan(self.archive('a.pk3', files))
+        skin = next(e for e in inv['dependencies'] if e['from'] == 'models/test.skin')
+        self.assertEqual(skin['targets'], ['shader:textures/test'])
+        noise = next(e for e in inv['dependencies'] if e['reason'] == 'entity-noise')
+        self.assertEqual(noise['status'], 'missing')
+
     def test_bad_hash_zip_paths_case_collision_and_corrupt_bsp(self):
         source = self.archive('a.pk3', self.files); source['sha256'] = '0' * 64
         with self.assertRaisesRegex(ValueError, 'SHA256 mismatch'): self.scan(source)
