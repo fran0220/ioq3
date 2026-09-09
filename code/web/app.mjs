@@ -2,7 +2,7 @@
 import { startHost } from './host.mjs';
 
 const og = window.OG ?? null;
-const canvas = document.querySelector('#game');
+const canvas = document.querySelector('#canvas');
 const status = document.querySelector('#status');
 const detail = document.querySelector('#detail');
 const retry = document.querySelector('#retry');

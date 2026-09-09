@@ -7,6 +7,14 @@ session=ioq3-m1-check
 ab() { agent-browser --session "$session" "$@"; }
 trap 'ab close >/dev/null 2>&1 || true' EXIT
 
+ab open "$base/tests/canvas.html"
+ab set viewport 1280 720 2
+ab wait --fn '!!window.canvasProbe && !!window.resizeCanvasProbe'
+ab eval 'if(JSON.stringify(canvasProbe)!==JSON.stringify({sdl:[800,600],buffer:[800,600],corner:[0,255,0,255]}))throw Error(JSON.stringify(canvasProbe)); true'
+ab eval 'resizeCanvasProbe()'
+ab wait --fn 'canvasProbe.sdl[0] === 1024'
+ab eval 'if(JSON.stringify(canvasProbe)!==JSON.stringify({sdl:[1024,768],buffer:[1024,768],corner:[0,255,0,255]}))throw Error(JSON.stringify(canvasProbe)); true'
+
 ab open "$base/tests/runtime.html"
 ab set viewport 1280 720 2
 ab wait --fn 'document.querySelector("#result").dataset.complete === "true"'
@@ -25,7 +33,7 @@ ab eval 'if(!document.fullscreenElement)throw Error("fullscreen enter failed"); 
 ab click '#exit-fullscreen'
 ab eval 'if(document.fullscreenElement)throw Error("fullscreen exit failed"); true'
 ab click '#capture'
-ab wait --fn 'document.pointerLockElement?.id === "game" && fixture.audioState() === "running"'
+ab wait --fn 'document.pointerLockElement?.id === "canvas" && fixture.audioState() === "running"'
 ab eval 'document.exitPointerLock()'
 ab wait --fn '!document.pointerLockElement'
 ab eval 'window.dispatchEvent(new Event("blur")); if(fixture.blur<1)throw Error("blur bridge not called"); true'
@@ -39,4 +47,4 @@ ab wait --fn 'document.body.dataset.state === "failed" && document.body.dataset.
 ab tab new "$base/"
 ab wait --fn 'document.body.dataset.state === "failed"'
 ab eval 'if(!document.querySelector("#detail").textContent.includes("another tab"))throw Error("concurrent save writer allowed"); true'
-echo 'PASS: real WASM/IDBFS reload, host controls fixture, missing data/retry, exclusive settings lease'
+echo 'PASS: real SDL2/WebGL2 canvas sizing/pixels/resize, WASM/IDBFS reload, host controls fixture, missing data/retry, exclusive settings lease'

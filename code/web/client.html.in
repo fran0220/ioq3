@@ -12,7 +12,8 @@
   <link rel="stylesheet" href="./shell.css">
 </head>
 <body data-engine="./@CLIENT_BINARY@.js" data-state="loading">
-  <canvas id="game" tabindex="0" aria-label="ioq3 game canvas"></canvas>
+  <!-- SDL2's Emscripten backend requires the literal #canvas selector. -->
+  <canvas id="canvas" tabindex="0" aria-label="ioq3 game canvas"></canvas>
   <main id="status-panel" aria-labelledby="title">
     <p class="eyebrow">PC BROWSER · WASM / WEBGL2</p>
     <h1 id="title">ioq3 remaster</h1>

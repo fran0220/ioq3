@@ -103,12 +103,23 @@ node --test code/web/host.test.mjs
 # or: bun test code/web/host.test.mjs
 ```
 
-For a real-WASM IndexedDB round trip, run the test server as a supervised service:
+Build the real SDL2/WebGL2 canvas regression probe with the same pinned SDK,
+then run the test server as a supervised service:
 
 ```sh
+emcc code/web/tests/canvas-probe.c -O2 -sUSE_SDL=2 \
+  -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -sEXPORT_ES6 \
+  -o build-web/canvas-probe.js
 amp orb service start ioq3-web-tests --port 4174 \
   --command 'python3 code/web/tests/serve.py build-web/Release'
 ```
+
+`/tests/canvas.html` uses the generated production template with real SDL2/WASM,
+not a fake renderer. SDL2 in this SDK hardcodes `#canvas`; passing Module.canvas
+alone does not satisfy its resize/event selectors. The suite requires matching
+SDL and WebGL backing sizes at 800×600 and 1024×768, plus an upper-right green
+pixel outside the default 300×150 canvas. Neither this probe nor its outputs
+belong in the release directory. It does not certify game content or gameplay.
 
 Open `/tests/runtime.html` through the local browser tool. Write the asymmetric
 settings fixture, reload and require `wasm:true,idbfs:true,matches:true`; then
