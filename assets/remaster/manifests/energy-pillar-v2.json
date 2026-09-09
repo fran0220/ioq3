@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "asset_id": "energy-pillar-v2",
+  "supersedes": "energy-pillar-v1: Grok channel unavailable; GPT Image 2 explicitly selected by main thread; old requests retained",
+  "classification": "original-style-sample-not-original-game-reconstruction",
+  "authorization": "2026-09-09 user authorized remake/publication and generation without budget ceiling",
+  "style": "industrial-arena-v1",
+  "image_model": "gpt-image-2",
+  "shape_model": "hunyuan3d-2",
+  "prompt": "A single original science-fiction arena energy pillar game prop, full object isolated on a plain pale gray background, centered three-quarter front view, no floor plane, no cast shadow. A sturdy waist-high rectangular industrial power cell tower, broad stable square base, chamfered corners, one thick recessed cyan glowing vertical energy slit on the front, dark graphite metal frame, warm ivory ceramic front panels, restrained orange connector details on one side, a closed flat top, large readable bevels and clean angular silhouette. Solid continuous connected object without cables, detached pieces, thin spikes, handles or holes. Proportions height 1.6 meters and width approximately 0.8 meters. Medium stylized hard surface production concept, believable construction, evenly lit, no text, no numbers, no symbols, no logo, no HUD, no collage, no exploded view, no other props. This is a new original style study, not a reproduction of any existing game asset.",
+  "processing": {
+    "height_meters": 1.6,
+    "units_per_meter": 40,
+    "target_triangles": 1800,
+    "texture_edge": 1024,
+    "rotation_z_degrees": 0,
+    "shader": "models/remaster/energy_pillar"
+  }
+}
