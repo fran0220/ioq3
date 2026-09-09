@@ -50,10 +50,13 @@ function(deploy_shell_files)
     endif()
     configure_file(${SOURCE_DIR}/web/client.html.in
         ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/index.html @ONLY)
-    foreach(file host.mjs app.mjs shell.css)
+    foreach(file host.mjs app.mjs menu.mjs shell.css)
         configure_file(${SOURCE_DIR}/web/${file}
             ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${file} COPYONLY)
     endforeach()
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/ui)
+    configure_file(${CMAKE_SOURCE_DIR}/assets/remaster/ui/hangar.webp
+        ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/ui/hangar.webp COPYONLY)
     # Preserve a locally prepared manifest during incremental reconfiguration.
     if(NOT EXISTS ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/game-manifest.json)
         configure_file(${SOURCE_DIR}/web/client-config.json
