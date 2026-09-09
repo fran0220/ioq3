@@ -7,6 +7,8 @@ endif()
 set(CMAKE_EXECUTABLE_SUFFIX ".js")
 set(CMAKE_SHARED_LIBRARY_SUFFIX ".wasm")
 
+option(IOQ3_WEB_TEST_OBSERVER "Include read-only gameplay state for browser tests (not release)" OFF)
+
 # Disable options that don't make sense for emscripten
 set(BUILD_SERVER OFF CACHE INTERNAL "")
 set(BUILD_RENDERER_GL1 OFF CACHE INTERNAL "")
@@ -42,6 +44,10 @@ list(APPEND POST_CONFIGURE_FUNCTIONS deploy_shell_files)
 
 function(deploy_shell_files)
     target_sources(${CLIENT_BINARY} PRIVATE ${SOURCE_DIR}/web/web_bridge.c)
+    if(IOQ3_WEB_TEST_OBSERVER)
+        target_sources(${CLIENT_BINARY} PRIVATE ${SOURCE_DIR}/client/cl_web_test.c)
+        target_compile_definitions(${CLIENT_BINARY} PRIVATE IOQ3_WEB_TEST_OBSERVER=1)
+    endif()
     configure_file(${SOURCE_DIR}/web/client.html.in
         ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/index.html @ONLY)
     foreach(file host.mjs app.mjs shell.css)
