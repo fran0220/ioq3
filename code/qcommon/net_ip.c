@@ -23,6 +23,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../qcommon/q_shared.h"
 #include "../qcommon/qcommon.h"
 
+#ifdef __EMSCRIPTEN__
+#include "net_websocket.h"
+#endif
+
 #ifdef _WIN32
 #	include <winsock2.h>
 #	include <ws2tcpip.h>
@@ -366,7 +370,20 @@ Sys_StringToAdr
 qboolean Sys_StringToAdr( const char *s, netadr_t *a, netadrtype_t family ) {
 	struct sockaddr_storage sadr;
 	sa_family_t fam;
-	
+
+#ifdef __EMSCRIPTEN__
+	// A stable logical peer; the room service, never the browser, selects UDP targets.
+	if (family != NA_IP6 && (!Q_stricmp(s, "origingame") || !strcmp(s, "192.0.2.1"))) {
+		memset(a, 0, sizeof(*a));
+		a->type = NA_IP;
+		a->ip[0] = 192;
+		a->ip[2] = 2;
+		a->ip[3] = 1;
+		return qtrue;
+	}
+	return qfalse;
+#endif
+
 	switch(family)
 	{
 		case NA_IP:
@@ -533,7 +550,18 @@ qboolean NET_GetPacket(netadr_t *net_from, msg_t *net_message, fd_set *fdr)
 	struct sockaddr_storage from;
 	socklen_t	fromlen;
 	int		err;
-	
+
+#ifdef __EMSCRIPTEN__
+	if (!networkingEnabled) return qfalse;
+	ret = NET_WebReceive(net_message->data, net_message->maxsize);
+	if (!ret) return qfalse;
+	Sys_StringToAdr("origingame", net_from, NA_IP);
+	net_from->port = BigShort(PORT_SERVER);
+	net_message->readcount = 0;
+	net_message->cursize = ret;
+	return qtrue;
+#endif
+
 	if(ip_socket != INVALID_SOCKET && FD_ISSET(ip_socket, fdr))
 	{
 		fromlen = sizeof(from);
@@ -650,6 +678,15 @@ Sys_SendPacket
 void Sys_SendPacket( int length, const void *data, netadr_t to ) {
 	int				ret = SOCKET_ERROR;
 	struct sockaddr_storage	addr;
+
+#ifdef __EMSCRIPTEN__
+	if (networkingEnabled && to.type == NA_IP && to.ip[0] == 192 &&
+		to.ip[1] == 0 && to.ip[2] == 2 && to.ip[3] == 1 &&
+		to.port == (unsigned short)BigShort(PORT_SERVER)) {
+		NET_WebSend(data, length);
+	}
+	return;
+#endif
 
 	if( to.type != NA_BROADCAST && to.type != NA_IP && to.type != NA_IP6 && to.type != NA_MULTICAST6)
 	{
@@ -1535,6 +1572,12 @@ void NET_Config( qboolean enableNetworking ) {
 		networkingEnabled = enableNetworking;
 	}
 
+#ifdef __EMSCRIPTEN__
+	if (stop) NET_WebStop();
+	if (start) NET_WebStart();
+	return;
+#endif
+
 	if( stop ) {
 		if ( ip_socket != INVALID_SOCKET ) {
 			closesocket( ip_socket );
@@ -1666,6 +1709,12 @@ void NET_Sleep(int msec)
 	int retval;
 	SOCKET highestfd = INVALID_SOCKET;
 
+#ifdef __EMSCRIPTEN__
+	// WebSocket callbacks enqueue datagrams between frames; never block rAF in select.
+	if (networkingEnabled) NET_Event(NULL);
+	return;
+#endif
+
 	if(msec < 0)
 		msec = 0;
 
@@ -1712,5 +1761,9 @@ NET_Restart_f
 */
 void NET_Restart_f(void)
 {
+#ifdef __EMSCRIPTEN__
+	// Session credentials are intentionally not cvars; pick up a new host session.
+	NET_Config(qfalse);
+#endif
 	NET_Config(qtrue);
 }
