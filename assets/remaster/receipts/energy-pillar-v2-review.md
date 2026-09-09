@@ -43,19 +43,32 @@ model switch. It was not a replay of an unknown task. No other models were tried
   pivot, decimated from 40000 input polygons to **1800 triangles**. Quantized
   bounds: x −15.875..15.90625, y −14.203125..14.21875, z 0.015625..63.984375
   Q3 units. The small bound shift is from decimation after initial scaling.
-- Output: **5013 vertices across 2 MD3 surfaces**, one frame, one material,
+- Output: **5051 vertices across 6 MD3 surfaces**, one frame, one material,
   1024×1024 baked base-color TGA. The split handles UV/normal seam duplication;
-  each surface meets the 4096-vertex limit. MD3: 102324 bytes.
+  each surface meets actual renderer limits: ≤999 vertices and ≤5999 indices
+  (whole triangles allow at most 5997). MD3: 103636 bytes.
+  Surface vertex/triangle/index counts: 997/350/1050, 999/360/1080,
+  998/354/1062, 997/356/1068, 997/359/1077, 63/21/63.
+  The prior two-surface package was format-valid but **runtime-invalid** and is
+  superseded: `R_LoadMD3` rejects ≥1000 vertices or ≥6000 indices. No engine
+  limits were changed. Independent binary decoding confirmed all 1800 ordered
+  triangles, UVs and encoded normals identical; texture/shader bytes unchanged.
+  All 23 tests passed including real Blender processing and independent binary
+  boundary cases (999→1000 vertices, 5997→6000 indices). Reprocessing used only
+  local sources; generation IDs, submissions and charges are unchanged.
 - Front/back review renders are made from **decoded exported MD3 positions,
   UVs and quantized normals**, not the unexported GLB. Both views show complete
   structure with no obvious holes/floating parts or UV/black-texture failure.
   Silhouette and palette remain recognizable. Some texture/render grain remains;
   close-up art polish and in-engine filtering/light response are pending.
+  The rebuilt review shows no new split seams/missing chunks; noisy surfaces
+  and fragmented rear panel appearance remain art-polish issues, not resolved
+  by this export-limit correction. Blender renders are not runtime validation.
 - PBR material has been deliberately reduced to base-color diffuse. This does
   not preserve metallic highlights, normal maps or true emission. Original GLB
   remains available for a future GL2 material pass. No collision is supplied.
-- PK3 size: **1,629,307 bytes**, SHA-256
-  `8a02b19de2da31ccb23b9cb471e36a0a0a1d101e67aadacd3de77f69c68e36ba`.
+- PK3 size: **1,624,174 bytes**, SHA-256
+  `0b30c9f6d82fbf72155557bc2b9e9cac6de6d6724567ec1b1400cb5cb99646dc`.
   Only model, TGA and shader are packaged. No source data, credentials, remote
   URLs or test-fixture geometry is included.
 
@@ -72,9 +85,10 @@ model switch. It was not a replay of an unknown task. No other models were tried
 
 Raw source/master files are ignored by Git and currently retained in this
 production thread's orb. **Durable external archival is still pending.** The
-main thread can use `download_thread_file` for those exact paths, then verify
-against the machine receipt. Do not regenerate because a checkout lacks raw
-files. This production thread must not be discarded before source handoff.
+main thread confirmed download/hash verification of the original three source
+files. Prototype/GLB hashes remain unchanged; the locally resaved Blender master
+has an updated hash in the machine receipt and can be downloaded again if needed.
+Do not regenerate because a checkout lacks raw files.
 
 ## Receiving engine workstream
 

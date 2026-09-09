@@ -9,6 +9,17 @@ def vertex(position, uv=(0.25, 0.75), normal=(0, 0, 1)):
     return position, uv, normal
 
 
+def binary_surface_counts(data):
+    # Independent qfiles.h offsets, not exporter constants or read_md3.
+    count = struct.unpack_from("<i", data, 84)[0]
+    offset = struct.unpack_from("<i", data, 100)[0]
+    counts = []
+    for _ in range(count):
+        counts.append(struct.unpack_from("<2i", data, offset + 80))
+        offset += struct.unpack_from("<i", data, offset + 104)[0]
+    return counts
+
+
 class StaticMD3Tests(unittest.TestCase):
     def setUp(self):
         self.triangle = [vertex((-3.25, 2, 0)), vertex((5, 1, 0)), vertex((0, 4.5, 8))]
@@ -46,12 +57,37 @@ class StaticMD3Tests(unittest.TestCase):
         self.assertEqual(surface["triangles"], [(0, 1, 2), (3, 1, 2)])
 
     def test_surface_split_preserves_all_triangles(self):
-        # Each triangle has distinct UVs, forcing >4096 vertices even with shared XYZ.
+        # Each triangle has distinct UVs, forcing splits even with shared XYZ.
         triangles = [[vertex(v[0], (index/1500, corner/3)) for corner, v in enumerate(self.triangle)] for index in range(1400)]
         surfaces = read_md3(write_md3(triangles, "a"))["surfaces"]
-        self.assertEqual(len(surfaces), 2)
+        self.assertEqual(len(surfaces), 5)
         self.assertEqual(sum(len(s["triangles"]) for s in surfaces), 1400)
-        self.assertTrue(all(len(s["positions"]) <= 4096 for s in surfaces))
+        self.assertTrue(all(len(s["positions"]) <= 999 for s in surfaces))
+
+    def test_999_vertices_fit_and_1000th_vertex_forces_split(self):
+        triangles = [[vertex(v[0], (index/1000, corner/3)) for corner, v in enumerate(self.triangle)] for index in range(333)]
+        at_limit = write_md3(triangles, "a")
+        self.assertEqual(binary_surface_counts(at_limit), [(999, 333)])
+        # One new UV vertex plus two previously seen vertices: exactly 1000,
+        # not a three-new-vertex test which could miss an off-by-one split.
+        extra = [vertex(self.triangle[0][0], (0.9, 0)), *triangles[0][1:]]
+        split = write_md3([*triangles, extra], "a")
+        self.assertEqual(binary_surface_counts(split), [(999, 333), (3, 1)])
+        invalid = bytearray(at_limit)
+        struct.pack_into("<i", invalid, 164 + 80, 1000)
+        with self.assertRaisesRegex(ValueError, "surface counts"):
+            read_md3(invalid)
+
+    def test_5997_indices_fit_and_6000_indices_force_split(self):
+        # Shared vertices isolate the index limit from the vertex limit.
+        at_limit = write_md3([self.triangle] * 1999, "a")
+        self.assertEqual(binary_surface_counts(at_limit), [(3, 1999)])
+        split = write_md3([self.triangle] * 2000, "a")
+        self.assertEqual(binary_surface_counts(split), [(3, 1999), (3, 1)])
+        invalid = bytearray(at_limit)
+        struct.pack_into("<i", invalid, 164 + 84, 2000)
+        with self.assertRaisesRegex(ValueError, "surface counts"):
+            read_md3(invalid)
 
     def test_quantization_collapsed_face_and_corrupt_index_rejected(self):
         with self.assertRaisesRegex(ValueError, "collapses"):

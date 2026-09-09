@@ -108,7 +108,7 @@
       {
         "bytes": 6523012,
         "path": "processed/cleaned.blend",
-        "sha256": "7a607d83d2377e59a061c851be85d3c442a8be4533c1fc6520f7a0c71b892542"
+        "sha256": "67c3e901baf7ddadfe546ab4b4f8cdb23919f5e645c9d8a4630b2494872a994d"
       },
       {
         "bytes": 2427051,
@@ -116,14 +116,14 @@
         "sha256": "49d07acbdb13c4d9511a659726f3889c1acb09165de87a3626e60dbf8d4c22e0"
       },
       {
-        "bytes": 620,
+        "bytes": 1210,
         "path": "processed/geometry-report.json",
-        "sha256": "6210aaff7f15a6b3100ee0ec0662afcf788afd66cb17ac4a377515860659baa9"
+        "sha256": "8920b4b6c3e4a4a5a7b6fc7cb1efc42052d0d8108e176eaf7f8bfe1520ccc909"
       },
       {
-        "bytes": 102324,
+        "bytes": 103636,
         "path": "processed/model.md3",
-        "sha256": "4d7dd4fe775d9e293836c45b6bd0647d502824e6f1d9a10da1f683f06bce93fc"
+        "sha256": "8c092a002ea5d452c7d29979a8ab53aa0a1b73041416a1c4702651f3c80b9b94"
       },
       {
         "bytes": 123,
@@ -133,23 +133,23 @@
       {
         "bytes": 536656,
         "path": "processed/review-back.png",
-        "sha256": "c49a1255c3edc2f80d24a1f6b5ea78998453a55942e75f0a37d2461dd89ca70f"
+        "sha256": "0d0ecc6b4f269942cf3edbbe551e449c225c3067ad26c80c04a28b35c59a4837"
       },
       {
         "bytes": 525317,
         "path": "processed/review-front.png",
-        "sha256": "fea087d835bc7e0bf02a7bff85d727c5e3dd3b94d55a2a9c6dd21ffd621e92bd"
+        "sha256": "68a3a513441033d4a5955d30014939cf312533381e93295a78fd1a15b26987a5"
       }
     ],
     "scripts": {
-      "blender_static.py": "b910ee1c8eb9bdf1a555ecef8c1686a85e35b3f87c87c16089cf9319ea8f5177",
-      "md3_static.py": "f433662f762f46e4e788d68b531aeffbb709c4ef14da7920980d82a7d6455ccb"
+      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
+      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
     },
     "source_sha256": "8b6fb0eab9571f3f35446a9acb6a4627cc05bebf32adb25cd6b12d80fec2d817"
   },
   "package": {
-    "bytes": 1629307,
+    "bytes": 1624174,
     "path": "energy-pillar-v2.pk3",
-    "sha256": "8a02b19de2da31ccb23b9cb471e36a0a0a1d101e67aadacd3de77f69c68e36ba"
+    "sha256": "0b30c9f6d82fbf72155557bc2b9e9cac6de6d6724567ec1b1400cb5cb99646dc"
   }
 }

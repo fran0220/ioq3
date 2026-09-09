@@ -11,7 +11,7 @@ import bmesh
 from mathutils import Vector
 
 sys.path.insert(0, str(Path(__file__).parent))
-from md3_static import read_md3, write_md3
+from md3_static import RUNTIME_MAX_INDEXES, RUNTIME_MAX_VERTS, read_md3, write_md3
 
 
 def selected(obj):
@@ -185,6 +185,7 @@ def main(source, output, config):
     (output / "remaster.shader").write_text(shader + "\n{\n    {\n        map " + shader + ".tga\n        rgbGen lightingDiffuse\n    }\n}\n")
     # Save source/baked master before making a *decoded MD3* inspection mesh.
     texture.pack()
+    bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=str(output / "cleaned.blend"))
     mesh = bpy.data.meshes.new("md3_roundtrip")
     positions, faces, uvs, normals = [], [], [], []
@@ -207,6 +208,9 @@ def main(source, output, config):
     report = {"blender_version": bpy.app.version_string, "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
               "input_polygons": before, "output_triangles": len(faces), "output_vertices": len(positions),
               "surfaces": len(parsed["surfaces"]), "bounds_q3": parsed["bounds"],
+              "surface_counts": [{"vertices": len(s["positions"]), "triangles": len(s["triangles"]),
+                                  "indices": len(s["triangles"]) * 3} for s in parsed["surfaces"]],
+              "runtime_surface_limits": {"vertices": RUNTIME_MAX_VERTS, "indices": RUNTIME_MAX_INDEXES},
               "md3_sha256": hashlib.sha256(md3).hexdigest(), "frames": 1,
               "render_source": "decoded exported MD3 + baked runtime TGA", "runtime_accepted": False,
               "material_limitations": "Diffuse only; no PBR/emission preservation claim", "units_per_meter": units}

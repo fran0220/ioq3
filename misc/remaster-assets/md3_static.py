@@ -10,6 +10,10 @@ import struct
 HEADER = struct.Struct("<4si64s9i")
 SURFACE = struct.Struct("<4s64s10i")
 FRAME = struct.Struct("<10f16s")
+# R_LoadMD3 rejects counts >= SHADER_MAX_VERTEXES/SHADER_MAX_INDEXES
+# (qfiles.h: 1000 and 6000). These are stricter than the MD3 format limits.
+RUNTIME_MAX_VERTS = 999
+RUNTIME_MAX_INDEXES = 5999
 
 
 def name_bytes(value, size=64):
@@ -63,7 +67,7 @@ def write_md3(triangles, shader, model_name="static-prop"):
         if not any(cross):
             raise ValueError("Triangle collapses after MD3 quantization")
         missing = set(encoded) - lookup.keys()
-        if len(vertices) + len(missing) > 4096 or len(indices) >= 8192:
+        if len(vertices) + len(missing) > RUNTIME_MAX_VERTS or (len(indices) + 1) * 3 > RUNTIME_MAX_INDEXES:
             flush()
         tri_indices = []
         for vertex in encoded:
@@ -116,7 +120,7 @@ def read_md3(data):
         if offset + SURFACE.size > end:
             raise ValueError("Truncated surface")
         ident, surface_name, flags, nframes, nshaders, nverts, ntris, ot, osh, ouv, ov, oe = SURFACE.unpack_from(data, offset)
-        if ident != b"IDP3" or nframes != 1 or nshaders != 1 or not 1 <= nverts <= 4096 or not 1 <= ntris <= 8192:
+        if ident != b"IDP3" or nframes != 1 or nshaders != 1 or not 1 <= nverts <= RUNTIME_MAX_VERTS or not 1 <= ntris * 3 <= RUNTIME_MAX_INDEXES:
             raise ValueError("Invalid surface counts")
         if not (ot == SURFACE.size and osh == ot + ntris*12 and ouv == osh+68 and ov == ouv+nverts*8 and oe == ov+nverts*8 and offset+oe <= end):
             raise ValueError("Invalid surface offsets")

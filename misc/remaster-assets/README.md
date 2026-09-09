@@ -121,10 +121,13 @@ The receiving engine workstream must load it from the virtual filesystem, add
 it to a controlled test scene, check orientation/lighting/scaling and browser
 memory, and provide engine review. `runtime_accepted` stays false here.
 
-MD3 export: one frame, no tags/rig; UV seam/normal splits, ≤4096 vertices and
-≤8192 triangles per surface, ≤32 surfaces, strict signed-short × 1/64 position
-range, no quantization-collapsed triangles. It will refuse problematic output
-rather than silently wrap coordinates. It is not a generic character exporter.
+MD3 export: one frame, no tags/rig; UV seam/normal splits, **≤999 vertices and
+≤5999 indices per surface** (whole triangles therefore ≤1999 / 5997 indices),
+≤32 surfaces, strict signed-short × 1/64 position range, no quantization-collapsed
+triangles. `R_LoadMD3` in `code/renderergl2/tr_model.c` rejects counts ≥1000
+vertices or ≥6000 indices (`SHADER_MAX_*` in `qfiles.h`), stricter than the MD3
+format's 4096/8192 limits. Both writer and read-back/package validation enforce
+the runtime limits. It is not a generic character exporter.
 
 ## Tests (no network or paid generation)
 
