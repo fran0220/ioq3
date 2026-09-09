@@ -1,23 +1,55 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
-:root { color-scheme: dark; font-family: system-ui, sans-serif; background: #101318; color: #edf0f4; }
+:root { color-scheme: dark; font-family: Arial, Helvetica, sans-serif; background: #12171a; color: #edece4; }
 * { box-sizing: border-box; }
 body { margin: 0; min-height: 100vh; }
 canvas { display: block; width: 100vw; height: 100vh; outline: none; background: #090b0f; }
-#status-panel { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: min(640px, 90vw); padding: 36px; background: #191f29; border: 1px solid #384252; border-radius: 8px; }
-.eyebrow { color: #98adca; font-size: 12px; letter-spacing: .12em; }
-h1 { margin: 16px 0 28px; font-size: 34px; }
-#status { font-size: 20px; font-weight: 600; }
-#detail { line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
-.note { color: #a5adba; font-size: 13px; line-height: 1.5; margin-top: 28px; }
-button { font: inherit; color: #f5f7fa; background: #2b3d55; border: 1px solid #607594; border-radius: 4px; padding: 10px 16px; cursor: pointer; }
-button:hover { background: #3b5271; }
-button:focus-visible { outline: 3px solid #90bbf9; outline-offset: 3px; }
-#controls { position: fixed; bottom: 12px; left: 12px; right: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px; background: #101318e8; font-size: 12px; }
+button, input { font: inherit; }
+button { color: inherit; background: #1d272b; border: 1px solid #536168; padding: 12px 18px; cursor: pointer; }
+button:hover { background: #314248; border-color: #9be4dc; }
+button:focus-visible, input:focus-visible { outline: 2px solid #9be4dc; outline-offset: 4px; }
+button:disabled, input:disabled { opacity: .45; cursor: not-allowed; }
 [hidden] { display: none !important; }
-/* The platform owns loading/error overlays. Never cover it with a second splash. */
+.eyebrow { color: #a8c4c7; font-size: 11px; letter-spacing: .18em; font-weight: 700; }
+.note { color: #aebbbd; font-size: 13px; line-height: 1.65; max-width: 590px; }
+#menu, #status-panel { background: #12171a url('./ui/hangar.webp') center / cover; }
+#status-panel { position: fixed; inset: 0; padding: max(60px, 12vh) 8vw; overflow: auto; }
+h1, h2 { font-size: clamp(38px, 4.5vw, 68px); letter-spacing: -.045em; line-height: 1.02; margin: 25px 0; font-weight: 800; }
+h2:focus { outline: none; }
+#status { color: #9be4dc; font-size: 22px; margin-top: 36px; }
+#detail { line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 580px; color: #b9c7c8; }
+#retry, .primary { color: #15191b; background: #e9e8dd; border: 0; padding: 17px 24px; font-weight: 700; }
+#retry:hover, .primary:hover { background: #9be4dc; }
+#menu { position: fixed; inset: 0; overflow: auto; padding: 28px 4vw 100px; }
+#menu header, #menu footer { display: flex; justify-content: space-between; align-items: center; }
+#menu header { border-bottom: 1px solid #596565; padding-bottom: 22px; }
+.badge { color: #c7cdca; font-size: 10px; letter-spacing: .12em; }
+.menu-layout { display: grid; grid-template-columns: 220px minmax(0, 650px); gap: 6vw; margin-top: 6vh; }
+.menu-nav { display: flex; flex-direction: column; gap: 8px; }
+.menu-nav .eyebrow { margin: 12px 0 22px; }
+.menu-nav button { text-align: left; background: #10171a99; border-color: transparent; font-size: 13px; padding: 15px 12px; }
+.menu-nav button[aria-current] { background: #d8e4de; color: #172124; border-left: 3px solid #e28748; }
+#return-engine { margin-top: 30px; color: #b9c7c8; }
+.intro { color: #cbd4d1; font-size: 17px; margin-bottom: 32px; }
+.availability { border-top: 1px solid #4a5759; margin-top: 28px; max-width: 430px; padding-top: 18px; font-size: 12px; color: #aebbbd; line-height: 1.6; }
+.availability span { color: #e4b18b; text-transform: uppercase; letter-spacing: .14em; font-size: 10px; }
+.setting-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; max-width: 560px; border-bottom: 1px solid #384448; padding: 10px 0; font-size: 14px; }
+.setting-row input { width: 120px; padding: 8px 12px; background: #162125; color: #d0f5ef; border: 1px solid #66777b; }
+.setting-row input:disabled { opacity: 1; background: #242c2e; border-color: #495456; }
+.setting-row input::placeholder { color: #bdc7c8; font-size: 12px; }
+[data-page="settings"] h2 { font-size: 42px; margin: 15px 0; }
+[data-page="settings"] .note { font-size: 12px; line-height: 1.5; }
+#setting-status { font-size: 13px; color: #9be4dc; min-height: 20px; }
+#setting-status:empty { display: none; }
+dl { display: grid; grid-template-columns: 120px 1fr; gap: 20px; max-width: 570px; font-size: 14px; line-height: 1.6; }
+dt { color: #9be4dc; } dd { margin: 0; color: #b9c7c8; }
+#menu footer { margin-top: 45px; color: #829698; letter-spacing: .16em; font-size: 9px; }
+#controls { position: fixed; bottom: 0; left: 0; right: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 20px; background: #101719f5; border-top: 1px solid #39494d; font-size: 11px; }
+#controls button { padding: 9px 12px; }
+#save-status, #input-status, #network-status { color: #adbfbd; }
 html[data-embedded="true"] #status-panel { display: none; }
 body[data-state="ready"] #status-panel { display: none; }
-/* loading.fail is intentionally ignored by OG after ready; runtime recovery is ours. */
 html[data-embedded="true"] body[data-ready="true"][data-state="failed"] #status-panel { display: block; }
 body[data-captured="true"] #controls { display: none; }
-body[data-state="failed"] #status { color: #ffc19b; }
+body[data-state="failed"] #status { color: #efac7b; }
+@media (max-height: 700px) { .menu-layout { margin-top: 22px; } h2 { font-size: 42px; margin: 15px 0; } #menu footer { margin-top: 20px; } }
+@media (max-width: 950px) { .menu-layout { grid-template-columns: 180px minmax(0, 1fr); gap: 30px; } }

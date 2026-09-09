@@ -9,12 +9,13 @@ static const char *webSettings[] = { "s_volume", "s_musicvolume", "sensitivity",
 static const double webMin[] = { 0, 0, 0.1, -0.1, 60 };
 static const double webMax[] = { 1, 1, 30, 0.1, 140 };
 static int webMenuOpen;
+static int webInputBlocked;
 
-int OG_WebMenuOpen(void) { return webMenuOpen; }
+int OG_WebMenuOpen(void) { return webMenuOpen || webInputBlocked; }
 
 EMSCRIPTEN_KEEPALIVE int OG_WebUIState(void)
 {
-    if (!com_cl_running || !com_cl_running->integer || !uivm) return 0;
+    if (webInputBlocked || !com_cl_running || !com_cl_running->integer || !uivm) return 0;
     if (clc.state == CA_DISCONNECTED) return 1;
     if (clc.state == CA_ACTIVE) return 2;
     return 3;
@@ -39,8 +40,9 @@ EMSCRIPTEN_KEEPALIVE int OG_WebSetSetting(int id, double value)
 
 EMSCRIPTEN_KEEPALIVE int OG_WebMenu(int open)
 {
-    /* Recovery detaches DOM ownership without touching a failed UI VM. */
-    if (open == 3) { webMenuOpen = 0; return 1; }
+    /* Terminal failure releases menu ownership but blocks recapture until reload.
+     * No VM invocation or attempts to revive a failed renderer/runtime. */
+    if (open == 3) { webMenuOpen = 0; webInputBlocked = 1; return 1; }
     int state = OG_WebUIState();
     if ((state != 1 && state != 2) || open < 0 || open > 2) return 0;
     webMenuOpen = open == 1;

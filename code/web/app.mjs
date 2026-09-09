@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { startHost } from './host.mjs';
+import { createMenu } from './menu.mjs';
 
 const og = window.OG ?? null;
 const canvas = document.querySelector('#canvas');
@@ -8,6 +9,7 @@ const detail = document.querySelector('#detail');
 const retry = document.querySelector('#retry');
 const inputStatus = document.querySelector('#input-status');
 let host;
+const menu = createMenu(canvas);
 
 function report(update) {
     if (update.state) {
@@ -18,6 +20,7 @@ function report(update) {
         detail.textContent = update.detail;
         retry.hidden = update.state !== 'failed';
         document.querySelector('#controls').hidden = update.state !== 'ready';
+        menu.report(update);
     }
     if (update.persistence) document.querySelector('#save-status').textContent = {
         saving: 'Saving…', saved: 'Settings saved', failed: 'Save failed — retry Save settings',
@@ -77,6 +80,7 @@ try {
     await navigator.locks.request('ioq3-player-home-v1', { ifAvailable: true }, async lock => {
         if (!lock) throw new Error('This game is already open in another tab. Close that tab, then retry to protect your settings.');
         host = await startHost({ factory, canvas, og, report,
+            onModule: module => menu.attach(module),
             manifestURL: new URL('./game-manifest.json', location.href),
             // Trusted integration may acquire a fresh session; never read credentials
             // from location, archived cvars, localStorage or the asset manifest.

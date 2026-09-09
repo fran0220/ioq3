@@ -16,13 +16,48 @@
   <canvas id="canvas" tabindex="0" aria-label="ioq3 game canvas"></canvas>
   <main id="status-panel" aria-labelledby="title">
     <p class="eyebrow">PC BROWSER · WASM / WEBGL2</p>
-    <h1 id="title">ioq3 remaster</h1>
+    <h1 id="title">BUILT FOR<br>THE ARENA.</h1>
     <p id="status" role="status" aria-live="polite">Loading engine…</p>
     <p id="detail">Preparing the browser runtime.</p>
     <button id="retry" hidden>Reload and retry</button>
     <p class="note">Game data must be installed by the build owner. The engine alone is not a playable game.</p>
   </main>
+  <section id="menu" aria-label="Arena menu" hidden>
+    <header><span class="eyebrow">IOQ3 / REMASTER PROGRAM</span><span class="badge">PC · WEBGL2</span></header>
+    <div class="menu-layout">
+      <nav class="menu-nav" aria-label="Main navigation">
+        <p class="eyebrow">OPERATIONS</p>
+        <button data-screen="home" aria-current="page">01 / Overview</button>
+        <button data-screen="settings">02 / Settings</button>
+        <button data-screen="help">03 / Field manual</button>
+        <button id="return-engine">Return to engine</button>
+      </nav>
+      <div class="menu-content">
+        <section data-page="home">
+          <p class="eyebrow" id="menu-context">ARENA SYSTEMS / ONLINE</p>
+          <h2 id="menu-title" tabindex="-1">MAKE EVERY<br>MOVE COUNT.</h2>
+          <p class="intro">Precision in motion. No shortcuts.</p>
+          <button class="primary" id="play">Open engine Play menu →</button>
+          <p class="note" id="play-note">Map, bot and match selection currently use the original engine menu.</p>
+          <div class="availability"><span>Multiplayer</span><p>Room entry requires a platform-issued session. No public lobby is configured in this build.</p></div>
+        </section>
+        <section data-page="settings" hidden>
+          <p class="eyebrow">TUNE YOUR RESPONSE</p><h2 tabindex="-1">SETTINGS</h2>
+          <p class="note">Changes apply immediately in the engine. Archived settings save automatically on an engine frame, then sync to this browser.</p>
+          <div id="setting-fields"></div>
+          <p id="setting-status" role="status" aria-live="polite"></p>
+          <p class="note">FOV becomes available after entering a map. Browser fullscreen is available in the lower toolbar. Display quality and key rebinding remain in the engine menu.</p>
+        </section>
+        <section data-page="help" hidden>
+          <p class="eyebrow">FIELD MANUAL / PC</p><h2 tabindex="-1">STAY IN CONTROL.</h2>
+          <dl><dt>F10</dt><dd>Open this menu without leaving the match.</dd><dt>Esc</dt><dd>Release mouse capture. Open the engine pause menu while playing.</dd><dt>Mouse capture</dt><dd>Use Capture mouse / enable sound after returning to the game.</dd><dt>Browser storage</dt><dd>Settings are local to this browser and origin. Clearing site data removes them.</dd><dt>Online matches</dt><dd>Opening a menu does not stop a remote match. Other players continue playing.</dd></dl>
+        </section>
+      </div>
+    </div>
+    <footer><span>ENGINE-NATIVE GAMEPLAY</span><span>WASM / PC EDITION</span></footer>
+  </section>
   <nav id="controls" aria-label="Browser controls" hidden>
+    <button id="open-menu">Menu / F10</button>
     <button id="capture">Capture mouse / enable sound</button>
     <button id="fullscreen">Enter fullscreen</button>
     <button id="exit-fullscreen">Exit fullscreen</button>

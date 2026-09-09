@@ -13,7 +13,10 @@ tests = pathlib.Path(__file__).resolve().parent
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         path = self.path.split('?', 1)[0]
-        if path == '/tests/canvas.html':
+        if path == '/engine-test.html':
+            data = (build / 'index.html').read_text().replace('./ioquake3.js', './tests/real-engine.mjs')
+            self.reply(data.encode(), 'text/html')
+        elif path == '/tests/canvas.html':
             data = (build / 'index.html').read_text().replace('<head>', '<head><base href="/">')
             data = data.replace('./app.mjs', './tests/canvas-probe.mjs')
             self.reply(data.encode(), 'text/html')
@@ -40,7 +43,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.wfile.write(data)
 
     def translate_path(self, path):
-        for name in ['runtime.html', 'fake-engine.mjs', 'canvas-probe.mjs']:
+        for name in ['runtime.html', 'fake-engine.mjs', 'canvas-probe.mjs', 'real-engine.mjs']:
             if path.split('?', 1)[0] == '/tests/' + name:
                 return str(tests / name)
         for name in ['canvas-probe.js', 'canvas-probe.wasm']:

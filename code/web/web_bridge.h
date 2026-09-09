@@ -16,8 +16,9 @@ int OG_WebUIState(void);
 double OG_WebSetting(int id);
 int OG_WebSetSetting(int id, double value);
 /* 0 resumes active match; 1 opens DOM + engine menu; 2 returns to engine menu;
- * 3 detaches DOM ownership during failure, without invoking the UI VM.
- * SDL input must not recapture the canvas while OG_WebMenuOpen() is true. */
+ * 3 detaches DOM and terminally blocks input until reload, without invoking VM.
+ * OG_WebMenuOpen covers both a visible DOM menu and a terminal failure page;
+ * SDL input must not recapture the canvas while this predicate is true. */
 int OG_WebMenu(int open);
 int OG_WebMenuOpen(void);
 

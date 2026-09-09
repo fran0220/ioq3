@@ -1,5 +1,10 @@
 # PC Web build and host
 
+The DOM menu rollout and full screen/interface inventory are in [UI-PLAN.md](UI-PLAN.md).
+The first slice uses actual Painter artwork and a numeric C settings bridge;
+Play selection, display quality, bindings and gameplay HUD still belong to the
+original engine. It is not the completed remaster.
+
 Run `.agents/setup` in an orb, or activate Emscripten **3.1.58** manually:
 
 ```sh
@@ -85,6 +90,9 @@ The function must return null for offline, or the platform session object:
 The endpoint must be WSS without userinfo, query or fragment; expiresAt is an ISO
 timestamp. Acquisition uses the platform's authorized native-room service, not
 the AI Gateway. Never put a join capability/token into this file or bundle.
+Optional `rtcEndpoint` follows the same WSS URL restrictions and is copied into
+the frozen in-memory session; omission preserves compatibility with WSS-only
+sessions. No RTC credentials or ICE configuration belong in player settings.
 
 After assets load, the host freezes that session into read-only `Module.ogNetwork`
 before `callMain`. An optional `Module.onNativeNetworkStatus({state,code})` reports
@@ -138,3 +146,11 @@ module/network failures and multiple tabs. Capture and inspect loading/error
 states. A usable menu, actual audio output, gameplay mouse capture and first-frame
 ready integration require a complete authorized data package and the shared
 engine call sites; unit fixtures must never be reported as playable-game proof.
+
+With separately supplied authorized local data including q3dm1, run
+`bash code/web/tests/menu-browser.sh "$TEST_SERVER_URL"`. It drives actual compiled
+C exports through /engine-test.html: rejects pre-init/invalid setting access,
+changes values through DOM, reloads IDBFS, navigates screens and fullscreen,
+then enters a real map through SDL key events and checks in-match menu/FOV/resume.
+No test route or test data is deployed. Its values live only in that disposable
+browser session. Do not run this on a published build or download data in tests.

@@ -17,12 +17,17 @@ export function createMenu(canvas) {
         name.textContent = label;
         const input = document.createElement('input');
         Object.assign(input, { type: 'number', min, max, step, id: `setting-${id}` });
+        input.placeholder = 'Unavailable';
         input.addEventListener('change', () => {
             const value = input.valueAsNumber;
+            const previous = [1, 2].includes(state()) ? module._OG_WebSetting(id) : NaN;
             if (!input.checkValidity() || !Number.isFinite(value) || ![1, 2].includes(state())
                 || !module._OG_WebSetSetting(id, value)) {
                 status.textContent = 'Engine rejected this value. No successful change is claimed.';
-            } else status.textContent = `${label} applied: ${module._OG_WebSetting(id)}. Browser save status appears below.`;
+            } else {
+                status.textContent = `${label} applied: ${module._OG_WebSetting(id)}. Browser save status appears below.`;
+                if (value !== previous) document.querySelector('#save-status').textContent = 'Applied — waiting for engine save…';
+            }
             refresh();
         });
         row.append(name, input);
@@ -54,6 +59,7 @@ export function createMenu(canvas) {
         if (![1, 2].includes(current) || !module._OG_WebMenu(1)) return;
         if (document.pointerLockElement) document.exitPointerLock();
         root.hidden = false;
+        canvas.inert = true;
         document.querySelector('#menu-context').textContent = current === 2 ? 'IN-MATCH / MENU' : 'ARENA SYSTEMS / STANDBY';
         document.querySelector('#menu-title').innerText = current === 2 ? 'TAKE A\nBREATH.' : 'MAKE EVERY\nMOVE COUNT.';
         document.querySelector('#play').textContent = current === 2 ? 'Resume match →' : 'Open engine Play menu →';
@@ -64,27 +70,36 @@ export function createMenu(canvas) {
     }
     function close() {
         const current = state();
-        if (![1, 2].includes(current) || !module._OG_WebMenu(current === 1 ? 1 : 0)) return;
+        if (![1, 2].includes(current) || !module._OG_WebMenu(current === 1 ? 2 : 0)) return;
         root.hidden = true;
+        canvas.inert = false;
         canvas.focus();
     }
     for (const button of root.querySelectorAll('[data-screen]')) button.addEventListener('click', () => screen(button.dataset.screen));
     document.querySelector('#open-menu').addEventListener('click', open);
     document.querySelector('#play').addEventListener('click', close);
     document.querySelector('#return-engine').addEventListener('click', close);
+    document.querySelector('#capture').addEventListener('click', () => { if (!root.hidden) close(); });
     // Capture before SDL's document handlers, so DOM typing/navigation cannot
     // activate hidden engine menu items or move/fire in the match.
     for (const type of ['keydown', 'keyup', 'keypress']) window.addEventListener(type, event => {
         if (event.key === 'F10' || (!root.hidden && event.key === 'Escape')) {
             event.preventDefault(); event.stopImmediatePropagation();
             if (type === 'keydown' && !event.repeat) root.hidden ? open() : close();
-        } else if (!root.hidden) event.stopPropagation();
+        } else if (!root.hidden) event.stopImmediatePropagation();
     }, true);
     return {
         attach(value) { module = value; },
         report(update) {
-            if (update.state === 'failed') { failed = true; root.hidden = true; }
-            if (update.state === 'ready' && !ready) { ready = true; open(); }
+            if (update.state === 'failed') {
+                failed = true; root.hidden = true;
+                canvas.inert = true;
+                // An aborted runtime may reject calls; it cannot process input
+                // again and full reload will reset its static ownership flag.
+                try { module?._OG_WebMenu?.(3); } catch { /* Reload is required. */ }
+            }
+            // Leave the engine frame stack before calling back into its UI VM.
+            if (update.state === 'ready' && !ready) { ready = true; queueMicrotask(open); }
         },
     };
 }
