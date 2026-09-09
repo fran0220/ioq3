@@ -109,6 +109,9 @@ Small inspected runtime PK3s and review JPEGs can be copied into tracked
 Blender masters require durable asset storage or thread-file transfer; an orb's
 ignored files are **not backed up by Git**. Do not claim archival complete until
 the destination and hashes are recorded. Do not expose private request JSON.
+When a tracked `<asset-id>.json` receipt exists but local state is absent, the
+runner refuses to create another job. Restore the private state and artifacts
+from the production orb/storage first; a fresh checkout is not a new commission.
 
 The PK3 contains only `models/remaster/<name>.md3`, its `.tga`, and the unique
 `scripts/remaster_<asset-id>.shader`. Packaging verifies processed hashes and

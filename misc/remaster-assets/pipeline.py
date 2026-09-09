@@ -154,6 +154,9 @@ class Production:
         self.work.mkdir(parents=True, exist_ok=True)
         self.gateway = gateway
         self.state_path = self.work / "state.json"
+        published_receipt = ROOT / "assets/remaster/receipts" / (manifest["asset_id"] + ".json")
+        if not self.state_path.exists() and published_receipt.exists():
+            raise ValueError("Committed receipt exists; restore this asset's private work/state before running. A fresh checkout must not regenerate it")
         self.state = json.loads(self.state_path.read_text()) if self.state_path.exists() else {
             "schema_version": 1, "asset_id": manifest["asset_id"],
             "manifest_sha256": digest(encoded(manifest)), "stages": {},

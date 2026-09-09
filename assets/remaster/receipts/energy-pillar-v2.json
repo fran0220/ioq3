@@ -1,0 +1,155 @@
+{
+  "asset_id": "energy-pillar-v2",
+  "classification": "original-style-sample-not-original-game-reconstruction",
+  "manifest_sha256": "ace56cb69d9f03d8a9271c8d19b345a1929447ac67b1b9650dad1736d8290dc5",
+  "prototype_review": {
+    "at": 1788972879,
+    "note": "Inspected 1024px prototype derivative: single complete graphite/ivory pillar, cyan vertical slit, orange side insert, no logo/text or detached geometry. Accepted for style sample image-to-3D; hidden back/left remain inferred, not exact-original reconstruction.",
+    "reviewer": "Amp",
+    "sha256": "3e48a0f9376d4238e12bc7e867efa965479c8b76ed2f4c0f60ce00446272595c"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": "c536963f-a678-42c0-bbb2-bd9290547b30",
+      "task_id": null,
+      "request_id": "202609091652454205540648268d9d6gKoxeiOR",
+      "request_sha256": "cc8453b1d8afe2859033bee477bda81022a13cda0a9e4bfc2cbb3daa5403f0db",
+      "response_sha256": "70aba333b9c04732db97b5cfd18373cf11b59abf2f5bcce7d45b632bdf52707a",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "gpt-image-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 1750236,
+        "path": "prototype.png",
+        "sha256": "3e48a0f9376d4238e12bc7e867efa965479c8b76ed2f4c0f60ce00446272595c"
+      },
+      "image": {
+        "height": 1536,
+        "mime": "image/png",
+        "width": 1024
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.019076,
+        "quota": 9538,
+        "records": [
+          {
+            "created_at": 1788972806,
+            "model_name": "gpt-image-2",
+            "quota": 9538,
+            "request_id": "202609091652454205540648268d9d6gKoxeiOR",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    },
+    "shape": {
+      "operation_id": "ea261cbd-bf99-41fc-82f2-7f0a05c5fd97",
+      "task_id": "task_3fR84E6SPQFuSAkwcAkXMt19ZvXKkIub",
+      "request_id": "202609091654400146392608268d9d6CWYHObzM",
+      "request_sha256": "c93ca5d61443e9b616160e240e04028284f1ae8b46ac88c18409322a007eeccb",
+      "response_sha256": "3a3fdfedbf5019eac288d807b29e1cd959ac51d5d23cb0ca58de42ea81cb6201",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 3940908,
+        "path": "generated.glb",
+        "sha256": "8b6fb0eab9571f3f35446a9acb6a4627cc05bebf32adb25cd6b12d80fec2d817"
+      },
+      "image": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 59.27434879799999,
+          "paint_load_and_generate_seconds": 37.06448209999999,
+          "shape_load_and_generate_seconds": 38.645790987,
+          "texture_bake_seconds": 0.41205621399998904,
+          "texture_delight_seconds": 1.7905339799999922,
+          "texture_export_verify_seconds": 0.901487244000009,
+          "texture_inpaint_seconds": 5.710492270000003,
+          "texture_load_seconds": 12.833852840000006,
+          "texture_mesh_preparation_seconds": 4.39396859,
+          "texture_multiview_seconds": 6.43912328899998,
+          "texture_normal_render_seconds": 0.24814216299998293,
+          "texture_position_render_seconds": 0.20160701000000358,
+          "texture_uv_seconds": 9.108325409000003
+        }
+      },
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1788972880,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609091654400146392608268d9d6CWYHObzM",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    }
+  },
+  "processing": {
+    "files": [
+      {
+        "bytes": 6523012,
+        "path": "processed/cleaned.blend",
+        "sha256": "7a607d83d2377e59a061c851be85d3c442a8be4533c1fc6520f7a0c71b892542"
+      },
+      {
+        "bytes": 2427051,
+        "path": "processed/diffuse.tga",
+        "sha256": "49d07acbdb13c4d9511a659726f3889c1acb09165de87a3626e60dbf8d4c22e0"
+      },
+      {
+        "bytes": 620,
+        "path": "processed/geometry-report.json",
+        "sha256": "6210aaff7f15a6b3100ee0ec0662afcf788afd66cb17ac4a377515860659baa9"
+      },
+      {
+        "bytes": 102324,
+        "path": "processed/model.md3",
+        "sha256": "4d7dd4fe775d9e293836c45b6bd0647d502824e6f1d9a10da1f683f06bce93fc"
+      },
+      {
+        "bytes": 123,
+        "path": "processed/remaster.shader",
+        "sha256": "dd54ae0a32660c72855e2eb182adde7d842cac216a976506785019a969bdcbc3"
+      },
+      {
+        "bytes": 536656,
+        "path": "processed/review-back.png",
+        "sha256": "c49a1255c3edc2f80d24a1f6b5ea78998453a55942e75f0a37d2461dd89ca70f"
+      },
+      {
+        "bytes": 525317,
+        "path": "processed/review-front.png",
+        "sha256": "fea087d835bc7e0bf02a7bff85d727c5e3dd3b94d55a2a9c6dd21ffd621e92bd"
+      }
+    ],
+    "scripts": {
+      "blender_static.py": "b910ee1c8eb9bdf1a555ecef8c1686a85e35b3f87c87c16089cf9319ea8f5177",
+      "md3_static.py": "f433662f762f46e4e788d68b531aeffbb709c4ef14da7920980d82a7d6455ccb"
+    },
+    "source_sha256": "8b6fb0eab9571f3f35446a9acb6a4627cc05bebf32adb25cd6b12d80fec2d817"
+  },
+  "package": {
+    "bytes": 1629307,
+    "path": "energy-pillar-v2.pk3",
+    "sha256": "8a02b19de2da31ccb23b9cb471e36a0a0a1d101e67aadacd3de77f69c68e36ba"
+  }
+}

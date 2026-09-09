@@ -1,9 +1,13 @@
 import json
 from pathlib import Path
+import struct
 import tempfile
 import unittest
+from unittest.mock import patch
+import zipfile
 
-from pipeline import Gateway, Production, encoded, lock
+from pipeline import Gateway, Production, check_glb, encoded, lock
+from md3_static import write_md3
 
 
 class FakeGateway:
@@ -111,6 +115,74 @@ class RecoveryTests(unittest.TestCase):
             Gateway(identity, {"OG_API_KEY": "not-the-creator-key"})
         with self.assertRaisesRegex(ValueError, "HTTPS origin"):
             Gateway(identity, {"OG_CREATOR_KEY_OG_ATLAS": "test", "OG_AI_GATEWAY": "https://example.com/unsafe"})
+
+    def test_default_generation_identity_is_explicitly_distinct(self):
+        identity = self.work / "identity.json"
+        identity.write_text('{"creator":"og-atlas"}')
+        env = {"OG_API_KEY": "generation-key", "OG_CREATOR_KEY_OG_ATLAS": "publisher-key"}
+        default = Gateway(identity, env, credential="default")
+        publisher = Gateway(identity, env, credential="publisher")
+        self.assertFalse(default.same_as_publisher)
+        self.assertNotEqual(default.scope, publisher.scope)
+        self.assertEqual(default.key_name, "OG_API_KEY")
+        self.assertEqual(identity.read_text(), '{"creator":"og-atlas"}')
+
+    def test_fresh_checkout_with_receipt_cannot_regenerate(self):
+        receipt = self.work / "assets/remaster/receipts/test.json"
+        receipt.parent.mkdir(parents=True)
+        receipt.write_text('{"stages":{"image":{"status":"downloaded"}}}')
+        with patch("pipeline.ROOT", self.work), self.assertRaisesRegex(ValueError, "Committed receipt exists"):
+            Production(self.manifest, self.work / "new-work", FakeGateway([]))
+
+    def test_glb_rejects_external_resources_and_corrupt_lengths(self):
+        def glb(doc):
+            raw = encoded(doc)
+            raw += b" " * (-len(raw) % 4)
+            return struct.pack("<4sIIII", b"glTF", 2, 20+len(raw), len(raw), 0x4E4F534A) + raw
+        good = glb({"meshes": [{}]})
+        self.assertEqual(check_glb(good)["meshes"], [{}])
+        with self.assertRaisesRegex(ValueError, "external"):
+            check_glb(glb({"meshes": [{}], "images": [{"uri": "file:///private"}]}))
+        with self.assertRaisesRegex(ValueError, "length"):
+            check_glb(good[:-4])
+
+    def test_completed_task_download_recovery_uses_only_get(self):
+        doc = encoded({"meshes": [{}]})
+        doc += b" " * (-len(doc) % 4)
+        glb = struct.pack("<4sIIII", b"glTF", 2, 20+len(doc), len(doc), 0x4E4F534A) + doc
+        gateway = FakeGateway([(200, {}, encoded({"status": "completed"})), (503, {}, b"failure"),
+                               (200, {}, encoded({"status": "completed"})), (200, {}, glb)])
+        runner = self.runner(gateway)
+        runner.state["stages"]["shape"] = {"task_id": "task_1", "credential_scope": gateway.scope}
+        runner.save()
+        with self.assertRaisesRegex(ValueError, "Download HTTP"):
+            runner.resume()
+        path = self.runner(gateway).resume()
+        self.assertEqual(path.read_bytes(), glb)
+        self.assertTrue(all(c[0] == "GET" for c in gateway.calls))
+        self.runner(gateway).resume()
+        self.assertEqual(len(gateway.calls), 4)
+
+    def test_package_is_deterministic_and_rejects_modified_outputs(self):
+        self.manifest["processing"] = {"shader": "models/remaster/test"}
+        runner = self.runner(None)
+        shape = self.work / "test-source.glb"
+        shape.write_bytes(b"fixture source marker, not production GLB")
+        runner.state["stages"]["shape"] = {"artifact": runner.artifact(shape)}
+        output = self.work / "processed"
+        output.mkdir()
+        triangle = [((0, 0, 0), (0, 0), (0, 0, 1)), ((2, 0, 0), (1, 0), (0, 0, 1)), ((0, 3, 0), (0, 1), (0, 0, 1))]
+        (output / "model.md3").write_bytes(write_md3([triangle], "models/remaster/test"))
+        (output / "diffuse.tga").write_bytes(b"test texture")
+        (output / "remaster.shader").write_bytes(b"test shader")
+        runner.state["processing"] = {"files": [runner.artifact(p) for p in output.iterdir()]}
+        first = runner.package().read_bytes()
+        self.assertEqual(first, runner.package().read_bytes())
+        with zipfile.ZipFile(runner.package()) as archive:
+            self.assertEqual(archive.namelist(), ["models/remaster/test.md3", "models/remaster/test.tga", "scripts/remaster_test.shader"])
+        (output / "diffuse.tga").write_bytes(b"tampered")
+        with self.assertRaisesRegex(ValueError, "artifact changed"):
+            runner.package()
 
 
 if __name__ == "__main__":

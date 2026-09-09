@@ -1,0 +1,33 @@
+{
+  "asset_id": "energy-pillar-v1",
+  "classification": "original-style-sample-not-original-game-reconstruction",
+  "manifest_sha256": "02e0b979bf08ebc3288eaecce02292863f69fcd3e44d602bd4cccd719c825616",
+  "prototype_review": null,
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": "68938cd3-d9ae-4df9-87c8-af6d8f3e9fda",
+      "task_id": null,
+      "request_id": "202609091649570263075678268d9d60bpmQjay",
+      "request_sha256": "8cbe7e51294cecb185bd8e94a69e56e2d4681cafd9985454cf1d286ebc93f3c7",
+      "response_sha256": null,
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "grok-imagine-image-2.0",
+      "status": "http_error",
+      "submissions": 1,
+      "artifact": null,
+      "image": null,
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "unreconciled"
+      }
+    }
+  },
+  "processing": null,
+  "package": null
+}
