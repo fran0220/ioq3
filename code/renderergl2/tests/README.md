@@ -76,11 +76,77 @@ Desktop MSAA is unchanged. A later stage needs per-format supported sample
 counts, an actual multisampled color/depth allocation + resolve probe and
 fallback to a lower sample count or single-sample targets.
 
-**Not yet verified:** full engine Web build and game/map startup, production
-GLSL material permutations, full-resolution FBO allocation under memory
-pressure, HDR exposure/tonemapping/bloom screenshots, real GLES2 hardware,
-Firefox/Edge/Safari and physical GPUs, context loss/restart, actual platform
-iframe, performance. The focused test does not execute `R_CreateBuiltinImages`
-or the entire `FBO_Init` graph. Subsequent HDR/material work must first run
-those paths with real game data and inspect representative rendered scenes;
-capability-test PASS is not evidence that the game is ready to ship.
+## Full-engine context-loss regression (2026-09-09)
+
+The capability probe alone passed while the full renderer crashed. With
+Emscripten 3.1.58 Release, Chromium 152 / ANGLE SwiftShader on Linux, the
+production ES3 `precision mediump float` header caused the GPU process to
+exit with code 11 on map startup. GDB caught SIGSEGV in `libvk_swiftshader.so`
+(stripped: the exact internal function is not established). Context loss
+followed the GPU crash; subsequent unsupported FBO / shader-source `None`
+messages were not evidence of the initial cause. Disabling HDR or replacing
+the presentation blit did not reliably cure it.
+
+Changing only the modern GLES shader float precision to highp eliminated
+the reproduced crash; reverting to mediump reproduced it again with the same
+HDR=1 / q3dm1 launch. ES3 guarantees fragment highp, and world-space lighting
+and HDR also benefit from its range. ES2 retains its separate mediump header;
+desktop headers are unchanged. This is a driver-path workaround supported by
+an A/B experiment, not a claim that every mediump shader crashes every GPU.
+
+The registration-time `RB_ShowImages` preview produced four sampler mismatch
+errors by sampling comparison-enabled sunlight depth textures with sampler2D.
+Disabling comparison only around those preview draws, then restoring it,
+removed all four errors without changing the sunlight rendering pass.
+
+The HDR=0 map regression exposed a separate per-frame error:
+`CopyTexSubImage2D: Invalid format`. The direct-to-default-framebuffer path
+tried to copy depth into a texture for screen effects, which WebGL does not
+permit with that operation. ES3 now also uses the existing RGBA8 color/depth
+texture render FBO in LDR, avoiding that copy. This does not enable HDR or
+require float renderability; desktop direct rendering is unchanged.
+
+Production header regression (both vertex and fragment stages):
+
+```sh
+cc -O1 -ffunction-sections -fdata-sections $(sdl2-config --cflags) \
+  code/renderergl2/tests/shader-header.c code/qcommon/q_shared.c \
+  -Wl,--gc-sections -lm -o /tmp/gl2-header-test
+/tmp/gl2-header-test
+```
+
+Expected: `PASS: ES3 vertex/fragment highp, ES2 mediump, desktop unchanged`.
+This checks the real header builder, not shader execution or driver safety.
+
+Full-engine technical fixture, **not release content**: official Linux Quake 3
+demo `linuxq3ademo-1.11-6.x86.gz.sh` from id Software's GWDG mirror, locally
+extracted with its documentation/EULA retained. Its `demoq3/pak0.pk3` plus
+current ioq3 QVMs in a separate PK3 were loaded through the Web manifest.
+No demo assets are committed or authorized for redistribution by this test.
+Temporary test-output host fixes exposed console logs and corrected the canvas
+selector; no renderer patch changes the host, SDL or gameplay.
+
+Observed with `--use-angle=swiftshader --enable-unsafe-swiftshader`:
+
+- Full Web Release and native Debug builds passed, as did the native
+  GLES3/GLES2/desktop capability tests and the header regression above.
+- HDR=1 q3dm1 loaded 1942 faces, 113 meshes, 42 trisurfs and entered the game.
+  Inspected screenshots show textured world geometry, weapon and HUD. The
+  context stayed alive over several minutes; the final browser log contained
+  no GL_INVALID errors or GPU-process exits.
+- HDR=0 q3dm1 also entered the game with the LDR FBO fix, with an inspected
+  textured-world/weapon/HUD screenshot and no GL_INVALID or GPU-exit messages
+  in a fresh browser log. This is not a no-FBO or forced probe-failure test.
+- Escape opened the complete in-game menu; a separate normal startup followed
+  by Escape dismissed the CD-key prompt and rendered the full main menu.
+  Screenshots of both menus were inspected, not inferred from readiness.
+- The old demo lacks some assets referenced by current QVMs, producing missing
+  sound/music warnings. Audio completeness was not established.
+
+**Not yet verified:** every production GLSL/material permutation, full-resolution
+FBO allocation under memory pressure, HDR exposure/tonemapping/bloom visual
+correctness against a reference, real GLES2 hardware, Firefox/Edge/Safari and
+physical GPUs, forced context-loss recovery / vid_restart, actual platform
+iframe, sustained input/gameplay and performance. Demo startup is not the
+all-maps/modes/bots/multiplayer release matrix. Capability-test PASS and this
+software-renderer scene test do not establish that the game is ready to ship.
