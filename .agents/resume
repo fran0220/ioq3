@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Native tools are installed system-wide and survive pause/resume. There are
+# no credentials, databases, or services to refresh; never install here.
+echo "[resume] Native toolchain ready; build with: cmake --build build-orb --parallel 2"

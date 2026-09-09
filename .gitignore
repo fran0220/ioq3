@@ -5,6 +5,9 @@ build*
 /.vscode/
 /baseq3
 
+# Amp portal metadata
+/.amp/portals/*
+
 # OS X
 ####################
 .Spotlight-V100/

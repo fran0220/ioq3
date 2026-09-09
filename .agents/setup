@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SECONDS=0
+
+# Debian 12 provides CMake >= 3.25. Include the external-library CI
+# dependencies and optional FreeType support, not cross-compilation SDKs.
+packages=(
+  build-essential cmake ninja-build pkg-config gdb
+  libsdl2-dev zlib1g-dev libjpeg-dev libopenal-dev
+  libogg-dev libvorbis-dev libopus-dev libopusfile-dev
+  libcurl4-openssl-dev libfreetype6-dev
+)
+missing=()
+for package in "${packages[@]}"; do
+  if [[ "$(dpkg-query -W -f='${Status}' "$package" 2>/dev/null || true)" != "install ok installed" ]]; then
+    missing+=("$package")
+  fi
+done
+
+if ((${#missing[@]})); then
+  echo "[setup ${SECONDS}s] Installing missing packages: ${missing[*]}"
+  sudo -n apt-get update
+  sudo -n env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${missing[@]}"
+else
+  echo "[setup ${SECONDS}s] All system dependencies already installed; skipping apt"
+fi
+
+# Keep orb configuration separate from developers' existing build directories.
+# Do not compile on activation: Ninja retains incremental outputs in snapshots.
+echo "[setup ${SECONDS}s] Configuring native Debug build"
+cmake -S "$repo_root" -B "$repo_root/build-orb" -G Ninja -DCMAKE_BUILD_TYPE=Debug
+echo "[setup ${SECONDS}s] Ready: cmake --build build-orb --parallel 2"
