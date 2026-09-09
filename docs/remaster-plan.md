@@ -30,9 +30,9 @@
 - Web 构建当前固定 WebGL2、256MB WASM 内存；独立 Linux x64 dedicated server 另行构建。仍需测量真实整局的总内存峰值。
 - 正式启动器已实现 manifest 字节/SHA 校验、IDBFS 恢复/串行保存、首个功能帧通知、输入/音频与失败重载。宿主无会话时离线，有会话时通过内存中的只读对象启用房间传输；生产平台嵌入和实际游戏输入仍需联合验收。
 - GL2 有法线/高光贴图、实验性 PBR、HDR、阴影等代码；文档说明部分特性不支持 OpenGL ES。需分别证明 WebGL2 可用性，不能照搬原生特性清单。
-- GLES3 FBO/VAO 与 float 目标已实现真实能力探测/降级，Mesa GLES2/3、desktop GL 与 Chromium WebGL2 能力测试通过。整机 Demo 初始化可完成 FBO/115 GLSL/UI VM，但实际首帧出现 context loss，正在修复；能力探针通过不代表地图渲染通过。GLES MSAA 仍关闭等待各格式 sample/resolve 验证。
+- GLES3 FBO/VAO 与 float 目标已实现真实能力探测/降级，Mesa GLES2/3、desktop GL 与 Chromium WebGL2 能力测试通过。整机首次 context loss 已定位到 SwiftShader GPU 进程 SIGSEGV；[ES3 highp 修复](https://github.com/fran0220/ioq3/commit/2b408c8f2fc6204a248af60971f6e6f421ba86b9) 经 mediump 回切对照及主线程复验，开启 HDR/FBO 可实际进入 q3dm1，地图/武器/HUD 连续绘制，预热深度纹理 sampler 错误也已修复。此结果不覆盖其他浏览器/真实 GPU、完整光照质量或性能；GLES MSAA 仍关闭等待各格式 sample/resolve 验证。
 - 模型加载器支持 IQM，但玩家表现仍有 MD3 分段和 tag 约定。支持格式不代表支持新角色动画体系，更不代表直接支持生成服务返回的 GLB。
-- 首件原创立柱风格样件已完成 GPT Image 2→Hunyuan→Blender→MD3/PK3，见 [生产记录](../assets/remaster/receipts/energy-pillar-v2-review.md)。成功请求实际费用合计 $0.519076；旧失败请求仍待核账。原型/GLB/Blender 源已跨线程转存并核 hash，但持久外部归档未完成。主线程修正了格式上限与引擎上限的契约：每 surface ≤999 顶点、≤5999 索引；新版为 1800 三角形、6 surfaces。真实 native GL2 能加载/绘制；旧版负控被同一引擎明确拒绝。Web 验收未通过，噪点、发光条边缘与背面面板仍需美术打磨。
+- 首件原创立柱风格样件已完成 GPT Image 2→Hunyuan→Blender→MD3/PK3，见 [生产记录](../assets/remaster/receipts/energy-pillar-v2-review.md)。成功请求实际费用合计 $0.519076；旧失败请求仍待核账。原型/GLB/Blender 源已跨线程转存并核 hash，但持久外部归档未完成。已修正格式上限与引擎上限的契约：每 surface ≤999 顶点、≤5999 索引；新版为 1800 三角形、6 surfaces。真实 native GL2 与 Chromium WASM/HDR 均已用 testmodel 加载/绘制并检查截图；旧版负控被同一原生引擎明确拒绝。这不等于最终关卡放置/碰撞/全部材质验收，噪点、发光条边缘与背面面板仍需美术打磨。
 - Origin Game AI 网关不承载 Quake UDP。独立原生房间服务、WSS→UDP 与 loading.fail 已部署，见平台 [验收提交](https://github.com/fran0220/origingame/commit/2f8393deefae3205242ca5c5b184a7c9c464a921)。真实 Chromium 执行本仓库传输代码，经公开 TLS 向原生 q3dm1 收发 status/challenge 成功；这不是多人完整比赛。受控 200ms RTT/每向 3% 丢包条件下，WSS p99 包龄 464ms、原始 UDP 207ms，WebRTC 无序路径仍需实现/验收。测试房间/会话已清理，没有留存可玩房间或有效凭据。
 - 主线程复跑 18 项宿主/网络单测、生产帧/存档 C 函数测试及 23 项资产测试（含真实 Blender）通过；真实浏览器 SDL2 缓冲尺寸/边角像素/resize、IDBFS 跨页恢复、宿主控件夹具、失败重载/多标签锁检查通过。完整游戏输入、声音、渲染和平台比赛闭环仍是独立门禁。原生 Demo q3dm1 实际加载 AAS、两名 Bot 拾取/击杀并能 UDP 查询，不以此替代 Web 玩法回归。
 
