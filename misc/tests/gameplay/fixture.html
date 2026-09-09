@@ -1,0 +1,56 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>ioq3 real-WASM gameplay test — not release content</title>
+<style>html,body{margin:0;background:#111;color:white}canvas{width:800px;height:600px;display:block}button{font:18px sans-serif}</style>
+<canvas id="canvas" width="800" height="600" tabindex="0"></canvas>
+<button id="capture">Capture mouse / resume audio</button>
+<pre id="status">Loading actual WASM and local technical demo data…</pre>
+<script type="module">
+import createEngine from './ioquake3.js';
+const canvas = document.querySelector('canvas');
+const status = document.querySelector('#status');
+const logs = [];
+window.testLogs = logs;
+const print = text => { logs.push(String(text)); console.log(text); };
+canvas.addEventListener('webglcontextlost', event => {
+    event.preventDefault();
+    window.testContextLost = true;
+    status.textContent = 'Context lost — reload required';
+});
+try {
+    const engine = window.engine = await createEngine({
+        canvas, noInitialRun: true, print, printErr: print,
+        onEngineFrame: frame => { window.testFrame = frame; },
+        onAbort: reason => { window.testAbort = String(reason); },
+    });
+    if (!engine._OG_WebTestSnapshot) throw new Error('Build with IOQ3_WEB_TEST_OBSERVER=ON');
+    window.readEngine = () => {
+        const pointer = engine._OG_WebTestSnapshot();
+        const end = engine.HEAPU8.indexOf(0, pointer);
+        return JSON.parse(new TextDecoder().decode(engine.HEAPU8.subarray(pointer, end)));
+    };
+    for (const name of ['pak0.pk3', 'zz-ioq3-vm.pk3']) {
+        const response = await fetch('demoq3/' + name);
+        if (!response.ok) throw new Error(`Missing technical fixture: ${name}`);
+        engine.FS.mkdirTree('/demoq3');
+        engine.FS.writeFile('/demoq3/' + name, new Uint8Array(await response.arrayBuffer()));
+    }
+    engine.FS.mkdirTree('/home/test');
+    const hdr = new URLSearchParams(location.search).get('hdr') === '0' ? '0' : '1';
+    engine.callMain(['+set','fs_basepath','/','+set','fs_homepath','/home/test',
+        '+set','com_basegame','demoq3','+set','r_mode','4','+set','r_fullscreen','0',
+        '+set','net_enabled','0','+set','r_hdr',hdr,'+set','r_ext_framebuffer_object','1',
+        '+set','name','BrowserTest','+set','fraglimit','3','+set','timelimit','0',
+        '+map','q3dm1']);
+    status.textContent = 'Real engine running; observations are read-only snapshots';
+    document.querySelector('#capture').onclick = () => {
+        canvas.focus();
+        engine._OG_WebResumeAudio();
+        canvas.requestPointerLock();
+    };
+} catch (error) {
+    window.testAbort = String(error);
+    status.textContent = String(error);
+    console.error(error);
+}
+</script>
