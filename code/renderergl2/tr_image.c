@@ -1468,7 +1468,13 @@ void R_ConvertTextureFormat( const byte *in, int width, int height, GLenum forma
 	int x, y, rowPadding;
 	int unpackAlign = 4; // matches GL_UNPACK_ALIGNMENT default
 
-	if ( format == GL_RGB && type == GL_UNSIGNED_BYTE )
+	if ( format == GL_RGBA && type == GL_FLOAT )
+	{
+		float *floats = (float *)out;
+		for ( x = 0; x < width * height * 4; x++ )
+			floats[x] = in[x] / 255.0f;
+	}
+	else if ( format == GL_RGB && type == GL_UNSIGNED_BYTE )
 	{
 		rowPadding = ROW_PADDING( width, 3, unpackAlign );
 
@@ -2033,7 +2039,9 @@ static void RawImage_UploadTexture(GLuint texture, byte *data, int x, int y, int
 
 	if (qglesMajorVersion && rgba8 && (dataFormat != GL_RGBA || dataType != GL_UNSIGNED_BYTE))
 	{
-		formatBuffer = ri.Hunk_AllocateTempMemory(4 * width * height);
+		// GL_FLOAT transfer to RGBA16F is sixteen bytes/pixel, not the
+		// eight-byte internal storage size (or four-byte RGBA8 source).
+		formatBuffer = ri.Hunk_AllocateTempMemory(4 * width * height * (dataType == GL_FLOAT ? sizeof(float) : 1));
 	}
 
 	miplevel = 0;
@@ -2247,7 +2255,25 @@ image_t *R_CreateImage2( const char *name, byte *pic, int width, int height, GLe
 				dataFormat = GL_RGBA;
 				dataType = GL_UNSIGNED_SHORT_4_4_4_4;
 				break;
+			case GL_DEPTH_COMPONENT24:
+				if (qglesMajorVersion >= 3)
+				{
+					dataFormat = GL_DEPTH_COMPONENT;
+					dataType = GL_UNSIGNED_INT;
+					break;
+				}
+				goto unsupportedGLESFormat;
+			case GL_RGBA16F:
+			case GL_R32F:
+				if (qglesMajorVersion >= 3 && glRefConfig.textureFloat)
+				{
+					dataFormat = internalFormat == GL_R32F ? GL_RED : GL_RGBA;
+					dataType = GL_FLOAT;
+					break;
+				}
+				goto unsupportedGLESFormat;
 			default:
+			unsupportedGLESFormat:
 				ri.Error( ERR_DROP, "Missing OpenGL ES support for image '%s' with internal format 0x%X\n", name, internalFormat );
 		}
 	}
@@ -2326,13 +2352,20 @@ image_t *R_CreateImage2( const char *name, byte *pic, int width, int height, GLe
 		case GL_DEPTH_COMPONENT32_ARB:
 			// Fix for sampling depth buffer on old nVidia cards.
 			// from http://www.idevgames.com/forums/thread-4141-post-34844.html#pid34844
-			if ( !QGL_VERSION_ATLEAST( 3, 0 ) ) {
+			if ( !qglesMajorVersion && !QGL_VERSION_ATLEAST( 3, 0 ) ) {
 				qglTextureParameterfEXT(image->texnum, textureTarget, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
 			}
 			qglTextureParameterfEXT(image->texnum, textureTarget, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			qglTextureParameterfEXT(image->texnum, textureTarget, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			break;
 		default:
+			// R32F renderability does not imply OES_texture_float_linear.
+			if (qglesMajorVersion && internalFormat == GL_R32F)
+			{
+				qglTextureParameterfEXT(image->texnum, textureTarget, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+				qglTextureParameterfEXT(image->texnum, textureTarget, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+				break;
+			}
 			qglTextureParameterfEXT(image->texnum, textureTarget, GL_TEXTURE_MIN_FILTER, mipmap ? gl_filter_min : GL_LINEAR);
 			qglTextureParameterfEXT(image->texnum, textureTarget, GL_TEXTURE_MAG_FILTER, mipmap ? gl_filter_max : GL_LINEAR);
 			break;
@@ -3348,5 +3381,4 @@ void	R_SkinList_f( void ) {
 	}
 	ri.Printf (PRINT_ALL, "------------------\n");
 }
-
 

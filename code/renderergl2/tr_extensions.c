@@ -30,6 +30,121 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "tr_local.h"
 #include "tr_dsa.h"
 
+// Called before GL_SetDefaultState: use raw bindings and restore them so the
+// DSA cache and the caller's GL state are not changed by capability probes.
+static qboolean GLimp_ProbeGLESFramebuffer(GLenum internalFormat, GLenum format, GLenum type)
+{
+	GLuint framebuffer = 0, textures[2] = { 0, 0 };
+	GLint drawFramebuffer, readFramebuffer, texture;
+	GLenum status, error;
+	qboolean valid;
+
+	qglGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &drawFramebuffer);
+	qglGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &readFramebuffer);
+	qglGetIntegerv(GL_TEXTURE_BINDING_2D, &texture);
+	qglGenFramebuffers(1, &framebuffer);
+	qglBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	qglGenTextures(2, textures);
+	qglBindTexture(GL_TEXTURE_2D, textures[0]);
+	qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	qglTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 4, 4, 0, format, type, NULL);
+	qglFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
+	qglBindTexture(GL_TEXTURE_2D, textures[1]);
+	qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	qglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	qglTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 4, 4, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
+	qglFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textures[1], 0);
+	status = qglCheckFramebufferStatus(GL_FRAMEBUFFER);
+	valid = framebuffer && textures[0] && textures[1] && status == GL_FRAMEBUFFER_COMPLETE;
+	while ((error = qglGetError()) != GL_NO_ERROR)
+	{
+		ri.Printf(PRINT_WARNING, "...GLES framebuffer format 0x%X probe error 0x%X\n", internalFormat, error);
+		valid = qfalse;
+	}
+	if (!valid)
+		ri.Printf(PRINT_WARNING, "...GLES framebuffer format 0x%X unavailable (status 0x%X)\n", internalFormat, status);
+
+	qglBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFramebuffer);
+	qglBindFramebuffer(GL_READ_FRAMEBUFFER, readFramebuffer);
+	qglBindTexture(GL_TEXTURE_2D, texture);
+	qglDeleteTextures(2, textures);
+	qglDeleteFramebuffers(1, &framebuffer);
+	return valid;
+}
+
+static void GLimp_InitGLES3Framebuffers(void)
+{
+	qboolean loaded = qtrue;
+	GLenum error;
+	GLuint vao = 0;
+	GLint oldVao;
+
+	glRefConfig.framebufferObject = qfalse;
+	glRefConfig.framebufferBlit = qfalse;
+	glRefConfig.framebufferMultisample = qfalse;
+	glRefConfig.vertexArrayObject = qfalse;
+	glRefConfig.textureFloat = qfalse;
+
+	// A non-NULL proc address alone is not a GLES version/capability check.
+	if (qglesMajorVersion < 3 || !r_allowExtensions->integer)
+		return;
+
+	while ((error = qglGetError()) != GL_NO_ERROR)
+		ri.Printf(PRINT_WARNING, "...GL error before GLES3 capability probes: 0x%X\n", error);
+
+#define GLE(ret, name, ...) qgl##name = (name##proc *) SDL_GL_GetProcAddress("gl" #name); if (!qgl##name) loaded = qfalse;
+	QGL_ARB_vertex_array_object_PROCS;
+#undef GLE
+	if (loaded && r_arb_vertex_array_object->integer)
+	{
+		qglGetIntegerv(GL_VERTEX_ARRAY_BINDING, &oldVao);
+		qglGenVertexArrays(1, &vao);
+		qglBindVertexArray(vao);
+		glRefConfig.vertexArrayObject = vao != 0;
+		while ((error = qglGetError()) != GL_NO_ERROR)
+			glRefConfig.vertexArrayObject = qfalse;
+		qglBindVertexArray(oldVao);
+		qglDeleteVertexArrays(1, &vao);
+	}
+	ri.Printf(PRINT_ALL, "...GLES3 VAO %s\n", glRefConfig.vertexArrayObject ? "enabled" : "disabled");
+
+	loaded = qtrue;
+#define GLE(ret, name, ...) qgl##name = (name##proc *) SDL_GL_GetProcAddress("gl" #name); if (!qgl##name) loaded = qfalse;
+	QGL_ARB_framebuffer_object_PROCS;
+#undef GLE
+	if (loaded && r_ext_framebuffer_object->integer)
+	{
+		qglGetIntegerv(GL_MAX_RENDERBUFFER_SIZE, &glRefConfig.maxRenderbufferSize);
+		qglGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &glRefConfig.maxColorAttachments);
+		// FBO_t has sixteen color attachment slots.
+		glRefConfig.maxColorAttachments = MIN(glRefConfig.maxColorAttachments, 16);
+		glRefConfig.framebufferObject = GLimp_ProbeGLESFramebuffer(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
+		glRefConfig.framebufferObject &= glRefConfig.maxRenderbufferSize > 0 && glRefConfig.maxColorAttachments > 0;
+		glRefConfig.framebufferBlit = glRefConfig.framebufferObject;
+	}
+	ri.Printf(PRINT_ALL, "...GLES3 framebuffer/blit %s\n", glRefConfig.framebufferObject ? "enabled" : "disabled");
+
+	// GLES3/WebGL2 float *textures* are core, float color renderability is not.
+	// Require both formats used by this renderer, not just an extension string.
+	if (glRefConfig.framebufferObject && r_ext_texture_float->integer &&
+		SDL_GL_ExtensionSupported("GL_EXT_color_buffer_float"))
+	{
+		glRefConfig.textureFloat = GLimp_ProbeGLESFramebuffer(GL_RGBA16F, GL_RGBA, GL_FLOAT) &&
+			GLimp_ProbeGLESFramebuffer(GL_R32F, GL_RED, GL_FLOAT);
+	}
+	ri.Printf(PRINT_ALL, "...GLES3 float render targets %s\n", glRefConfig.textureFloat ? "enabled" : "disabled (using RGBA8)");
+	if (!glRefConfig.textureFloat)
+	{
+		// These effects allocate R32F even when HDR itself uses the RGBA8 fallback.
+		ri.Cvar_Set("r_ssao", "0");
+		ri.Cvar_Set("r_shadowBlur", "0");
+	}
+	// Do not infer format-specific MSAA counts from GL_MAX_SAMPLES. In
+	// particular EXT_color_buffer_float does not guarantee float MSAA storage.
+	ri.Printf(PRINT_ALL, "...GLES3 framebuffer MSAA disabled (format-specific sample validation required)\n");
+}
+
 void GLimp_InitExtraExtensions(void)
 {
 	char *extension;
@@ -69,6 +184,7 @@ void GLimp_InitExtraExtensions(void)
 	//
 	if (qglesMajorVersion)
 	{
+		GLimp_InitGLES3Framebuffers();
 		if (!r_allowExtensions->integer)
 			goto done;
 
