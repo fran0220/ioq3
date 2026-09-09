@@ -33,6 +33,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "qcommon.h"
 #include "unzip.h"
 
+#ifdef __EMSCRIPTEN__
+#include "../web/web_bridge.h"
+#endif
+
 /*
 =============================================================================
 
@@ -281,6 +285,9 @@ typedef struct qfile_us {
 typedef struct {
 	qfile_ut	handleFiles;
 	qboolean	handleSync;
+#ifdef __EMSCRIPTEN__
+	qboolean	webSyncOnClose;
+#endif
 	int			fileSize;
 	int			zipFilePos;
 	int			zipFileLen;
@@ -836,6 +843,9 @@ on files returned by FS_FOpenFile...
 ==============
 */
 void FS_FCloseFile( fileHandle_t f ) {
+#ifdef __EMSCRIPTEN__
+	qboolean sync = qfalse;
+#endif
 	if ( !fs_searchpaths ) {
 		Com_Error( ERR_FATAL, "Filesystem call made without initialization" );
 	}
@@ -851,9 +861,18 @@ void FS_FCloseFile( fileHandle_t f ) {
 
 	// we didn't find it as a pak, so close it as a unique file
 	if (fsh[f].handleFiles.file.o) {
+#ifdef __EMSCRIPTEN__
+		sync = fsh[f].webSyncOnClose && !ferror(fsh[f].handleFiles.file.o);
+		if (fclose(fsh[f].handleFiles.file.o) != 0) sync = qfalse;
+#else
 		fclose (fsh[f].handleFiles.file.o);
+#endif
 	}
 	Com_Memset( &fsh[f], 0, sizeof( fsh[f] ) );
+#ifdef __EMSCRIPTEN__
+	// Only successfully closed home config/state writes become persistence work.
+	if (sync) OG_WebFrame(0, 1);
+#endif
 }
 
 /*
@@ -862,8 +881,12 @@ FS_FOpenFileWrite_HomeConfig
 ===========
 */
 fileHandle_t FS_FOpenFileWrite_HomeConfig( const char *filename ) {
-	return FS_OSPath_FOpenFileWrite(
+	fileHandle_t f = FS_OSPath_FOpenFileWrite(
 		FS_BuildOSPath(fs_homeconfigpath->string, fs_gamedir, filename), filename);
+#ifdef __EMSCRIPTEN__
+	if (f) fsh[f].webSyncOnClose = qtrue;
+#endif
+	return f;
 }
 
 /*
@@ -882,8 +905,12 @@ FS_FOpenFileWrite_HomeState
 ===========
 */
 fileHandle_t FS_FOpenFileWrite_HomeState( const char *filename ) {
-	return FS_OSPath_FOpenFileWrite(
+	fileHandle_t f = FS_OSPath_FOpenFileWrite(
 		FS_BuildOSPath(fs_homestatepath->string, fs_gamedir, filename), filename);
+#ifdef __EMSCRIPTEN__
+	if (f) fsh[f].webSyncOnClose = qtrue;
+#endif
+	return f;
 }
 
 /*

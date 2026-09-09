@@ -23,6 +23,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "client.h"
 
+#ifdef __EMSCRIPTEN__
+#include "../web/web_bridge.h"
+static qboolean scr_webPlayable;
+#endif
+
 qboolean	scr_initialized;		// ready to draw
 
 cvar_t		*cl_timegraph;
@@ -526,6 +531,9 @@ void SCR_DrawScreenField( stereoFrame_t stereoFrame ) {
 		case CA_ACTIVE:
 			// always supply STEREO_CENTER as vieworg offset is now done by the engine.
 			CL_CGameRendering(stereoFrame);
+#ifdef __EMSCRIPTEN__
+			scr_webPlayable = qtrue;
+#endif
 			SCR_DrawDemoRecording();
 #ifdef USE_VOIP
 			SCR_DrawVoipMeter();
@@ -537,6 +545,11 @@ void SCR_DrawScreenField( stereoFrame_t stereoFrame ) {
 	// the menu draws next
 	if ( Key_GetCatcher( ) & KEYCATCH_UI && uivm ) {
 		VM_Call( uivm, UI_REFRESH, cls.realtime );
+#ifdef __EMSCRIPTEN__
+		// A refreshed connection/loading overlay is not a usable game menu.
+		if (clc.state == CA_DISCONNECTED || clc.state == CA_ACTIVE)
+			scr_webPlayable = qtrue;
+#endif
 	}
 
 	// console draws next
@@ -572,6 +585,9 @@ void SCR_UpdateScreen( void ) {
 	// that case.
 	if( uivm || com_dedicated->integer )
 	{
+#ifdef __EMSCRIPTEN__
+		scr_webPlayable = qfalse;
+#endif
 		// XXX
 		int in_anaglyphMode = Cvar_VariableIntegerValue("r_anaglyphMode");
 		// if running in stereo, we need to draw the frame twice
@@ -587,8 +603,11 @@ void SCR_UpdateScreen( void ) {
 		} else {
 			re.EndFrame( NULL, NULL );
 		}
+#ifdef __EMSCRIPTEN__
+		// Initialization and loading frames are not playable. Signal only after submission.
+		OG_WebFrame(scr_webPlayable, 0);
+#endif
 	}
 	
 	recursive = 0;
 }
-
