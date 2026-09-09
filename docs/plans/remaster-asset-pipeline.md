@@ -2,6 +2,8 @@
 
 核验日期：2026-09-09。状态：**仅规划；未生成、未发布、未完成商业资产权利确认**。
 
+集成说明：以[主计划](../remaster-plan.md)的范围、阶段、模型选型与统一预算为准。下文 MD3 路线是兼容验证方案，不是最终角色格式决定；主计划优先验证 IQM 后冻结格式。分支内性能数值保留为样件实验候选，不作为另一套交付合同。
+
 ## 1. 已决定的范围与必须保留的关卡
 
 - 目标为 PC 网页端，沿用 ioq3 → Emscripten/WASM/GL2，不引入 Three.js。玩法循环复刻，画面、角色动画、特效、声音与手感重新制作和调试；长期分批覆盖全量资产，不把样件当最终范围。
@@ -21,7 +23,7 @@
 | 地图 | `code/qcommon/qfiles.h` 定义 IBSP v46；`cm_load.c` 和 `tr_bsp.c` 分别读碰撞和可见数据 | 最终为完整 BSP/光照/可见性/实体数据；巨大单个生成网格不是可玩地图 |
 | 材质 | GL2 默认 normal/specular 开、PBR 关；GL1 不安全忽略 GL2 stage 语法 | 母版保留 PBR，导出传统和 GL2 两套材质；先用传统 GL2 跑通，再独立验证 PBR |
 
-项目指导要求保留 Emscripten 3.1.58；本次 `.github/workflows/build.yml` 未检出该 pin，视为**待补齐的构建依赖**，不声称现有 CI 已验证该版本。现有 `build-orb` 原生 Debug 不构成浏览器交付。
+项目指导要求保留 Emscripten 3.1.58；主线程已核对 `.github/workflows/build.yml` 的 Emscripten job 明确固定该版本。需要补齐的是 orb 工具链与浏览器运行验证，不是重新添加已有的 CI pin。现有 `build-orb` 原生 Debug 不构成浏览器交付。
 
 ### 2.1 MD3 硬限制与转换风险
 
