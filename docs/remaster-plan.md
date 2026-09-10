@@ -1,9 +1,17 @@
 # PC Web WASM 全面重制实施计划
 
-状态：实施已获授权；Web 基座、传输桥及首件资产流水线已落地，正在进行真实地图集成；完整重制与游戏上线尚未完成。
-日期：2026-09-09。目标仓库：fran0220/ioq3；发布平台：Origin Game。
+状态：Web 基座、首轮 DOM UI、本地 WASM 比赛基线与生产 RTC/TURN 传输已交付；完整内容、产品入场流程和游戏发布仍未完成。
+日期：2026-09-10。目标仓库：fran0220/ioq3；发布平台：Origin Game。
 
 配套工作包：[引擎与玩法](plans/wasm-engine-remaster.md)、[全资产生产](plans/remaster-asset-pipeline.md)、[发布与长期验收](plans/remaster-release-validation.md)。本文为主计划；工作包保留的不同性能数字和技术建议属于实验候选，以本文统一决策为准。
+
+### 2026-09-10 剩余阻塞与继续执行
+
+- **外部内容输入仍缺失。** 主线程检查 `assets`、`build-demo-web` 与 `.amp`，仅发现官方 Demo、测试 QVM 和立柱样件 PK3。需要完整版基础 Q3A 数据的私有路径/下载入口与版本、覆盖顺序；地图源若存在一并提供。授权已确认，缺的是数据本体。Demo 不可代替全量参考或发布包。
+- **UI 属于未完成工程，不是外部阻塞。** [首轮交付](https://github.com/fran0220/ioq3/commit/6749b70c7463d03f6effb960be0c18939b426801) 已验证 DOM 导航、数值设置持久化、全屏、局内恢复和故障输入阻断。继续实现显示/键位/profile，以及结构化 Play、HUD、计分板、大厅；范围与接口见 `code/web/UI-PLAN.md`。
+- **本地比赛基线已通过，完整平台比赛仍待测。** [玩法记录](../misc/tests/gameplay/RESULTS.md) 包含移动/拾取/跳跃/射击、HDR/LDR 重启、三地图切换、死亡重生及两轮 Bot fraglimit 结算/重开。由玩法线程执行，不能写成主线程独立复跑；未覆盖玩家获胜、全部模式、正式 UI/iframe、音频、真实多人和物理 GPU。测试数据适配与 observer ON 构建不发布。
+- **RTC/TURN 已上线，不再列为待实现。** 平台[交付记录](https://github.com/fran0220/origingame/commit/21f8bd5b) 报告实际生产 session、客户端 EM_JS、直连/TURN UDP/TURN TLS、同 token 重连 UDP 身份、弱网及清理验收通过。静态 musl 服务构建消除宿主 glibc 依赖。仍需可信游戏 admission、容量/入场产品流程、正式资产 slot 和完整多人对局；目前无长期可玩房间。继续平台工程，不把 operator 手工操作作为玩家入口。
+- **制作与发布门禁未关闭。** 动画 IQM/cgame 绑定、地图编译、武器动画、音频生产和全资产引擎内验收仍需完成；源文件外部持久备份、实际 PC/多浏览器性能与最终许可证/来源包也未完成。继续可独立制作工具，缺参考时不盲目批量付费或伪造全量完成。
 
 ### 2026-09-09 授权更新（优先于配套工作包的历史阻塞记录）
 
@@ -49,7 +57,7 @@
 - GLES3 FBO/VAO 与 float 目标已实现真实能力探测/降级，Mesa GLES2/3、desktop GL 与 Chromium WebGL2 能力测试通过。整机首次 context loss 已定位到 SwiftShader GPU 进程 SIGSEGV；[ES3 highp 修复](https://github.com/fran0220/ioq3/commit/2b408c8f2fc6204a248af60971f6e6f421ba86b9) 经 mediump 回切对照及主线程复验，开启 HDR/FBO 可实际进入 q3dm1，地图/武器/HUD 连续绘制，预热深度纹理 sampler 错误也已修复。此结果不覆盖其他浏览器/真实 GPU、完整光照质量或性能；GLES MSAA 仍关闭等待各格式 sample/resolve 验证。
 - 模型加载器支持 IQM，但玩家表现仍有 MD3 分段和 tag 约定。支持格式不代表支持新角色动画体系，更不代表直接支持生成服务返回的 GLB。
 - 首件原创立柱风格样件已完成 GPT Image 2→Hunyuan→Blender→MD3/PK3，见 [生产记录](../assets/remaster/receipts/energy-pillar-v2-review.md)。成功请求实际费用合计 $0.519076；旧失败请求仍待核账。原型/GLB/Blender 源已跨线程转存并核 hash，但持久外部归档未完成。已修正格式上限与引擎上限的契约：每 surface ≤999 顶点、≤5999 索引；新版为 1800 三角形、6 surfaces。真实 native GL2 与 Chromium WASM/HDR 均已用 testmodel 加载/绘制并检查截图；旧版负控被同一原生引擎明确拒绝。这不等于最终关卡放置/碰撞/全部材质验收，噪点、发光条边缘与背面面板仍需美术打磨。
-- Origin Game AI 网关不承载 Quake UDP。独立原生房间服务、WSS→UDP 与 loading.fail 已部署，见平台 [验收提交](https://github.com/fran0220/origingame/commit/2f8393deefae3205242ca5c5b184a7c9c464a921)。真实 Chromium 执行本仓库传输代码，经公开 TLS 向原生 q3dm1 收发 status/challenge 成功；这不是多人完整比赛。受控 200ms RTT/每向 3% 丢包条件下，WSS p99 包龄 464ms、原始 UDP 207ms，WebRTC 无序路径仍需实现/验收。测试房间/会话已清理，没有留存可玩房间或有效凭据。
+- Origin Game AI 网关不承载 Quake UDP。独立原生房间服务、WSS→UDP、RTC/TURN 与 loading.fail 已部署，见上述 2026-09-10 交付。真实 Chromium 执行本仓库传输代码向原生 q3dm1 收发 status/challenge 成功；这不是多人完整比赛。历史本机 netns 的 WSS p99 包龄 464ms/原始 UDP 207ms 与当前含 WAN 的 RTC 弱网样本不可直接排名，不承诺无队头阻塞或竞技 SLA。测试房间/会话已清理，没有留存可玩房间或有效凭据。
 - 主线程复跑 18 项宿主/网络单测、生产帧/存档 C 函数测试及 23 项资产测试（含真实 Blender）通过；真实浏览器 SDL2 缓冲尺寸/边角像素/resize、IDBFS 跨页恢复、宿主控件夹具、失败重载/多标签锁检查通过。完整游戏输入、声音、渲染和平台比赛闭环仍是独立门禁。原生 Demo q3dm1 实际加载 AAS、两名 Bot 拾取/击杀并能 UDP 查询，不以此替代 Web 玩法回归。
 
 ## 3. 系统边界
