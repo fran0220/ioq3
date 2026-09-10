@@ -153,6 +153,11 @@ The renderer reads `maps/<baseName>.remaster.json` at world registration:
 }]}
 ```
 
+This is the historical technical fixture, not an accepted art placement:
+the environment thread's yaw=0 counterexample revealed that yaw=180 shows
+the crest's rear. Use its corrected placement pack with recomputed pivot and
+bounds for front-face review; do not compensate the rear view with brightness.
+
 Bindings require the exact map, surface index, shader and original AABB
 (0.01 unit tolerance). This example targets the private remaster BSP, not the
 commercial original's wallhead shader. Only static MD3/IQM with valid opaque

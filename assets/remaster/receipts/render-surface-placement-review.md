@@ -47,9 +47,25 @@ private map PK3 changed; the same WASM, model, camera and exposure settings
 were retained. Captures are in `render-placement/v2`; inspected comparison
 is `.amp/in/artifacts/render-placement/lighting-comparison.jpg` (v1 top,
 v2 bottom; HDR left, LDR right). The neutralized crest becomes gray instead
-of brown, with unchanged silhouette and placement. It remains underlit
-relative to the arch and its engraving lacks contrast, especially in LDR.
-This supports a lightgrid color contribution, not finished art acceptance.
+of brown, with unchanged silhouette and placement. The displayed side remains
+dark and low contrast, especially in LDR. This supports a lightgrid color
+contribution, but does not establish insufficient illumination: the orientation
+counterexample below shows these captures did not review the intended front.
 Defaults used are cameraExposure=1, autoExposure=1, toneMap=1,
 forceAutoExposure=0, forceToneMap=0. Rebased combined native and Web builds
 also succeeded; three material-math tests passed.
+
+## Orientation counterexample supersedes the underlighting diagnosis
+
+The environment thread subsequently tested yaw=0 against the original yaw=180
+placement and reported that the ivory center shield became visible immediately.
+Its `assets/remaster/work/environment-lighting-v2/crest-yaw0-small.jpg` was
+downloaded and inspected here: the distinct ivory shield supports a wrong-side
+orientation explanation, not exposure alone. That counterexample was run in
+the environment orb, not independently reproduced in this renderer orb yet.
+The preceding yaw=180 captures therefore verify substitution/fallback and the
+color change, not front-face material quality. Do not increase emission,
+exposure or material brightness to compensate for the rear view. The precise
+exporter/culling coordinate cause is not established. The corrected placement
+requires recomputed pivot/bounds and a matched HDR/LDR rerun from the environment
+thread's revised pack before front-face acceptance.
