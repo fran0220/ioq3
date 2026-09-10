@@ -48,15 +48,45 @@
         "username": "xiaomao"
       },
       "model": "hunyuan3d-2",
-      "status": "in_progress",
+      "status": "downloaded",
       "submissions": 1,
-      "artifact": null,
+      "artifact": {
+        "bytes": 4526228,
+        "path": "generated.glb",
+        "sha256": "08aebf7813065d4e890c8d08e6b868a05e0c0dc70e1caabf74de5028dbc0ba4d"
+      },
       "image": null,
-      "report": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 0.8966522249999969,
+          "paint_load_and_generate_seconds": 38.989196346,
+          "shape_load_and_generate_seconds": 37.39196325500001,
+          "texture_bake_seconds": 0.35492134500000816,
+          "texture_delight_seconds": 1.637074647999981,
+          "texture_export_verify_seconds": 1.026553892999999,
+          "texture_inpaint_seconds": 17.616175679999998,
+          "texture_load_seconds": 8.395261146999985,
+          "texture_mesh_preparation_seconds": 2.5864090319999775,
+          "texture_multiview_seconds": 6.0202923349999935,
+          "texture_normal_render_seconds": 0.12636671799998567,
+          "texture_position_render_seconds": 0.1029398220000246,
+          "texture_uv_seconds": 4.441022679000014
+        }
+      },
       "error_code": null,
       "cost": {
-        "actual_usd": null,
-        "status": "unreconciled"
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1789016806,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609100506462304253588268d9d6uIbyCmTF",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
       }
     }
   },

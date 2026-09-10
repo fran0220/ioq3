@@ -1,0 +1,41 @@
+{
+  "action_id": null,
+  "artifacts": {
+    "rigged": {
+      "bytes": 6579836,
+      "path": "rigged.glb",
+      "sha256": "da043fbe4bf5136c36db5a58d36aaf03da3eb482d9cac71a3b9772a697cb3c8d"
+    },
+    "running": {
+      "bytes": 6588000,
+      "path": "running.glb",
+      "sha256": "3c017f17ddfb75f8337a7eefac3d839dae0be078f98ba8d9fa4688a8097b0a25"
+    },
+    "walking": {
+      "bytes": 6592616,
+      "path": "walking.glb",
+      "sha256": "04f52601390fa56c749a00e49dedc3f98cb1f524e20d2dfbebe652ee72ff1164"
+    }
+  },
+  "asset_id": "character-sarge-v2",
+  "cost": {
+    "actual_usd": 0.1,
+    "quota": 50000,
+    "status": "matched_request_id"
+  },
+  "created_at": 1789017461,
+  "generator_identity": {
+    "id": 1,
+    "username": "xiaomao"
+  },
+  "http_status": 202,
+  "model": "meshy-rigging",
+  "operation_id": "d2eae8bf-bde7-4a5f-b0ab-19cef0039a4b",
+  "request_id": "202609100517411103032988268d9d6ra65PFR6",
+  "request_sha256": "7dcb835045a0cfa658622cb6b915ebb85056cf9db48f990fdbc6d2c61faa2831",
+  "response_sha256": "00beb8cc8b6fd3d618f9314d62ee04664a0ae6a1a920dd95616dd5d144b476b8",
+  "runtime_accepted": false,
+  "source_sha256": "08aebf7813065d4e890c8d08e6b868a05e0c0dc70e1caabf74de5028dbc0ba4d",
+  "status": "SUCCESS",
+  "task_id": "01a089c0-12f3-773d-b222-d45eda78da34"
+}

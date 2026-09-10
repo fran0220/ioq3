@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "classification": "source-motion-candidates-not-runtime-clips",
+  "rig_task_id": "01a089c0-12f3-773d-b222-d45eda78da34",
+  "rigged_glb_sha256": "da043fbe4bf5136c36db5a58d36aaf03da3eb482d9cac71a3b9772a697cb3c8d",
+  "catalog": "https://docs.meshy.ai/en/api/animation-library",
+  "catalog_checked": "2026-09-10",
+  "motions": {
+    "183": {"name": "Shot_and_Fall_Backward", "target": "BOTH_DEATH1 / BOTH_DEAD1"},
+    "184": {"name": "Shot_and_Fall_Forward", "target": "BOTH_DEATH2 / BOTH_DEAD2"},
+    "188": {"name": "Fall_Dead_from_Abdominal_Injury", "target": "BOTH_DEATH3 / BOTH_DEAD3"},
+    "466": {"name": "Regular_Jump", "target": "LEGS_JUMP / LEGS_LAND"},
+    "605": {"name": "Back_Jump_inplace", "target": "LEGS_JUMPB / LEGS_LANDB"},
+    "616": {"name": "Cautious_Crouch_Walk_Forward_inplace", "target": "LEGS_WALKCR / LEGS_IDLECR"},
+    "569": {"name": "Swim_Forward", "target": "LEGS_SWIM"},
+    "690": {"name": "Walk_Forward_While_Shooting_inplace", "target": "TORSO_ATTACK / TORSO_STAND; upper mask and weapon socket calibration required"},
+    "192": {"name": "Right_Jab_from_Guard", "target": "TORSO_ATTACK2; gauntlet event alignment required"},
+    "290": {"name": "Wave_One_Hand", "target": "TORSO_GESTURE"},
+    "573": {"name": "Rifle_Turn_Left", "target": "LEGS_TURN; remove authored global turn, preserve cgame angles"},
+    "0": {"name": "Idle", "target": "LEGS_IDLE"}
+  },
+  "included_in_rig_price": ["walking.glb", "running.glb"],
+  "retargeting": "Blender samples selected portions into original cfg frame counts/rates; source motion duration is not game timing. Remove horizontal locomotion from the visual root; do not apply it to player physics. Split and normalize upper relative to torso socket so independently clocked legs retain shooting and pain behavior.",
+  "runtime_accepted": false
+}

@@ -15,21 +15,24 @@
     "character": "sarge",
     "candidate": "character-sarge-v2",
     "prototype_reviewed": true,
-    "generated_mesh_reviewed": false,
-    "rig_reviewed": false,
+    "generated_mesh_reviewed": true,
+    "rig_reviewed": true,
     "clips_reviewed": false,
     "team_skins_reviewed": false,
     "runtime_package": null,
+    "inspection_package": "assets/remaster/work/character-sarge-v2/character-sarge-v2-review.pk3",
+    "inspection_package_sha256": "3f844d59639740a09754dd5147877f829e464c1b606378b53dfd01b7a6a7df94",
+    "inspection_scope": "Whole-rig native GL2 and browser WebGL testmodel only; not cgame combat acceptance",
     "native_accepted": false,
     "browser_accepted": false
   },
   "full_base_game_complete": false,
   "missing_inputs": [
     "Full authorized base-Q3 archive files, version and low-to-high VFS priority for complete original model/skin inventory",
-    "Generated character mesh from the recorded in-progress production task; a prototype is not a riggable mesh"
+    "Remaining approved Meshy motion source submissions paused: upstream balance 4 / insufficient funds, duplicate refund accounting under platform investigation; no task resubmissions authorized by this manifest"
   ],
   "remaining_production_not_external_inputs": [
-    "Generated mesh front/back/side material and topology review",
+    "Complete clip and final material/topology review beyond the inspected whole-rig candidate",
     "Blender waist/neck segment interfaces, rig, weights and complete event-aligned animation library",
     "Default/red/blue/krusade skins with shape-based team identification",
     "Native and browser real combat pose/tag/skin acceptance and inspected captures",

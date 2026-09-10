@@ -1,0 +1,24 @@
+{
+  "action_id": 569,
+  "artifacts": null,
+  "asset_id": "character-sarge-v2",
+  "cost": {
+    "actual_usd": null,
+    "status": "unreconciled"
+  },
+  "created_at": 1789017919,
+  "generator_identity": {
+    "id": 1,
+    "username": "xiaomao"
+  },
+  "http_status": 402,
+  "model": "meshy-animation",
+  "operation_id": "6a99f25d-8d51-407b-82db-0cbeccf1ede5",
+  "request_id": "202609100525199049380608268d9d613cXA8dC",
+  "request_sha256": "e03db1577e3dc4e70e24ad2e6b47dfadb54a168c332b246b4eccddd67f11f014",
+  "response_sha256": "a0b4c243ab4ad35c98c5e6e8df0f1401b0a8ed6813c4b978bc45ef05a6f3c28a",
+  "runtime_accepted": false,
+  "source_sha256": "da043fbe4bf5136c36db5a58d36aaf03da3eb482d9cac71a3b9772a697cb3c8d",
+  "status": "http_error",
+  "task_id": null
+}

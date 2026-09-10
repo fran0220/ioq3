@@ -1,0 +1,31 @@
+{
+  "action_id": 466,
+  "artifacts": {
+    "motion-466": {
+      "bytes": 6603544,
+      "path": "motion-466.glb",
+      "sha256": "c16e40b2de80689f32777050110ea349677508436a4d5cd2aaa166172a914d39"
+    }
+  },
+  "asset_id": "character-sarge-v2",
+  "cost": {
+    "actual_usd": 0.06,
+    "quota": 30000,
+    "status": "matched_request_id"
+  },
+  "created_at": 1789017917,
+  "generator_identity": {
+    "id": 1,
+    "username": "xiaomao"
+  },
+  "http_status": 202,
+  "model": "meshy-animation",
+  "operation_id": "126a0c2a-6100-420d-9efe-4373331c9fbd",
+  "request_id": "202609100525174664973618268d9d6lEaOajB2",
+  "request_sha256": "dc53e4e6973448d16b51b40eb05f7dd45b14de02ac65d45fce69b8979e9f8a6a",
+  "response_sha256": "f45fc5f74799f9128c3cd83ef0e3675f997c97c515b00f1e717c836ec27c3728",
+  "runtime_accepted": false,
+  "source_sha256": "da043fbe4bf5136c36db5a58d36aaf03da3eb482d9cac71a3b9772a697cb3c8d",
+  "status": "SUCCESS",
+  "task_id": "01a089c7-0842-7700-a807-c3d43ba45860"
+}

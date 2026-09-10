@@ -48,3 +48,47 @@ negative/one-past-end/large indices in either argument, exact case and static
 bind pose. Surface validation cannot protect `R_IQMLerpTag`: cgame queries tags
 before scene submission. The implementation now applies the same frame-zero
 fallback used by IQM surfaces instead of indexing beyond the pose allocation.
+
+## Downloaded candidate, not combat acceptance
+
+Shape v2 and the Meshy rig succeeded. Receipts retain task/request/input/output
+hashes and matched charges. Walking/running came with rigging; source motions
+183/184/188 (deaths), 466 (jump), 616 (crouch) succeeded. 605 failed after task
+acceptance. 569 returned 402 with no task: read the separate billing-audit JSON,
+which records an initial charge and duplicate refunds, not a free request.
+Its original journal/receipt uncertainty is retained as historical evidence.
+New Meshy submissions are paused at the user's direction; never retry 569.
+
+`rig.py receipt` writes an offline allowlisted public receipt without changing
+the original private journal. `status`/`download` resume accepted tasks; all
+creates require an inspected GLB hash and refuse ambiguous previous attempts.
+The full source motion catalog mapping is in `character-sarge-motion-sources.json`.
+
+```sh
+W=assets/remaster/work/character-sarge-v2
+blender --background --factory-startup --disable-autoexec --threads 2 --python-exit-code 1 --python assets/remaster/characters/prepare_rig.py -- "$W"
+blender --background --factory-startup --disable-autoexec --threads 2 --python-exit-code 1 --python misc/remaster-assets/blender_iqm.py -- "$W/prepared/source.blend" "$W/prepared/config.json" "$W/prepared/iqm"
+python assets/remaster/characters/package_review.py "$W"
+python -m unittest discover -s assets/remaster/characters -p test_rig.py
+```
+
+This reproducible **inspection-only** package uses the genuine generated rig,
+seven source motions, 137 frames, 24 bones, 9964 triangles and the existing IQM
+exporter. Decimation and four-weight pruning are explicit authoring steps;
+the exporter still rejects invalid weights/tangents. Horizontal visual root
+travel is removed, never applied to physics. It has no character override,
+weapon socket, team skins or final normal/specular material.
+
+Native GL2 and real browser WASM/WebGL testmodel inspections found the original
+exporter passed Blender CCW faces to Q3's clockwise front-sided renderer.
+The independent `cull back` negative control exposed that error. Export now
+reverses winding, with a cross-product regression and inverse conversion only
+in the Blender wire-format review tool. Default single-sided shader now shows
+the correct face/chest; browser frame98 also displays the walking pose. This is
+real loader/renderer evidence, **not** lower/upper/weapon/player acceptance.
+Screenshots are in the source thread's `.amp/in/artifacts/character-browser-*`.
+
+Remaining work is explicit in coverage.json. In particular the whole-rig
+inspection clips are NOT the final rebased lower/upper cfg layout; do not copy
+their frame numbers into a released player. Private Demo data is not in the
+review PK3 and must never be copied into an asset publication.

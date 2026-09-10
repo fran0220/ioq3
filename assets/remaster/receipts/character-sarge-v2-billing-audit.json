@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "source": "Read-only production audit reported by coordinating thread T-01a08704-52d6-719c-abb5-6399af20a05f on 2026-09-10",
+  "supersedes_initial_uncertainty_not_original_evidence": true,
+  "motion_569": {
+    "request_id": "202609100525199049380608268d9d613cXA8dC",
+    "task_created": false,
+    "status": "duplicate_refund_observed",
+    "billing_operations": [
+      {"id": 1696, "kind": "initial", "status": "committed", "charged_quota": 30000},
+      {"id": 1697, "kind": "refund", "status": "committed", "charged_quota": -30000, "key_suffix": ":refund"},
+      {"id": 1703, "kind": "refund", "status": "committed", "charged_quota": -30000, "key_suffix": ":initial:refund"}
+    ],
+    "projection": "All three wallet/cache projections completed; historical ledger not modified",
+    "quota_unit": "Gateway internal quota, not USD",
+    "fix": "https://github.com/fran0220/origingame/commit/4dcfc1a1",
+    "fix_deployed_at_audit": false,
+    "resubmit": false
+  },
+  "meshy": {
+    "upstream_balance": 4,
+    "balance_unit": "Unspecified provider balance field, not USD",
+    "channel": 10,
+    "new_submissions": "paused until funding and accounting resolved",
+    "accepted_downloads": "Continue existing successful tasks without another POST"
+  },
+  "limitations": "This thread records the parent audit, not its own direct production database inspection. Provider balance GET is not a supplier transaction-ledger audit. Failed 605 initial cost observation is not a final refund settlement. Painter tool cost remains unknown."
+}
