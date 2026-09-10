@@ -56,7 +56,7 @@
       "depends_on": ["map-logic"],
       "scope": "Every player/bot body, head, team/alternate skin, first-person hands; idle/run/walk/back/crouch/jump/land/swim/turn/gesture/pain/death/attack/weapon-switch animations",
       "outputs": ["front/back/side neutral-pose prototypes", "generated GLB", "retopologized weighted Blender rig", "IQM2", "skin/material maps", "animation semantic/frame/event table", "attachment/socket transforms"],
-      "format_gap": "IQM-first; exporter/rig-retarget/game animation binding is NOT implemented by static tool. Generation does not guarantee topology, weights, motions or Q3 semantic compatibility; retain MD3 tags and animation.cfg as references, no MD3 character batch",
+      "format_gap": "IQM2 rigid-joint Blender/action exporter and independent binary/production pose tests implemented in misc/remaster-assets/blender_iqm.py. Rig creation/retargeting, non-unit bone scale and cgame animation semantic binding remain unimplemented. Generation does not guarantee topology, weights or motions; retain MD3 tags/animation.cfg as references, no MD3 character batch",
       "measurement": "Source bounds/eye height/hitbox and actual tag transforms; root motion must not override authoritative player physics"
     },
     {
@@ -65,7 +65,7 @@
       "depends_on": ["characters"],
       "scope": "Every weapon world/pickup/first-person mesh, hands, barrel, flash socket, projectile and ammo; idle/fire/recoil/reload-if-original/switch event alignment",
       "outputs": ["dimensioned prototype views", "generated GLB", "Blender articulated master", "engine model with tags or verified IQM attachment contract", "event timing table", "world/view/FOV comparison"],
-      "format_gap": "One-frame static exporter cannot export animated weapons or tags. Need explicit animated/tag exporter or verified IQM client binding; avoid inventing reload/gameplay loops absent from original",
+      "format_gap": "IQM2 export now preserves animated attachment joints, but cgame weapon/hands frame mapping and attachment binding still require integration. Static MD3 exporter remains one-frame/tagless; no animated MD3 conversion. Avoid inventing reload/gameplay loops absent from original",
       "measurement": "Source tag_weapon/tag_flash/tag_barrel transforms, first-person FOV and projectile origin; mesh scale never changes damage/recoil timing"
     },
     {

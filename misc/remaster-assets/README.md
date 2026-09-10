@@ -4,6 +4,79 @@ This directory owns the image → generated GLB → Blender → **static** MD3/T
 sample pipeline. Characters remain IQM-first in the engine workstream. It does
 not publish a game, alter Gateway channels/accounts, or implement the web client.
 
+## Animated IQM2 export and actual-engine pose tests
+
+`blender_iqm.py` exports **prepared** Blender meshes, all rig/attachment joints,
+and explicit action ranges to `model.iqm`, inspectable `source.json` and
+`animation-contract.json`. `iqm_export.py` writes the same format from that JSON;
+`iqm_validate.py` independently decodes bytes and checks layout, hierarchy,
+weights, clip ranges and skinned bounds. No new character generation is involved.
+
+```sh
+F=assets/remaster/work/iqm-fixture
+blender --background --factory-startup --disable-autoexec --threads 2 --python-exit-code 1 --python misc/remaster-assets/blender_iqm_fixture.py -- "$F"
+blender --background --factory-startup --disable-autoexec --threads 2 --python-exit-code 1 --python misc/remaster-assets/blender_iqm.py -- "$F/fixture.blend" "$F/config.json" "$F/out"
+python misc/remaster-assets/iqm_validate.py "$F/out/model.iqm" --output "$F/validation.json"
+RUN_BLENDER_TESTS=1 uv run --with pillow==11.3.0 python -m unittest discover -s misc/remaster-assets -v
+```
+
+The fixture is conspicuous **TEST ONLY** asymmetric tetrahedral geometry, two
+materials, three joints including `tag_weapon`, two actions/five frames and mixed
+20/80 weights. It is not a paid/generated character or replacement game asset.
+Tests compare exported skinning/socket transforms with Blender's evaluated
+armature modifier and independently calculated numeric values, including reversed
+interpolation traps, quaternion signs, exact 999/1000 vertices, 5997/6000 indices,
+128/129 joints and deliberately corrupted IQM bytes. The Blender integration test
+also compiles **production** `ComputePoseMats` and `R_IQMLerpTag` via
+`iqm_pose_probe.c` and compares their output with Blender, including a 25% socket
+interpolation. It requires `cc`, SDL2 development headers/`sdl2-config`, and libm.
+This probe does not call the full loader or draw OpenGL; engine rendering and
+cgame gameplay acceptance remain separate gates. Never run the probe on unvalidated
+or untrusted binaries; it is a trusted-fixture test, not an asset loader.
+
+The actual contract is `code/renderercommon/iqm.h` and
+`code/renderergl2/tr_model_iqm.c`: IQM version2, ≤16MiB, ≤128 parent-before-child
+joints, each mesh ≤999 vertices/1999 triangles, float position3/normal3/UV2/**tangent4**,
+UBYTE index4/weight4. Weight bytes total255, positive influences precede zeros,
+and even zero-weight slots have valid indices. The writer normalizes and quantizes
+1–4 influences; more than4 is rejected, not silently pruned. UV V and tangent
+handedness are flipped for Q3. Position/bone translation units are explicit;
+model basis is X-forward/Y-left/Z-up, with no guessed axis conversion.
+
+Preprocess source: apply object transforms, retopologize/triangulate/UV and prepare
+Q3 shader textures before export. Only one active unmasked linear armature modifier
+per mesh is accepted. No shape keys, object animation, B-bones, dual-quaternion
+skinning, envelopes, shear, or non-unit bone scale. Constraints are sampled into
+parent-local TRS; NLA is disabled and unkeyed channels reset between explicit
+actions. Animated root/object motion must be consciously baked into root joints;
+root motion must not accidentally replace authoritative player physics. The
+exporter retains every bone, including non-deforming sockets, and stops at the
+128-joint ceiling. It does not infer rigs, retarget motion or convert PBR textures.
+Material mappings preserve explicit runtime shader paths and source material names;
+retain the source `.blend`/textures and the JSON sidecar in source archival.
+
+Config fields: `classification`, `coordinate_system`, `units_per_meter`,
+`armature`, `meshes`, `materials` (Blender material→Q3 shader), `attachments`
+(exact joint names), `clips` with `name`, `action`, inclusive integer `start/end`,
+`fps`, `loop`, optional `semantic/events`. Events are preserved in the sidecar;
+they are not IQM engine callbacks. See generated fixture config as runnable input.
+Bounds deliberately use a conservative rigid-joint sphere, covering rotations
+between frames rather than endpoint AABBs alone; production bounds/performance
+need per-character review before tightening.
+
+**Required cgame handoff:** IQM clip names/FPS/loop metadata are stored in the file
+but the current renderer does not consume them. Cgame must map gameplay semantics
+to `refEntity.frame`, `oldframe`, `backlerp` using sidecar ranges. Stock cgame still
+loads lower/upper/head plus `animation.cfg`, rebases leg frame offsets and maps
+torso attack/drop frames to weapon-hand frames. Either implement the whole-body
+client interface or supply verified segmented IQMs; `.iqm` is not an automatic
+override of an existing valid `.md3`. `R_IQMLerpTag` matches exact case-sensitive
+joint names and returns animated model-space joint transforms. Cgame must provide
+valid attachment frames (the tag path does not clamp), and handle `tag_torso`,
+`tag_head`, `tag_weapon`, `tag_barrel`/`tag_flash` conventions as appropriate. The
+fixture preserves `tag_weapon`; it does not claim to implement these player/weapon
+semantics. Keep `runtime_accepted=false` until actual engine/cgame/visual gates.
+
 ## Authorized source inventory and production work packages (offline)
 
 `inventory.py`, `batches.py` and `archive.py` use Python's standard library only.
