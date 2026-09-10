@@ -29,7 +29,10 @@
         <p class="eyebrow">OPERATIONS</p>
         <button data-screen="home" aria-current="page">01 / Overview</button>
         <button data-screen="settings">02 / Settings</button>
-        <button data-screen="help">03 / Field manual</button>
+        <button data-screen="display">03 / Display</button>
+        <button data-screen="bindings">04 / Key bindings</button>
+        <button data-screen="profile">05 / Player profile</button>
+        <button data-screen="help">06 / Field manual</button>
         <button id="return-engine">Return to engine</button>
       </nav>
       <div class="menu-content">
@@ -45,8 +48,32 @@
           <p class="eyebrow">TUNE YOUR RESPONSE</p><h2 tabindex="-1">SETTINGS</h2>
           <p class="note">Changes apply immediately in the engine. Archived settings save automatically on an engine frame, then sync to this browser.</p>
           <div id="setting-fields"></div>
-          <p id="setting-status" role="status" aria-live="polite"></p>
-          <p class="note">FOV becomes available after entering a map. Browser fullscreen is available in the lower toolbar. Display quality and key rebinding remain in the engine menu.</p>
+          <p id="setting-status" class="edit-status" role="status" aria-live="polite"></p>
+          <p class="note">FOV becomes available after entering a map. Use Display for live filtering and crosshair controls; Key bindings for action assignments.</p>
+        </section>
+        <section data-page="display" class="config-page" hidden>
+          <p class="eyebrow">IMAGE / READABILITY</p><h2 tabindex="-1">DISPLAY</h2>
+          <label class="setting-row">Texture filtering<select id="texture-filter"><option value="-2" disabled>Custom / unavailable</option><option value="0">Nearest mipmap</option><option value="1">Bilinear</option><option value="2">Trilinear</option></select></label>
+          <div id="display-fields"></div>
+          <p class="edit-status" role="status" aria-live="polite"></p>
+          <p class="note">Filtering updates existing world textures without restart. Crosshair 0 is off; 1–10 select engine shapes. Crosshair/FPS controls require a loaded map. Spectator and gameplay rules may hide the crosshair.</p>
+          <p class="note">Resolution and texture detail require renderer restart with recovery; those remain in the engine menu. Browser gamma is not offered as a misleading live brightness control.</p>
+        </section>
+        <section data-page="bindings" class="config-page" hidden>
+          <p class="eyebrow">INPUT / ACTIONS</p><h2 tabindex="-1">KEY BINDINGS</h2>
+          <p class="note">Change or clear individual slots; additional existing bindings are preserved. Esc, console, F10–F12 and OS-reserved shortcuts stay outside this editor. Custom command bindings cannot be overwritten.</p>
+          <p class="list-caption">30 actions · Scroll the list for weapons and advanced controls ↓</p>
+          <div id="binding-fields" class="binding-list" tabindex="0" aria-label="Scrollable action bindings"></div>
+          <div id="binding-conflict" hidden><p id="binding-conflict-text"></p><button id="binding-replace">Replace conflicting action</button><button id="binding-cancel">Cancel</button></div>
+          <p class="edit-status" role="status" aria-live="polite"></p>
+        </section>
+        <section data-page="profile" class="config-page" hidden>
+          <p class="eyebrow">IDENTITY / PLAYER</p><h2 tabindex="-1">PLAYER PROFILE</h2>
+          <form id="profile-form"><label class="setting-row">Player name<input id="player-name" required minlength="1" maxlength="31" autocomplete="off" spellcheck="false"></label><button type="submit">Apply name</button></form>
+          <p class="note">1–31 printable ASCII characters; at most three consecutive spaces. No leading/trailing spaces, color escapes, quotes, semicolons or backslashes. Existing names are never silently rewritten.</p>
+          <div id="profile-fields"></div>
+          <p class="note">Colors: 1 blue · 2 green · 3 cyan · 4 red · 5 magenta · 6 yellow · 7 white. Lower handicap limits health. Model/skin selection still uses the original engine's installed-content catalogue.</p>
+          <p class="edit-status" role="status" aria-live="polite"></p>
         </section>
         <section data-page="help" hidden>
           <p class="eyebrow">FIELD MANUAL / PC</p><h2 tabindex="-1">STAY IN CONTROL.</h2>

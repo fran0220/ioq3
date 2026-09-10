@@ -2,15 +2,19 @@
 // DOM navigation never signals game readiness and never accepts console text.
 export function createMenu(canvas) {
     const root = document.querySelector('#menu');
-    const status = document.querySelector('#setting-status');
+    const tell = text => { for (const node of root.querySelectorAll('.edit-status')) node.textContent = text; };
+    const saving = () => { document.querySelector('#save-status').textContent = 'Applied — waiting for engine save…'; };
     let module, ready = false, failed = false;
     const state = () => ready && !failed ? module?._OG_WebUIState?.() ?? 0 : 0;
     const fields = [
         ['Master volume', 0, 0, 1, 0.05], ['Music volume', 1, 0, 1, 0.05],
         ['Mouse sensitivity', 2, 0.1, 30, 0.1], ['Mouse pitch', 3, -0.1, 0.1, 0.001],
         ['Field of view', 4, 60, 140, 1],
+        ['Crosshair style', 5, 0, 10, 1, 'display'], ['Crosshair size', 6, 8, 64, 1, 'display'],
+        ['Show FPS (0 / 1)', 7, 0, 1, 1, 'display'],
+        ['Handicap', 8, 1, 100, 1, 'profile'], ['Primary color', 9, 1, 7, 1, 'profile'], ['Secondary color', 10, 1, 7, 1, 'profile'],
     ];
-    for (const [label, id, min, max, step] of fields) {
+    for (const [label, id, min, max, step, group = 'setting'] of fields) {
         const row = document.createElement('label');
         row.className = 'setting-row';
         const name = document.createElement('span');
@@ -23,20 +27,119 @@ export function createMenu(canvas) {
             const previous = [1, 2].includes(state()) ? module._OG_WebSetting(id) : NaN;
             if (!input.checkValidity() || !Number.isFinite(value) || ![1, 2].includes(state())
                 || !module._OG_WebSetSetting(id, value)) {
-                status.textContent = 'Engine rejected this value. No successful change is claimed.';
+                tell('Engine rejected this value. No successful change is claimed.');
             } else {
-                status.textContent = `${label} applied: ${module._OG_WebSetting(id)}. Browser save status appears below.`;
-                if (value !== previous) document.querySelector('#save-status').textContent = 'Applied — waiting for engine save…';
+                tell(`${label} applied: ${module._OG_WebSetting(id)}. Browser save status appears below.`);
+                if (value !== previous) saving();
             }
             refresh();
         });
         row.append(name, input);
-        document.querySelector('#setting-fields').append(row);
+        document.querySelector(`#${group}-fields`).append(row);
     }
     const pitchNote = document.createElement('p');
     pitchNote.className = 'note';
     pitchNote.textContent = 'Negative mouse pitch inverts vertical look. Zero is rejected.';
     document.querySelector('#setting-fields').append(pitchNote);
+    const filter = document.querySelector('#texture-filter');
+    filter.addEventListener('change', () => {
+        const choice = Number(filter.value);
+        if (![1, 2].includes(state()) || module._OG_WebTextureFilter(choice) !== choice) tell('Texture filter change rejected.');
+        else { tell('Texture filtering applied to the renderer.'); saving(); }
+    });
+    function readName() {
+        let result = '';
+        for (let i = 0; i < 31; i++) {
+            const code = module._OG_WebName(3, i);
+            if (code <= 0) break;
+            result += String.fromCharCode(code);
+        }
+        return result;
+    }
+    document.querySelector('#profile-form').addEventListener('submit', event => {
+        event.preventDefault();
+        if (![1, 2].includes(state())) return;
+        const value = document.querySelector('#player-name').value;
+        const previous = readName();
+        module._OG_WebName(0, 0);
+        for (const character of value) module._OG_WebName(1, character.codePointAt(0));
+        if (module._OG_WebName(2, 0) !== 1) tell('Name rejected. Keep 1–31 printable ASCII characters and omit the listed delimiters.');
+        else { tell(`Player name applied: ${readName()}.`); if (value !== previous) saving(); }
+    });
+    const actions = ['Forward', 'Back', 'Strafe left', 'Strafe right', 'Jump', 'Crouch', 'Walk', 'Fire', 'Zoom', 'Scores',
+        'Previous weapon', 'Next weapon', 'Use item', 'Chat', 'Team chat', 'Gauntlet', 'Machinegun', 'Shotgun',
+        'Grenade launcher', 'Rocket launcher', 'Lightning gun', 'Railgun', 'Plasma gun', 'BFG', 'Center view',
+        'Strafe modifier', 'Turn left', 'Turn right', 'Look up', 'Look down'];
+    const specialNames = ['Tab', 'Enter', 'Backspace', 'Caps lock', 'Up', 'Down', 'Left', 'Right', 'Alt', 'Ctrl', 'Shift',
+        'Insert', 'Delete', 'Page down', 'Page up', 'Home', 'End', ...Array.from({ length: 9 }, (_, i) => `F${i + 1}`),
+        'Mouse 1', 'Mouse 2', 'Mouse 3', 'Mouse 4', 'Mouse 5', 'Wheel down', 'Wheel up',
+        'Numpad 7', 'Numpad 8', 'Numpad 9', 'Numpad 4', 'Numpad 5', 'Numpad 6', 'Numpad 1', 'Numpad 2', 'Numpad 3',
+        'Numpad Enter', 'Numpad 0', 'Numpad decimal', 'Numpad /', 'Numpad -', 'Numpad +', 'Num lock', 'Numpad *', 'Numpad ='];
+    let pendingBinding;
+    const conflict = document.querySelector('#binding-conflict');
+    function refreshBindings() {
+        const list = document.querySelector('#binding-fields');
+        const position = list.scrollTop;
+        list.replaceChildren();
+        if (![1, 2].includes(state())) return;
+        const keys = [];
+        for (let i = 0; i < 95 + specialNames.length; i++) {
+            const key = module._OG_WebKey(i), action = module._OG_WebBinding(key);
+            if (action !== -3) keys.push({ key, action, label: i < 95 ? (key === 32 ? 'Space' : String.fromCharCode(key)) : specialNames[i - 95] });
+        }
+        actions.forEach((name, action) => {
+            const row = document.createElement('div'); row.className = 'binding-row';
+            row.dataset.action = action;
+            const title = document.createElement('span'); title.textContent = name; row.append(title);
+            const slots = keys.filter(key => key.action === action).map(key => key.key).concat(-1);
+            slots.forEach((old, slot) => {
+                const select = document.createElement('select');
+                select.id = `binding-${action}-${slot}`;
+                select.setAttribute('aria-label', `${name} ${old === -1 ? 'add binding' : `binding ${slot + 1}`}`);
+                select.append(new Option(old === -1 ? 'Add binding…' : 'Unbound', '-1'));
+                for (const item of keys) {
+                    const option = new Option(item.label + (item.action === -2 ? ' (custom)' : ''), item.key);
+                    option.disabled = item.action === -2; select.append(option);
+                }
+                select.value = String(old);
+                select.addEventListener('change', () => {
+                    const next = Number(select.value);
+                    const result = module._OG_WebBind(action, old, next, 0);
+                    pendingBinding = null; conflict.hidden = true;
+                    tell('');
+                    if (result === 2) {
+                        const target = module._OG_WebBinding(next);
+                        pendingBinding = { action, old, next, target };
+                        document.querySelector('#binding-conflict-text').textContent = `This key is assigned to ${actions[target]}. Replace that assignment with ${name}?`;
+                        conflict.hidden = false;
+                        document.querySelector('#binding-replace').focus();
+                    } else if (result === 1) { tell(`${name} binding applied.`); saving(); }
+                    else tell('Binding rejected. Custom commands and stale slots are protected.');
+                    refreshBindings();
+                    if (result !== 2) focusBinding(action, result === 1 ? next : old);
+                });
+                row.append(select);
+            });
+            list.append(row);
+        });
+        list.scrollTop = position;
+    }
+    function focusBinding(action, key) {
+        const selects = [...root.querySelectorAll(`[data-action="${action}"] select`)];
+        (selects.find(select => select.value === String(key)) ?? selects[0])?.focus({ preventScroll: true });
+    }
+    document.querySelector('#binding-cancel').addEventListener('click', () => {
+        const p = pendingBinding; pendingBinding = null; conflict.hidden = true; tell('Binding change cancelled.');
+        if (p) focusBinding(p.action, p.old);
+    });
+    document.querySelector('#binding-replace').addEventListener('click', () => {
+        const p = pendingBinding; pendingBinding = null; conflict.hidden = true;
+        if (p && module._OG_WebBinding(p.next) === p.target && module._OG_WebBind(p.action, p.old, p.next, 1) === 1) {
+            tell(`${actions[p.action]} binding applied; conflicting assignment replaced.`); saving();
+        } else tell('Binding state changed. Choose the key again.');
+        refreshBindings();
+        if (p) focusBinding(p.action, p.next);
+    });
     function refresh() {
         for (const [, id] of fields) {
             const input = document.querySelector(`#setting-${id}`);
@@ -51,7 +154,11 @@ export function createMenu(canvas) {
             if (button.dataset.screen === name) button.setAttribute('aria-current', 'page');
             else button.removeAttribute('aria-current');
         }
-        if (name === 'settings') refresh();
+        tell(''); pendingBinding = null; conflict.hidden = true;
+        if (['settings', 'display', 'profile'].includes(name)) refresh();
+        if (name === 'display') filter.value = String(module._OG_WebTextureFilter(-1));
+        if (name === 'profile') document.querySelector('#player-name').value = readName();
+        if (name === 'bindings') refreshBindings();
         root.querySelector(`[data-page="${name}"] h2`).focus();
     }
     function open() {

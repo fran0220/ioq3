@@ -1,9 +1,10 @@
 # PC Web build and host
 
 The DOM menu rollout and full screen/interface inventory are in [UI-PLAN.md](UI-PLAN.md).
-The first slice uses actual Painter artwork and a numeric C settings bridge;
-Play selection, display quality, bindings and gameplay HUD still belong to the
-original engine. It is not the completed remaster.
+The menu uses actual Painter artwork and numeric C settings/profile/binding
+bridges. Live filtering, crosshair controls and per-action bindings are available;
+Play selection, restart-dependent display quality, model selection and gameplay
+HUD still belong to the original engine. It is not the completed remaster.
 
 Run `.agents/setup` in an orb, or activate Emscripten **3.1.58** manually:
 
@@ -154,3 +155,9 @@ changes values through DOM, reloads IDBFS, navigates screens and fullscreen,
 then enters a real map through SDL key events and checks in-match menu/FOV/resume.
 No test route or test data is deployed. Its values live only in that disposable
 browser session. Do not run this on a published build or download data in tests.
+
+`bash code/web/tests/settings-browser.sh "$TEST_SERVER_URL"` adds actual GPU
+filtering, profile validation, key conflict/protected-script checks and IDBFS
+reload. Configure this local test build with `-DIOQ3_WEB_TEST_OBSERVER=ON` so its
+final rebound-key check can observe authoritative movement in q3dm1. Reconfigure
+with that flag OFF for production; never deploy this test server or demo data.

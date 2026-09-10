@@ -14,7 +14,9 @@ the background source, transformation and hash live in assets/remaster/ui.
 | Overview | Painter hangar, DOM navigation | Brand/title final approval |
 | Play / map / bot / mode selection | Explicit return to original engine menu | Coordinated q3_ui arena catalogue + validated launch interface, not arbitrary command text |
 | Settings: volume/music/sensitivity/pitch/FOV | Numeric C allowlist, live readback, archived engine saves | Actual map input/audio and browser reload; FOV disabled until registered |
-| Display / bindings / player profile | Original engine menu | Structured renderer modes, restart transaction/rollback, key conflict handling and profile validation |
+| Display | Real live texture filtering, crosshair style/size, FPS | Resolution/picmip preview-confirm-rollback transaction; no misleading live browser gamma |
+| Key bindings | 30 fixed actions, per-key slots/add/clear, explicit conflict replacement, custom-command protection | Non-US keyboard layout testing; original custom console scripts remain outside editor |
+| Player profile | Transactional ASCII name, handicap, two colors | Installed model/skin catalogue + validated selection; Unicode requires engine text support |
 | Field manual | Accessible DOM navigation, PC lifecycle instructions | Update alongside final bindings |
 | In-match menu / resume | F10, UI VM open/close, releases held input | Remote game continues; local pause semantics belong to engine |
 | Lobby / join / reconnect | Host session injection and network status | Platform room catalogue + fresh capability flow + failure/rejoin UX |
@@ -80,3 +82,46 @@ Authorized local data must be supplied separately; do not download it in tests.
 - Inspected 1280×720 DPR2 overview, settings, manual, in-match and failure screens.
   Settings help bottom is at 639px, above toolbar at 662px; unavailable FOV has
   readable disabled state. No claim of ultrawide/other-browser release acceptance.
+
+## Display / bindings / profile slice
+
+All additions reuse the existing Painter background and real DOM controls; no
+new generated art is required. Display filter is a three-value enum, not a string
+command. Crosshair 0 is off, 1..10 select the engine's ten shapes; HUD-related
+controls require CA_ACTIVE even when archived cvars exist before a map loads.
+Resolution and picmip remain explicitly outside the live panel because a safe
+renderer-restart preview needs durable rollback, not just a queued vid_restart.
+
+Bindings use immutable action IDs and engine key-code enumeration. Existing
+alternate slots are preserved. A conflict makes no mutation until confirmed;
+custom executable bindings cannot be displaced even with confirmation. Esc,
+console and F10..F12 are reserved. Slot changes clear held engine key states.
+The UI never accepts binding command text. Name edits stage numeric character
+codes and commit atomically: 1..31 printable ASCII bytes, no info delimiters,
+color escapes, edge spaces or runs of four spaces. Invalid staging cannot
+partially change userinfo. Existing names are read into DOM text/value only.
+
+`settings-browser.sh` requires a local test build configured with
+`-DIOQ3_WEB_TEST_OBSERVER=ON`, the test server, and separately supplied demo data.
+It checks pre-init rejection, 31/32-byte name boundaries, invalid profile ranges,
+protected custom bindings and conflict cancel/replace; verifies archived literal
+`bind k "+forward"`, preserved alternate keys and IDBFS reload. In actual q3dm1,
+instrumented real WebGL calls read back MIN_FILTER 9987 then 9984; actual SDL key
+events on rebound K move the authoritative player position forward more than
+20 units along view yaw. A gravity-only displacement cannot satisfy this check.
+The observer is not included in production builds.
+
+### Concrete shared interfaces still needed
+
+- **q3_ui catalogue**: versioned records `{id,map,displayName,supportedModes}`,
+  bot records `{id,name,modelId}`, and installed model/skin IDs enumerated through
+  VFS. Read-only data must distinguish missing content from an empty list.
+- **Play action**: validated numeric map/mode/bot/skill IDs with finite limits,
+  rejection reason and transition state. No free-form command or arbitrary VFS
+  path from the browser. Model selection likewise consumes only catalogue IDs.
+- **cgame HUD**: production read-only health/armor/ammo/weapon/team/score/match
+  time/intermission snapshot; fixed scoreboard/respawn actions. Test observer
+  exports are not a substitute for a production contract or duplicate game rules.
+- **Platform lobby**: room list/status, short-lived join capability and fresh
+  native session acquisition, explicit full/error/reconnect states. Credentials
+  remain exclusively in the existing in-memory session path.
