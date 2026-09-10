@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "candidate": "character-sarge-v2",
+  "runtime_accepted": false,
+  "completed_checks": [
+    "Native GL2: real generated whole-rig model loads with default one-sided material; inspected front and walking frame98",
+    "Browser WASM/WebGL2: real generated whole-rig model inspected at frame0, frame98 walk, frame127 jump",
+    "Native GL2: actual segmented CG_Player front stance; head/upper/lower texture, attachment, waist/neck assembly and grounding inspected",
+    "Browser WASM/WebGL2: actual segmented CG_Player front and side render; visible gun/hand fit",
+    "Browser actual team switch to red: red-tinted player inspected, original five-second team-switch rule remained enforced",
+    "Cross-orb private source recovery: both 64MiB-or-smaller parts and merged SHA256 confirmed by integration thread"
+  ],
+  "issues_found_and_resolved": [
+    "CCW exporter faces were invisible on outward surfaces in Q3; writer now uses CW with independent winding test",
+    "PK3 sorted before pak0 caused old skins to override new IQM surface mappings; combat-test package now has zz prefix",
+    "Cut vertices need orthogonalized tangents; zero-area clipping slivers removed without weakening writer validation",
+    "Native command-line batch exceeded startup command limits; switched to exec cfg",
+    "Team mode uses team_model/team_headmodel, not model/headmodel; tested with correct cvars"
+  ],
+  "pending_acceptance": [
+    "Full original physics/gameplay regression with current observer build",
+    "Run/walk/jump while aiming and firing, hit/pain, three deaths, respawn in both native and browser",
+    "Final material normal/F0/emission review",
+    "Blue readability and red/blue shape symbols in all four cardinal views",
+    "Back-jump, turn and idle authoring rather than temporary retimed review motions",
+    "Final weapon-thread gun origin and offhand alignment",
+    "External durable source backup, beyond two orb copies",
+    "Full authorized original character/skin inventory beyond private Demo subset"
+  ],
+  "private_backup": {
+    "sha256": "b52f5894cd472b45f692570c59b157446f81c60f8db5acdf23be620abb574a76",
+    "confirmed_by": "T-01a08650-c386-7680-a9f9-744898e9a239",
+    "scope": "pre-segmented paid source/rig/motions/master/journals; new segmented build must be separately transferred"
+  }
+}

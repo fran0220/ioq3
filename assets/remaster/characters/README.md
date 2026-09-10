@@ -92,3 +92,28 @@ Remaining work is explicit in coverage.json. In particular the whole-rig
 inspection clips are NOT the final rebased lower/upper cfg layout; do not copy
 their frame numbers into a released player. Private Demo data is not in the
 review PK3 and must never be copied into an asset publication.
+
+## Segmented combat-test candidate
+
+`segment_rig.py` uses Blender math and the same IQM writer to cut the real
+generated armor at waist/neck, fix boundary weights, express upper/head relative
+to their parent sockets, and retain the original cfg frame indices. It authors
+explicit two-bone IK holding/recoil/jab/gesture/drop/raise actions on the paid rig;
+these are not Meshy outputs and are recorded as hand-authored provenance.
+`package_segmented.py` writes only generated assets and authored cfg/skins,
+never Demo files. Its `zz-` prefix is necessary when testing beside `pak0.pk3`:
+otherwise old skins override the new IQM surface names.
+
+```sh
+blender --background --factory-startup --threads 2 --python-exit-code 1 --python assets/remaster/characters/segment_rig.py -- "$W"
+uv run --with pillow==11.3.0 python assets/remaster/characters/package_segmented.py "$W"
+blender --background --factory-startup --threads 2 --python-exit-code 1 --python assets/remaster/characters/test_segment_rig.py
+```
+
+This candidate has been rendered as an actual CG_Player in native GL2 and
+browser WebGL, including head/waist assembly, original gun attachment, and team
+red. A subsequent candidate adds authored armor ID plates (chevron versus two
+bars); front and side were inspected, rear needs a less obstructed camera.
+It is still **not accepted**: review placeholders remain for backward jump/turn,
+final material maps and complete combat/timing tests. See
+`character-runtime-checks.json`; do not promote render checks to rules coverage.
