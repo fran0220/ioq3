@@ -2,7 +2,7 @@ import struct
 import unittest
 
 from package import material, surfaces
-from prepare_map import adapt
+from prepare_map import adapt, adapt_aas
 
 
 class EnvironmentTests(unittest.TestCase):
@@ -46,6 +46,22 @@ class EnvironmentTests(unittest.TestCase):
         struct.pack_into('<i', data, 8, len(data) + 1)
         with self.assertRaises(ValueError):
             surfaces(data)
+
+    def test_aas_v4_v5_only_encoded_checksum_bytes_change(self):
+        for version in (4, 5):
+            header = bytearray(b'EAAS' + struct.pack('<II', version, 0x12345678))
+            header += struct.pack('<ii', 124, 6) * 14
+            if version == 5:
+                for i in range(8, 124):
+                    header[i] ^= ((i - 8) * 119) & 255
+            source = bytes(header) + b'NAV123'
+            result, report = adapt_aas(source, 0x12345678, 0xa1b2c3d4)
+            self.assertEqual(result[8:12], bytes.fromhex('d4b45cc4' if version == 5 else 'd4c3b2a1'))
+            self.assertEqual(result[:8] + result[12:], source[:8] + source[12:])
+            self.assertEqual(report['changed_byte_offsets'], [8, 9, 10, 11])
+            self.assertEqual(report['navigation_payload_before_sha256'], report['navigation_payload_after_sha256'])
+            with self.assertRaises(ValueError):
+                adapt_aas(source, 0x12345679, 0xa1b2c3d4)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,50 @@
+{
+  "date": "2026-09-10",
+  "engine_build_source_commit": "accec7a30e030eaffc4ee89476ed067b5a4e849d",
+  "toolchain": "Emscripten 3.1.58, observer ON for private technical fixture only",
+  "browser": "agent-browser Chromium, SwiftShader WebGL2; no physical GPU claim",
+  "engine_js_sha256": "bdc9c5d7a2effdca840959696658e749def696edffdcc020e1fb63515055b5d4",
+  "engine_wasm_sha256": "319a2f54e06d42dbc74abca13c3e4b13446f328e5c77c0725ab4a66844a654ae",
+  "material_package_sha256": "14f0d9ac239d72756a7a2474d6d09623bfa2d291d785884958a6926f83ec9262",
+  "private_map_package_sha256": "b45486259288faacb14fed39f92c736ddb6d9a331f41ee39c8cf1ebb0e89a742",
+  "private_map_package": "assets/remaster/work/environment-private/zzzz-environment-private-maps.pk3",
+  "private_map_package_note": "Deterministic ZIP repack of tested BSP/AAS bytes; no member content changed after Bot run",
+  "checks": {
+    "unit_tests": "4 PASS: visual-only BSP, physical flags, ignored effect/clip slots, corrupt header, AAS4/5 encoding",
+    "material_rebuild": "PASS byte-identical PK3 via cmp",
+    "environment_walk": "PASS >100-unit keyboard movement, armor pickup, airborne jump, landing and five viewpoints",
+    "shared_reliability_runner": "PASS HDR0/HDR1 vid_restart, q3tourney2/q3dm17/q3dm1 switch, forced context loss/full reload",
+    "shared_bot_runner_first": "FAIL: source AAS whole-BSP checksum mismatch after visual-only BSP change",
+    "shared_bot_runner_after_approved_header_adaptation": "PASS falling death/click respawn, shooting damage, fraglimit3 score-screen, restart",
+    "shared_baseline_mouse_runner": "FAIL: capture moves initial yaw to -72.8283691; turn to -89.9890137 does not satisfy >30 degree assertion. Not relabeled PASS."
+  },
+  "q3dm1_aas": {
+    "source_version": 5,
+    "original_checksum_unsigned": 1944137255,
+    "derived_checksum_unsigned": 3513429910,
+    "all_changed_byte_offsets": [8, 9, 10, 11],
+    "lump_offsets_and_lengths_identical": true,
+    "navigation_payload_before_and_after_sha256": "37ecdc0a0cd9af4377b2f0bdae97169032f5d479d2f29751c0c62152d81605e0"
+  },
+  "private_evidence_directories": [
+    "assets/remaster/work/environment-baseline",
+    "assets/remaster/work/environment-walk-v3",
+    "assets/remaster/work/environment-reliability",
+    "assets/remaster/work/environment-bot",
+    "assets/remaster/work/environment-bot-v2",
+    "assets/remaster/work/environment-private"
+  ],
+  "inspected_images": {
+    "environment-review-courtyard.jpg": "ab47508297bd74a979c5b59b04c22e0c99539bc9e0cf3f6d419bf6c5651afd6f",
+    "environment-review-bot-score.jpg": "df60d91dc0a6f581ab51ae112380719a0afb7e7a8dd865e90eff052d103eba75"
+  },
+  "art_findings": [
+    "Graphite/ivory materials and cloudy sky present in actual q3dm1",
+    "Sky atlas-border seam removed and recaptured",
+    "Original statues, geometry, weapon and UI retained; not a complete 3D remake",
+    "Dark arch interiors and bright LDR window panels require refinement",
+    "Original lightgrid and vertex colors retain warm/red model illumination",
+    "Expansion-map slots are unreviewed candidates, not completed maps"
+  ],
+  "release_accepted": false
+}

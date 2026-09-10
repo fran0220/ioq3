@@ -129,7 +129,7 @@ def build(source, atlas, output):
         crop.resize((512, 512), Image.Resampling.LANCZOS).save(buffer, format='TGA')
         entries[f'textures/remaster_environment/{tile}.tga'] = buffer.getvalue()
     coverage = {}
-    shaders = {}
+    mapped_slots = set()
     with zipfile.ZipFile(source) as reference:
         for mapname in ['q3dm1', 'q3dm7', 'q3dm17', 'q3tourney2']:
             bsp = reference.read(f'maps/{mapname}.bsp')
@@ -137,7 +137,7 @@ def build(source, atlas, output):
             for name, count in surfaces(bsp):
                 tile = material(name)
                 if tile and count:
-                    shaders[name] = shader(name, tile)
+                    mapped_slots.add(name)
                 rows.append({'slot': name, 'surfaces': count, 'material': tile,
                              'status': 'material-candidate' if tile and count else 'not-environment-or-not-drawn',
                              'geometry_remade': False})
@@ -159,7 +159,7 @@ def build(source, atlas, output):
               'entries': {k: hashlib.sha256(v).hexdigest() for k, v in entries.items()}, 'maps': coverage}
     (output / 'environment-coverage.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps({'package': str(package), 'bytes': package.stat().st_size,
-                      'shader_overrides': len(shaders), 'maps': list(coverage)}))
+                      'mapped_source_slots': len(mapped_slots), 'runtime_shaders': len(TILES), 'maps': list(coverage)}))
 
 
 if __name__ == '__main__':

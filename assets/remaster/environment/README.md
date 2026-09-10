@@ -22,8 +22,13 @@ sky shader won in an actual browser test. No renderer change is required.
 For private technical verification only, `prepare_map.py` rewrites the 64-byte
 name field in each BSP shader record and converts RGB lightmaps to max-channel
 neutral gray. Surface/content flag bytes, all other 15 lumps, BSP header/offsets,
-geometry, entities, spawn/trigger timing and PVS are unchanged; AAS is untouched.
-It records hashes for every lump. Max-channel grayscale is a deliberate art
+geometry, entities, spawn/trigger timing and PVS are unchanged. The original AAS
+is preserved in the reference PK3. The private derived AAS updates only encoded
+checksum bytes 8–11, with all navigation payload and lump tables byte-identical.
+This adaptation was explicitly approved after BotLib correctly rejected the
+first visual BSP's changed whole-file checksum. The tool uses production
+`code/qcommon/md4.c` and AAS v4/v5 header encoding; no engine check is disabled.
+It records hashes for every BSP lump and AAS payload. Max-channel grayscale is a deliberate art
 adjustment after luminance grayscale left red-lit halls excessively dark; it is
 not radiometric preservation. Lightgrid and vertex colors remain original, so
 models and some surfaces retain warm/red illumination. This discrepancy remains
@@ -56,13 +61,19 @@ build nor Demo input is release material.
 
 ## Evidence and unfinished content
 
-2026-09-10: current engine/QVM build completed (599 Ninja steps). Three asymmetric
+2026-09-10: current engine/QVM build completed (599 Ninja steps). Four asymmetric
 unit tests pass: flag preservation, visual-only mutation, independent max-channel
-expected bytes, skipped flame/clip slots and corrupt BSP rejection. Real Chromium
+expected bytes, skipped flame/clip slots, corrupt BSP rejection and independently
+expected AAS v4/v5 encoded checksum bytes. Real Chromium
 SwiftShader/WebGL2 HDR walkthrough passed actual keyboard yaw, >100-unit motion,
 armor pickup, airborne jump and landing, and captured five linked viewpoints.
 Sky atlas-border seam was seen in v2, removed by cropping and edge mirroring, and
 rechecked in v3. Package-loading logs contain no remaster texture warnings.
+The shared reliability runner passed HDR0/HDR1 `vid_restart`, q3tourney2/q3dm17/
+q3dm1 switching, and full reload after forced context loss. After AAS adaptation,
+the unchanged shared Bot runner passed falling death/click respawn, actual hit
+damage, fraglimit-3 score screen and match restart. This finite match does not
+prove every route or all-map navigation. Initial AAS failure remains in the log.
 
 The existing shared `baseline` run **failed** its mouse-turn assertion: capture
 already changed yaw from the original −45° to −72.828°, leaving only 17.161° to
@@ -73,5 +84,8 @@ Art inspection remains partial: original statues/heads and geometry are obvious;
 near-black arch interiors and bright window panels need lighting work. Five views
 do not cover every room or Bot route. Full geometry, formally generated 3D
 architecture, LOD/PBR, authored placement/visibility, full navigation, native/LDR,
-physical-GPU performance and all-map acceptance remain outstanding. No paid 3D
-job was submitted and the existing pillar was not purchased again.
+physical-GPU performance and all-map acceptance remain outstanding. LDR loading
+was tested, but its bright window panels need art refinement. No paid 3D job was
+submitted and the existing pillar was not purchased again. A measured original
+wall-crest Painter concept is prepared for the separate formal 3D branch; it is
+not counted as runtime geometry.
