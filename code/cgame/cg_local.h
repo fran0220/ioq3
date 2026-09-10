@@ -370,6 +370,8 @@ typedef struct {
 	qhandle_t		modelIcon;
 
 	animation_t		animations[MAX_TOTALANIMATIONS];
+	// Optional model-local visual torso frame offsets; zero keeps legacy frames.
+	int				torsoWeaponFrameOffset[WP_NUM_WEAPONS];
 
 	sfxHandle_t		sounds[MAX_CUSTOM_SOUNDS];
 } clientInfo_t;
@@ -1688,4 +1690,3 @@ void	CG_ParticleMisc (qhandle_t pshader, vec3_t origin, int size, int duration, 
 void	CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duration, int sizeStart, int sizeEnd);
 extern qboolean		initparticles;
 int CG_NewParticleArea ( int num );
-
