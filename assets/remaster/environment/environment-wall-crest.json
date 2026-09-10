@@ -1,6 +1,6 @@
 {
   "asset_id": "environment-wall-crest-v1",
-  "status": "prototype-imported-and-approved-image-to-3d-task-submitted",
+  "status": "generated-blender-cleaned-exported-and-measured-awaiting-map-runtime-review",
   "prototype": "environment-wall-crest-prototype.png",
   "prototype_sha256": "3be476cb7f8285b5b9f9cd5446bdcfb613cbd61c189b8ec81d0c97d1b59a80d0",
   "source_attachment": "https://ampcode.com/user-content/attachments/b427fb131b65244a21f1070275842c1f396fc57f2ba3d60993ce4cd85c6d9013-file.png",
@@ -12,6 +12,8 @@
     "paid_3d_submission_count": 1,
     "shape_model": "hunyuan3d-2",
     "shape_task_id": "task_mT0CycGrpLL6pz3unD4D0FegW2DrBTaq",
+    "shape_actual_cost_usd": 0.5,
+    "shape_billing_status": "matched_request_id",
     "immutable_manifest": "assets/remaster/manifests/environment-wall-crest-v1.json"
   },
   "review": "Complete broad closed graphite mounting plate, ivory central shield, thin cyan accents, orange side fasteners. Readable original industrial style. Single front view does not establish hidden-back quality or measured dimensions; enforce actual envelope in Blender after generation.",
@@ -26,10 +28,32 @@
     "placement_accepted": false,
     "visibility_requirement": "Hide only the identified original visual surface and associate replacement with the same original leaf/PVS visibility. Preserve collision and all gameplay BSP data. Origin/axes/scale must be confirmed against generated export bounds, not guessed from concept perspective."
   },
+  "export_review": {
+    "source_glb_sha256": "cf1d9898ad027cd6db528e32d7d7e1384c3e2b3938124f30ec4ea0ab307931f9",
+    "blender": "3.4.1",
+    "triangles": 1800,
+    "surfaces": 5,
+    "maximum_vertices_per_surface": 999,
+    "maximum_indices_per_surface": 1152,
+    "decoded_md3_views": "assets/remaster/work/environment-wall-crest-v1/orthographic/",
+    "findings": "Decorated front is local -Y. Connected backing/relief, no obvious holes or floating parts in six-view export inspection. Inferred back has nonfunctional relief and dark material. Ivory edge fringe and scattered source-texture speckles remain art issues; not final approval.",
+    "material": "Opaque baked diffuse; no preserved PBR or dynamic emission claim",
+    "placement": "environment-wall-crest-placement.json",
+    "runtime_package": "environment-wall-crest-q3dm1-v1.pk3",
+    "runtime_package_sha256": "d7eeef0944a46b36685980c9508a47cc1b82f0edc6063baf2d82b24ffa5da1c2",
+    "bounds_verified": true
+  },
+  "recovery": {
+    "snapshot": "assets/remaster/work/environment-source-archive/snapshots/5f401161a360ac4f8d205bc9728768b84c22146318abc126e672bc936a224a8c.json",
+    "verified_files": 14,
+    "private_archive": "assets/remaster/work/environment-wall-crest-recovery.tar.gz",
+    "private_archive_sha256": "5fff33616d7ecbbf7f4a1d71808213f76de5b85a567b59365b7cfd51eccc6349",
+    "external_backup_verified": false
+  },
   "next_required_stages": [
-    "Poll retained image-to-3D task and reconcile cost without duplicate submission",
-    "Blender cleanup, closed-back review, UV/material bake, scale and MD3 limits",
-    "Measured runtime placement and multi-view occlusion review"
+    "Measured runtime placement and multi-view occlusion review through renderer surface replacement",
+    "Refine observed source-texture edge artifacts after actual on-wall view",
+    "Verified durable source backup beyond the production orb"
   ],
   "runtime_accepted": false
 }

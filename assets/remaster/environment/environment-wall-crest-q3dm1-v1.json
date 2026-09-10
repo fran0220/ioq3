@@ -1,0 +1,34 @@
+{
+  "source_package_sha256": "57eba5f42ecd4429529be131faceba910ee60ecab60423313a6bcf1cfe7945b6",
+  "placement_sha256": "ee6a30a1899526b55dc02385682a09c0ebe91c1d8c43be69907927ed3f88557b",
+  "runtime_package_sha256": "d7eeef0944a46b36685980c9508a47cc1b82f0edc6063baf2d82b24ffa5da1c2",
+  "local_bounds": [
+    -43.15625,
+    -6.3125,
+    0.0,
+    43.140625,
+    6.3125,
+    47.203125
+  ],
+  "world_bounds": [
+    [
+      637.6615625000001,
+      1200.3225,
+      296.37
+    ],
+    [
+      710.1509375,
+      1210.9275,
+      336.020625
+    ]
+  ],
+  "inside_original_bounds": true,
+  "runtime_accepted": false,
+  "content": [
+    "maps/q3dm1.remaster.json",
+    "models/remaster/environment_wall_crest.md3",
+    "models/remaster/environment_wall_crest.tga",
+    "scripts/remaster_environment_wall_crest_v1.shader"
+  ],
+  "contains_original_bsp_or_aas": false
+}

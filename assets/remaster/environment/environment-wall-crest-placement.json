@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "map": "q3dm1",
+  "replacements": [
+    {
+      "surface": 2050,
+      "shader": "textures/remaster_environment/panel",
+      "bounds": [
+        [636.578125, 1191.609375, 292.59375],
+        [711.234375, 1219.640625, 339.796875]
+      ],
+      "model": "models/remaster/environment_wall_crest.md3",
+      "origin": [673.8996875, 1205.625, 296.37],
+      "angles": [0, 180, 0],
+      "scale": 0.84
+    }
+  ]
+}

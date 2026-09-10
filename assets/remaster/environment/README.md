@@ -85,7 +85,32 @@ near-black arch interiors and bright window panels need lighting work. Five view
 do not cover every room or Bot route. Full geometry, formally generated 3D
 architecture, LOD/PBR, authored placement/visibility, full navigation, native/LDR,
 physical-GPU performance and all-map acceptance remain outstanding. LDR loading
-was tested, but its bright window panels need art refinement. No paid 3D job was
-submitted and the existing pillar was not purchased again. A measured original
-wall-crest Painter concept is prepared for the separate formal 3D branch; it is
-not counted as runtime geometry.
+was tested, but its bright window panels need art refinement. The existing pillar
+was not purchased again.
+
+## Wall crest: generated model and measured placement candidate
+
+`environment-wall-crest-q3dm1-v1.pk3` combines the existing approved Painter
+prototype → one Hunyuan3D task → Blender 3.4.1 cleanup/bake → decoded MD3 pipeline
+with `maps/q3dm1.remaster.json`. The 1800-triangle, five-surface opaque model uses
+1024px diffuse only. Generation cost matched the exact request ID at **$0.50**;
+Painter cost remains unknown. The source receipt is
+`assets/remaster/receipts/environment-wall-crest-v1.json`.
+
+Placement uses local -Y front → world +Y via yaw180, uniform scale0.84 and origin
+[673.8996875,1205.625,296.37]. Exported vertices fit wholly inside original
+surface2050's AABB. This is not an inferred center-pivot placement: the exporter
+uses XY-centered, Z-bottom coordinates. The five environment tests include an
+asymmetric transform and rejection on both sides of the allowed envelope.
+
+The renderer owner is implementing original-surface/leaf visibility registration;
+this package does not use testmodel or hide every instance of a material. Actual
+on-wall runtime/occlusion review remains pending. Orthographic inspection found
+connected backing and no obvious holes, but source texture edge fringe/speckles
+remain art issues. Do not mark geometry or runtime acceptance complete yet.
+
+`package_crest.py SOURCE_PK3 RECEIPT PLACEMENT OUTPUT_PK3` reproduces the combined
+package and verifies the receipt hash and every transformed vertex. Source GLB,
+Blender master, paid-state recovery and prototype are in the ignored archive
+recorded by `environment-wall-crest.json`; 14 files verified locally. Off-orb
+durable backup is not claimed.

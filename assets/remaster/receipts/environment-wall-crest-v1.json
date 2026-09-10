@@ -1,0 +1,142 @@
+{
+  "asset_id": "environment-wall-crest-v1",
+  "classification": "original-generated-environment-wall-relief-for-q3dm1",
+  "manifest_sha256": "6578560b25ab7a66c84ac44c0337f8aed71a6fe6145898f236f5c7c4c7ed05a8",
+  "prototype_review": {
+    "at": 1789018273,
+    "note": "Inspected imported Painter prototype: complete connected graphite plate, ivory shield, thin cyan and orange fasteners; no cropped or floating pieces. Approve one 3D candidate only; hidden back, depth and envelope require Blender inspection.",
+    "reviewer": "environment-production-thread",
+    "sha256": "3be476cb7f8285b5b9f9cd5446bdcfb613cbd61c189b8ec81d0c97d1b59a80d0"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": null,
+      "task_id": null,
+      "request_id": null,
+      "request_sha256": null,
+      "response_sha256": null,
+      "generator_identity": null,
+      "model": "amp-painter",
+      "status": "downloaded",
+      "submissions": 0,
+      "artifact": {
+        "bytes": 1652787,
+        "path": "prototype.png",
+        "sha256": "3be476cb7f8285b5b9f9cd5446bdcfb613cbd61c189b8ec81d0c97d1b59a80d0"
+      },
+      "image": {
+        "height": 998,
+        "mime": "image/png",
+        "width": 1576
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "not-exposed-by-tool"
+      }
+    },
+    "shape": {
+      "operation_id": "501bddb0-ab83-4272-b66b-def2423d5d63",
+      "task_id": "task_mT0CycGrpLL6pz3unD4D0FegW2DrBTaq",
+      "request_id": "202609100531140199469998268d9d6C5UN8O0l",
+      "request_sha256": "d2a67f26aa37f2539a18cf54a07ff5662c7d70a1deb8b57e817290b76ba53c78",
+      "response_sha256": "3961c48ce07442ad441b354db8f915f62f0caa036bf2e928c11f2377302d51a6",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 4064292,
+        "path": "generated.glb",
+        "sha256": "cf1d9898ad027cd6db528e32d7d7e1384c3e2b3938124f30ec4ea0ab307931f9"
+      },
+      "image": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 38.109547598,
+          "paint_load_and_generate_seconds": 58.24235212000001,
+          "shape_load_and_generate_seconds": 31.153602426999996,
+          "texture_bake_seconds": 0.4774606709999887,
+          "texture_delight_seconds": 1.026002431000009,
+          "texture_export_verify_seconds": 0.8992309870000099,
+          "texture_inpaint_seconds": 4.168682418000003,
+          "texture_load_seconds": 12.929018502999995,
+          "texture_mesh_preparation_seconds": 2.4555109799999997,
+          "texture_multiview_seconds": 5.497018118,
+          "texture_normal_render_seconds": 0.23546631000000673,
+          "texture_position_render_seconds": 0.176935370999999,
+          "texture_uv_seconds": 33.411770737
+        }
+      },
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1789018274,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609100531140199469998268d9d6C5UN8O0l",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    }
+  },
+  "processing": {
+    "files": [
+      {
+        "bytes": 6273160,
+        "path": "processed/cleaned.blend",
+        "sha256": "9df24a2825f610d7af3d57786693f9a4303f62cae15f26d872219c33b73a1b12"
+      },
+      {
+        "bytes": 2098912,
+        "path": "processed/diffuse.tga",
+        "sha256": "79a05544fe43f6718aa6b97c5117e02ab214dea585a418f0c189ed32aeaeb2c8"
+      },
+      {
+        "bytes": 1124,
+        "path": "processed/geometry-report.json",
+        "sha256": "8b6d2b0ca40452719688e2474b351515325daf3c90f4ae835a5f6a6ef326cfe8"
+      },
+      {
+        "bytes": 100340,
+        "path": "processed/model.md3",
+        "sha256": "fb39b208dcf27603601e33a50651c88aab2f44881413541939452f026b49f8f7"
+      },
+      {
+        "bytes": 141,
+        "path": "processed/remaster.shader",
+        "sha256": "cee449f836c9c05d1d4ee51fd59cdeee248841b692040228b39371b488abd87b"
+      },
+      {
+        "bytes": 547714,
+        "path": "processed/review-back.png",
+        "sha256": "179a26bf4b3c273a587553392909f0e950d3ff07191997b65254de58c1b7e6cf"
+      },
+      {
+        "bytes": 593675,
+        "path": "processed/review-front.png",
+        "sha256": "bf76e09d2cbc5b275134128395d5c16dce9164d80e5daa0d8a70de1756cabb4f"
+      }
+    ],
+    "scripts": {
+      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
+      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
+    },
+    "source_sha256": "cf1d9898ad027cd6db528e32d7d7e1384c3e2b3938124f30ec4ea0ab307931f9"
+  },
+  "package": {
+    "bytes": 1194441,
+    "path": "environment-wall-crest-v1.pk3",
+    "sha256": "57eba5f42ecd4429529be131faceba910ee60ecab60423313a6bcf1cfe7945b6"
+  }
+}
