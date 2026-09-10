@@ -97,8 +97,12 @@ def main():
                 raise ValueError('Turn introduces root movement')
     if maximum > .02:
         raise ValueError(f'Authored lower clips stretch limb lengths by {maximum}')
+    death_bottom = min(v[2] for frame in range(90) for v in skin_positions(lower,frame))
+    if death_bottom < -24.02:
+        raise ValueError(f'Death pose penetrates authored floor: {death_bottom}')
     print(json.dumps({'runtime_accepted':False,'seam_checks':errors,
-                      'authored_lower_max_limb_length_error':maximum},indent=2))
+                      'authored_lower_max_limb_length_error':maximum,
+                      'death_minimum_z':death_bottom},indent=2))
 
 
 if __name__ == '__main__':

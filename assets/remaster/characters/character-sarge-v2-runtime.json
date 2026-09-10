@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "asset_id": "character-sarge-v2",
+  "classification": "generated-segmented-combat-test-candidate",
+  "runtime_accepted": false,
+  "artifact": "assets/remaster/runtime/character-sarge-v2-candidate.pk3",
+  "sha256": "e6ee819ac3fa4ca6c96537b31a329f0f05264c8a362651b8e4d0a78fac77055e",
+  "test_install_basename": "zz-character-sarge-v2-segmented.pk3",
+  "install_note": "Must sort after reference pak0 in the private test VFS so original skin/cfg files do not override the generated IQM mappings. Not a standalone game or release approval.",
+  "recipe_base_commit": "https://github.com/fran0220/ioq3/commit/2d4d51ef",
+  "recipe_updates": "Death-grounding correction and validation are in the same Git revision as this manifest",
+  "source_manifest": "assets/remaster/characters/character-sarge-v2.json",
+  "contract": "assets/remaster/characters/contract.md",
+  "qa": "assets/remaster/characters/character-runtime-checks.json",
+  "frames": {"lower": 191, "upper": 306, "head": 1},
+  "upper_weapon_offsets": {"machinegun": 0, "rocket": 153},
+  "skin_sets": ["default", "red", "blue", "krusade"],
+  "contents": ["Generated rig-derived segmented IQM with per-frame bounds", "Generated baked textures and portraits", "Authored armor dyes, insignia, legacy material shaders", "Authored timing cfg and weapon-frame mapping"],
+  "excludes": ["Demo archive data", "QVM binaries", "Original textures, meshes and sounds", "Private generation journals and credentials"],
+  "licensing": "Authorized character remake candidate with retained paid-generation provenance; not a declaration that all assets are GPL or CC0. Final publication source/license package remains open.",
+  "new_paid_submissions": 0,
+  "private_incremental_recovery": {
+    "path": "assets/remaster/work/character-sarge-v2-grounded-source.tar.gz",
+    "sha256": "035429da68a6a5b3c94e8532e379deafe51f393eea8dad96c1bf6de24573ed6e",
+    "scope": "Current grounded segmented IQM/pose JSON and PK3; combine with parented-source archive f989f107b0a1b28ae5d5b78e5a14ad49506f3148a249c7b975e24b22043ca322 for prepared input JSON/textures/portrait, earlier b52f5894 paid-source archive, and current tracked recipe",
+    "external_durable_backup_confirmed": false
+  }
+}

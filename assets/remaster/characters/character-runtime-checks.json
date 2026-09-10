@@ -13,7 +13,11 @@
     "Actual browser keyboard jump and mouse respawn inspected; kill-command visual was gibbed and does not count as full skeletal death review",
     "Native and browser inspected high-to-low baked tangent normal plus authored dielectric F0 material without visible normal inversion",
     "Native rear insignia projection corrected and inspected: readable cream chevron seated on back armor",
-    "Cross-orb private source recovery: both 64MiB-or-smaller parts and merged SHA256 confirmed by integration thread"
+    "Cross-orb private source recovery: both 64MiB-or-smaller parts and merged SHA256 confirmed by integration thread",
+    "Parented candidate native/browser actual CG_Player: backjump Anim20, turn Anim24, walk Anim14 + attack Anim7, run Anim15 + attack Anim7 logged and screenshots inspected; attached weapon and connected limbs, run muzzle flash visible. Browser movement inspection used timescale .2, restored to 1; not a performance or timing regression test",
+    "Armor-only dye native/browser front/back inspected: distinguishable red/blue, natural face/arms, back chevron/two bars. Front marks may be hidden by weapon; this is skin inspection, not full team combat acceptance",
+    "Final grounded package: native driver and actual WASM console/input each logged three non-gib deaths Anim0/2/4 and live respawns. Six corpse captures inspected: no clear remaining floor penetration, but several have incomplete framing/near-camera occlusion",
+    "Native and browser nonfatal bot damage logged with blue player visible; inspected neck/waist remain connected. Native shows a leaned pose; browser still does not establish the precise twitch curve. Damage inspection used slow motion, not timing acceptance"
   ],
   "issues_found_and_resolved": [
     "CCW exporter faces were invisible on outward surfaces in Q3; writer now uses CW with independent winding test",
@@ -21,15 +25,17 @@
     "Cut vertices need orthogonalized tangents; zero-area clipping slivers removed without weakening writer validation",
     "Native command-line batch exceeded startup command limits; switched to exec cfg",
     "Team mode uses team_model/team_headmodel, not model/headmodel; tested with correct cvars",
-    "Root-flattened attachment tags passed frame endpoints but produced .776-unit interpolated waist separation. Bone-parented tags reduce asymmetric interpolation error to .001031 units at 254 waist pairs / .000009 at 326 neck pairs",
-    "Wrist-origin weapon fitting buried the hands; current candidate computes actual weighted palm anchors and separate machinegun/rocket support targets"
+    "Root-flattened attachment tags passed frame endpoints but produced .776-unit interpolated waist separation. Bone-parented tags reduce asymmetric interpolation error to .001031 units at 254 waist pairs / .000011 at 326 neck pairs",
+    "Wrist-origin weapon fitting buried the hands; current candidate computes actual weighted palm anchors and separate machinegun/rocket support targets",
+    "Death skin penetrated the floor (negative control minimum Z=-28.075206). Offline grounding includes byte weights and new pinned cut-ring vertices; all 90 decoded lower death frames now have minimum Z=-24.000476 with authored floor -24. Entity physics/origin are unchanged",
+    "Discarded fixed-delay death captures: g_blood was not the engine cvar (com_blood is), and selecting before the pickup snapshot or holding attack past death produced live/gib/respawn captures. Native driver now waits for actual death logs"
   ],
   "pending_acceptance": [
     "Original baseline regression fails mouse-turn >30 assertion: capture already changes spawn yaw to -72.828; aim(-90) yields correct -89.989 but delta17.16. Observed twice including new browser; not waived or called passing",
-    "Run/walk/jump while aiming and firing, hit/pain, three deaths, respawn in both native and browser",
+    "Full-speed combined locomotion/fire/pain timing review beyond debug-pose captures and prior bot rules regression",
     "Final material normal/F0/emission review",
     "Blue readability and both team shape symbols during combat, beyond default front/side/rear checks",
-    "Engine review of newly authored back-jump counterbalance and turn shuffle; idle is deliberately static planted stance",
+    "Complete corpse framing and near-camera foreground-geometry review for all three deaths; current event checks do not close full-body visual acceptance",
     "Final offhand/finger/arm deformation: latest native rocket side review still reports upper-arm seam and compressed grip; browser full side shows contact, but opposite side hides the second hand",
     "External durable source backup, beyond two orb copies",
     "Full authorized original character/skin inventory beyond private Demo subset"

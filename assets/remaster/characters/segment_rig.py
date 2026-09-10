@@ -14,7 +14,7 @@ from mathutils.geometry import intersect_ray_tri
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT/'misc/remaster-assets'))
-from iqm_export import write_iqm
+from iqm_export import packed_weights, write_iqm
 from iqm_validate import read_iqm
 
 
@@ -76,6 +76,39 @@ def main():
     source_clips = {c['name']:[globals_for(joints,f) for f in c['frames']] for c in source['clips']}
     waist = Matrix.Translation((.55,-.12,20))
     neck = Matrix.Translation((1.47,-.02,37.3))
+    # Paid retargeted deaths put boots below the authored floor. Correct the
+    # source pose, not entity origin/collision/root-motion rules. Apply the same
+    # correction before sampling both segments, and retain its provenance.
+    inverse_bind = [m.inverted() for m in rest]
+    vertices = []
+    for mesh in source['meshes']:
+        for vertex in mesh['vertices']:
+            # Match runtime byte weights rather than ideal authoring weights.
+            indices,weights = packed_weights(vertex['influences'],len(joints))
+            vertices.append((Vector(vertex['position']),[(i,w/255) for i,w in zip(indices,weights) if w]))
+        # Segmentation adds pinned boundary vertices that can become the lowest
+        # point in a lying pose; the uncut source mesh alone does not cover them.
+        for height,bone in ((waist.translation.z,names['Hips']),(neck.translation.z,names['Head'])):
+            for triangle in mesh['triangles']:
+                points = [mesh['vertices'][i] for i in triangle]
+                if min(v['position'][2] for v in points) <= height <= max(v['position'][2] for v in points):
+                    for vertex in cut_triangle(points,height,True):
+                        if abs(vertex['position'][2]-height)<1e-4:
+                            vertices.append((Vector(vertex['position']),[(bone,1)]))
+    death_grounding = {}
+    for name,frames in source_clips.items():
+        if not name.startswith('death'):
+            continue
+        offsets = []
+        for pose in frames:
+            skin = [p @ inverse for p,inverse in zip(pose,inverse_bind)]
+            bottom = min(sum(weight*(skin[bone] @ vertex).z for bone,weight in influences)
+                         for vertex,influences in vertices)
+            lift = max(0,-24-bottom)
+            for bone in pose:
+                bone.translation.z += lift
+            offsets.append(lift)
+        death_grounding[name] = offsets
     hip_offset = rest[names['Hips']].inverted() @ waist
     head_offset = rest[names['Head']].inverted() @ neck
     palm = {}
@@ -191,7 +224,8 @@ def main():
               'weapon_frame_offsets':{'2':0,'5':153},
               'grip_targets':{'machinegun':{'right':[9,-4,27],'left':[16.6,-4,26]},
                               'rocket':{'right':[11,-3,28],'left':[26.2,-3,26.2]}},
-              'palm_local_anchors':{key:list(value) for key,value in palm.items()}}
+              'palm_local_anchors':{key:list(value) for key,value in palm.items()},
+              'death_grounding_q3_units':death_grounding}
     for part,poses,origin in (('lower',lower,Matrix.Identity(4)),('upper',upper,waist),('head',[rest],neck)):
         inverse = origin.inverted()
         bind = [inverse @ p for p in rest]

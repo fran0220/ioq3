@@ -127,7 +127,7 @@ static planted stance. This is authoring, not completed motion acceptance.
 `tag_torso`, `tag_head`, `tag_weapon` are children of Hips, Head, RightHand:
 flattening tags to roots had passed endpoint tests but produced a 0.776-unit
 waist gap during asymmetric SLERP. The new independent interpolation check
-measures <=.001031 units at 254 waist pairs and <=.000009 at 326 neck pairs.
+measures <=.001031 units at 254 waist pairs and <=.000011 at 326 neck pairs.
 Authored lower clips preserve limb lengths within .000023 units and turn
 introduces no root transform. Generated portraits now replace reference icons.
 Current palm fitting is weapon-specific, not a single shared offhand point;
@@ -158,3 +158,30 @@ The separate baseline is **not passing**: mouse capture shifts initial yaw to
 -72.828°, so its turn to -90° correctly travels only 17.16°, below the test's
 hardcoded >30° assertion. Reproduced in a fresh browser and reported to the
 integration owner; neither the assertion nor the game was changed to hide it.
+
+## Actual death and damage checks
+
+`review_native_combat.py ENGINE PRIVATE_BASEPATH` runs native GL2 against the
+private q3dm1 fixture. It waits for real self-rocket death logs and animation
+IDs 0/2/4, stops firing before automatic respawn, verifies live torso animation
+after respawn, then observes nonfatal bot damage. It uses `com_blood 0`, the
+engine's real no-gib setting, not the internal C variable name `g_blood`.
+Fixed wait-only scripts were rejected: pickup commands need a server snapshot
+before selecting the rocket, and a guessed delay can photograph a live player
+or already-respawned body. This driver is a visual inspection aid with cheats
+for setup and slow motion for damage capture, not a rules/timing benchmark.
+
+Actual death captures exposed floor penetration in the paid retargeted clips.
+Authoring now raises only the source skin pose as needed, preserving entity
+origin, collision and the original animation clocks. Grounding includes IQM
+byte weights and pinned cut-ring vertices. The independent decoded-mesh check
+fails the earlier candidate at Z=-28.075206 and passes all 90 corrected lower
+death frames at minimum Z=-24.000476 (authored floor -24, tolerance .02).
+Native/Web death/respawn logs pass; several corpse captures still have poor
+framing/near-camera occlusion, so this does not close full visual acceptance.
+
+The generated-only candidate is tracked at
+`assets/remaster/runtime/character-sarge-v2-candidate.pk3`; installation name,
+hashes, provenance references, recovery chain and open QA are in
+`character-sarge-v2-runtime.json`. Rename it to the documented `zz-` basename
+when installing beside the private Demo. No Demo, VM or sound files are in it.
