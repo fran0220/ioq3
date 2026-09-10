@@ -67,7 +67,8 @@ int main(void) {
     assert(UI_WebLaunch(1, GT_CTF, 3) == -2 && writes == 0);
     assert(UI_WebEdit(UI_WEB_LIMITS, 5, 9) == 1);
     assert(UI_WebLaunch(1, GT_CTF, 4) == 1 && writes > 0);
-    assert(strstr(commands, "map ctf_test\n"));
+    /* Reset the old reliable-command stream before loading a fresh match. */
+    assert(strncmp(commands, "disconnect\nmap ctf_test\n", 24) == 0);
     assert(strstr(commands, "addbot Sarge 4 Blue\n"));
     assert(strstr(commands, "team Red\n"));
     assert(!strstr(commands, "quit"));
