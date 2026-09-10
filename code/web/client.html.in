@@ -66,11 +66,12 @@
           <form id="match-setup">
             <label class="setting-row">Arena<select id="arena-map" required></select></label>
             <label class="setting-row">Mode<select id="arena-mode" required></select></label>
-            <label class="setting-row">Opponent<select id="arena-bot"></select></label>
             <label class="setting-row">Bot difficulty<select id="arena-skill"><option value="1">I can win</option><option value="2">Bring it on</option><option value="3" selected>Hurt me plenty</option><option value="4">Hardcore</option><option value="5">Nightmare</option></select></label>
-            <label class="setting-row">Frag / capture limit<input id="arena-limit" type="number" min="0" max="100" value="10" required></label>
-            <label class="setting-row">Time limit (minutes)<input id="arena-time" type="number" min="0" max="120" value="10" required></label>
-            <button class="primary" id="launch-match" type="submit" disabled>Launch match →</button>
+            <div id="arena-bots" class="bot-roster" tabindex="0" aria-label="Eight bot slots, scroll to select opponents"><p>8 OPPONENT SLOTS · SCROLL ↓</p></div>
+            <div class="match-limits"><label class="setting-row">Frag / capture limit<input id="arena-limit" type="number" min="0" max="999" value="10" required></label><label class="setting-row">Minutes<input id="arena-time" type="number" min="0" max="999" value="10" required></label></div>
+            <label class="setting-row">Character<select id="arena-model"></select><button type="button" data-apply-model="play" disabled>Apply</button></label>
+            <p id="arena-rule-note" class="note"></p>
+            <div class="launch-actions"><button class="primary" id="launch-match" type="submit" disabled>Launch match →</button><button id="arena-refresh" type="button">Refresh content</button></div>
           </form>
           <p id="play-status" class="edit-status" role="status"></p>
         </section>
@@ -85,7 +86,7 @@
         <section data-page="lobby" class="config-page" hidden>
           <p class="eyebrow">ONLINE / NATIVE ARENAS</p><h2 tabindex="-1">FIND YOUR MATCH.</h2>
           <p id="lobby-status" role="status">Multiplayer unavailable: this build has no trusted platform release/session integration. Local play is available.</p>
-          <div id="lobby-controls" hidden><button id="lobby-refresh">Refresh rooms</button><label class="setting-row">List room publicly<input id="lobby-listed" type="checkbox" checked></label><button id="lobby-create">Create room</button><form id="lobby-join"><label class="setting-row">Room code<input id="lobby-code" pattern="[0-9A-F]{8}" maxlength="8" required autocomplete="off" placeholder="8 uppercase HEX"></label><button type="submit">Join room</button></form><div id="lobby-rooms"></div><button id="lobby-leave">Leave reservation</button></div>
+          <div id="lobby-controls" hidden><button id="lobby-refresh">Refresh rooms</button><label class="setting-row">List room publicly<input id="lobby-listed" type="checkbox" checked></label><button id="lobby-create">Create room</button><form id="lobby-join"><label class="setting-row">Room code<input id="lobby-code" pattern="[0-9A-F]{8}" maxlength="8" required autocomplete="off" placeholder="8 uppercase HEX"></label><button type="submit">Join room</button></form><div id="lobby-rooms"></div><button id="lobby-leave">Leave reservation</button><button id="lobby-close">Close owned room</button><button id="lobby-enter" disabled>Engine entry unavailable</button></div>
           <p class="note">Rooms require a published release and platform-issued admission. No operator credentials, room token or server address are entered here.</p>
         </section>
         <section data-page="settings" hidden>
@@ -116,7 +117,9 @@
           <form id="profile-form"><label class="setting-row">Player name<input id="player-name" required minlength="1" maxlength="31" autocomplete="off" spellcheck="false"></label><button type="submit">Apply name</button></form>
           <p class="note">1–31 printable ASCII characters; at most three consecutive spaces. No leading/trailing spaces, color escapes, quotes, semicolons or backslashes. Existing names are never silently rewritten.</p>
           <div id="profile-fields"></div>
-          <p class="note">Colors: 1 blue · 2 green · 3 cyan · 4 red · 5 magenta · 6 yellow · 7 white. Lower handicap limits health. Model/skin selection still uses the original engine's installed-content catalogue.</p>
+          <label class="setting-row">Character / skin<select id="profile-model"></select><button type="button" data-apply-model="profile" disabled>Apply</button></label>
+          <p id="model-status" class="edit-status" role="status"></p>
+          <p class="note">Colors: 1 blue · 2 green · 3 cyan · 4 red · 5 magenta · 6 yellow · 7 white. Lower handicap limits health. Character choices come from the engine's installed-content catalogue.</p>
           <p class="edit-status" role="status" aria-live="polite"></p>
         </section>
         <section data-page="help" hidden>

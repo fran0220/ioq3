@@ -86,6 +86,15 @@ export function createPlay(getModule, launched) {
     }
     map.addEventListener('change', updateModes);
     mode.addEventListener('change', updateRules);
+    document.querySelector('#arena-refresh').addEventListener('click', refresh);
+    function reject(result) {
+        // Some staged fields may already exist after a later validation fails.
+        // Require a fresh transaction rather than silently carrying FFA limits
+        // into an original-roster single-player launch.
+        catalog = null;
+        document.querySelector('#launch-match').disabled = true;
+        status.textContent = `${playError(result)} Use Refresh content to reset staged options.`;
+    }
     for (const button of document.querySelectorAll('[data-apply-model]')) button.addEventListener('click', () => {
         const select = button.dataset.applyModel === 'profile' ? profileModel : model;
         const target = button.dataset.applyModel === 'profile' ? document.querySelector('#model-status') : status;
@@ -100,15 +109,16 @@ export function createPlay(getModule, launched) {
         const single = Number(mode.value) === 2;
         for (let slot = 0; slot < bots.length; slot++) {
             const result = module._OG_WebPlayBot(generation, slot, single ? -1 : Number(bots[slot].value));
-            if (result !== 1) { status.textContent = playError(result); return; }
+            if (result !== 1) { reject(result); return; }
         }
         if (!single) {
             const result = module._OG_WebPlayLimits(generation, limit.valueAsNumber, time.valueAsNumber);
-            if (result !== 1) { status.textContent = playError(result); return; }
+            if (result !== 1) { reject(result); return; }
         }
         const result = module._OG_WebPlay(generation, Number(map.value), Number(mode.value), Number(document.querySelector('#arena-skill').value));
-        status.textContent = result === 1 ? 'Launch accepted. Waiting for the engine to load the arena.' : playError(result);
-        if (result === 1) launched();
+        if (result !== 1) { reject(result); return; }
+        status.textContent = 'Launch accepted. Waiting for the engine to load the arena.';
+        launched();
     });
     return { refresh };
 }

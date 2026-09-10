@@ -30,6 +30,10 @@ int main( void ) {
 	cgs.gametype = GT_CTF;
 	cgs.fraglimit = 23;
 	cgs.capturelimit = 8;
+	cgs.scores1 = 4;
+	cgs.scores2 = 7;
+	cg.teamScores[0] = 1; /* Older scoreboard response must not stale the HUD. */
+	cg.teamScores[1] = 2;
 	snap.ps.stats[STAT_HEALTH] = 37;
 	snap.ps.stats[STAT_ARMOR] = 91;
 	snap.ps.stats[STAT_WEAPONS] = 6;
@@ -51,6 +55,7 @@ int main( void ) {
 	assert( s->health == 37 && s->armor == 91 && s->ammo == -1 );
 	assert( s->team == TEAM_BLUE && s->score == -3 && s->elapsed == 114456 );
 	assert( s->fraglimit == 8 && s->scoreCount == 1 && s->scores[0].client == 7 );
+	assert( s->teamScores[0] == 4 && s->teamScores[1] == 7 );
 	assert( s->scores[0].ping == 47 && s->scores[0].time == 2 );
 	assert( !strcmp( s->scores[0].name, "^4Player <7>" ) );
 	cg.numScores = 0;

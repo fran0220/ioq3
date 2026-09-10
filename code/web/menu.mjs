@@ -2,6 +2,7 @@
 // DOM navigation never signals game readiness and never accepts console text.
 import { createHUD, readHUD, matchClock, teamNames } from './hud.mjs';
 import { createLobby } from './lobby.mjs';
+import { createPlay } from './play.mjs';
 
 export function createMenu(canvas) {
     const root = document.querySelector('#menu');
@@ -11,6 +12,9 @@ export function createMenu(canvas) {
     const saving = () => { document.querySelector('#save-status').textContent = 'Applied — waiting for engine save…'; };
     let module, ready = false, failed = false, snapshot, heldAction = null;
     const state = () => ready && !failed ? module?._OG_WebUIState?.() ?? 0 : 0;
+    // Accepted launch already releases engine menu ownership; it may enter
+    // connecting state before JS regains control. Do not call the UI VM twice.
+    const play = createPlay(() => module, hideMenu);
     function frame() {
         if (failed) return;
         snapshot = ready && !document.hidden ? readHUD(module) : null;
@@ -212,6 +216,7 @@ export function createMenu(canvas) {
         if (name === 'profile') document.querySelector('#player-name').value = readName();
         if (name === 'bindings') refreshBindings();
         if (name === 'match') refreshMatch();
+        if (name === 'play' || name === 'profile') play.refresh();
         lobby.show(name === 'lobby');
         root.querySelector(`[data-page="${name}"] h2`).focus();
     }
@@ -224,15 +229,18 @@ export function createMenu(canvas) {
         canvas.inert = true;
         document.querySelector('#menu-context').textContent = current === 2 ? 'IN-MATCH / MENU' : 'ARENA SYSTEMS / STANDBY';
         document.querySelector('#menu-title').innerText = current === 2 ? 'TAKE A\nBREATH.' : 'MAKE EVERY\nMOVE COUNT.';
-        document.querySelector('#play').textContent = current === 2 ? 'Resume match →' : 'Open engine Play menu →';
+        document.querySelector('#play').textContent = current === 2 ? 'Resume match →' : 'Choose your arena →';
         document.querySelector('#play-note').textContent = current === 2
             ? 'Local single-player may pause. Online matches continue while this menu is open.'
-            : 'Map, bot and match selection currently use the original engine menu.';
+            : 'Select an installed arena, game mode, opponents and character. Local play needs no online account.';
         screen('home');
     }
     function close() {
         const current = state();
         if (![1, 2].includes(current) || !module._OG_WebMenu(current === 1 ? 2 : 0)) return;
+        hideMenu();
+    }
+    function hideMenu() {
         root.hidden = true;
         lobby.show(false);
         canvas.inert = false;
@@ -240,7 +248,7 @@ export function createMenu(canvas) {
     }
     for (const button of root.querySelectorAll('[data-screen]')) button.addEventListener('click', () => screen(button.dataset.screen));
     document.querySelector('#open-menu').addEventListener('click', open);
-    document.querySelector('#play').addEventListener('click', close);
+    document.querySelector('#play').addEventListener('click', () => state() === 2 ? close() : screen('play'));
     document.querySelector('#return-engine').addEventListener('click', close);
     document.querySelector('#capture').addEventListener('click', () => { if (!root.hidden) close(); });
     // Capture before SDL's document handlers, so DOM typing/navigation cannot

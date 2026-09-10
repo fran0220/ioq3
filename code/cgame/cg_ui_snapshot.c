@@ -37,8 +37,9 @@ const cg_ui_snapshot_t *CG_UISnapshot( int version, int size ) {
 	result.scoresShowing = cg.showScores || cg.scoreBoardShowing;
 	result.localClient = cg.clientNum;
 	result.gametype = cgs.gametype;
-	result.teamScores[0] = cg.teamScores[0];
-	result.teamScores[1] = cg.teamScores[1];
+	/* Configstrings update independently of the requested scoreboard rows. */
+	result.teamScores[0] = cgs.scores1;
+	result.teamScores[1] = cgs.scores2;
 	result.fraglimit = cgs.gametype >= GT_CTF ? cgs.capturelimit : cgs.fraglimit;
 	result.timelimit = cgs.timelimit;
 	Q_strncpyz( result.mapName, cgs.mapname, sizeof( result.mapName ) );

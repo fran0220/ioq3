@@ -2,9 +2,12 @@
 
 The DOM menu rollout and full screen/interface inventory are in [UI-PLAN.md](UI-PLAN.md).
 The menu uses actual Painter artwork and numeric C settings/profile/binding
-bridges. Live filtering, crosshair controls and per-action bindings are available;
-Play selection, restart-dependent display quality, model selection and gameplay
-HUD still belong to the original engine. It is not the completed remaster.
+bridges. Play uses the real VFS map/mode/bot/model catalogue and validated staged
+launch options. The production cgame snapshot drives a leased DOM HUD and match
+actions; native HUD remains the fallback. Restart-dependent display quality is
+still engine-owned. Native room reservations are distinct from engine entry:
+trusted session lifecycle integration and production multiplayer validation are
+still required. This is not the completed remaster or a publishable Demo build.
 
 Run `.agents/setup` in an orb, or activate Emscripten **3.1.58** manually:
 

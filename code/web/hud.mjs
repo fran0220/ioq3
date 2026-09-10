@@ -44,7 +44,7 @@ export function playerText(value) {
 
 export function createHUD(root) {
     const nodes = Object.fromEntries([...root.querySelectorAll('[data-hud]')].map(node => [node.dataset.hud, node]));
-    let lastRows = '', lastWeapons = '';
+    let lastRows = '', lastWeapons = '', finalElapsed = null;
     const set = (key, value) => {
         const text = String(value);
         if (nodes[key].textContent !== text) nodes[key].textContent = text;
@@ -53,7 +53,11 @@ export function createHUD(root) {
         hide() { root.hidden = true; },
         render(s, menuOpen) {
             root.hidden = menuOpen || !s;
-            if (!s) return;
+            if (!s) { finalElapsed = null; return; }
+            // Freeze the observed engine time on entry to intermission; do not
+            // count time spent reading final standings as active match time.
+            if (s.intermission) finalElapsed ??= s.elapsed;
+            else finalElapsed = null;
             root.dataset.phase = s.intermission ? 'intermission' : s.team === 3 ? 'spectator' : s.health <= 0 ? 'dead' : 'active';
             root.dataset.team = s.team;
             root.dataset.lowHealth = String(s.health > 0 && s.health <= 25);
@@ -63,7 +67,7 @@ export function createHUD(root) {
             set('weapon', weaponNames[s.weapon] ?? 'Unknown weapon');
             set('team', teamNames[s.team] ?? '');
             set('score', s.score);
-            set('clock', matchClock(s.elapsed));
+            set('clock', matchClock(finalElapsed ?? s.elapsed));
             set('mode', modeNames[s.gametype] ?? 'Arena');
             set('map', playerText(s.map));
             set('red', s.redScore);

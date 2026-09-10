@@ -12,15 +12,15 @@ the background source, transformation and hash live in assets/remaster/ui.
 | WASM / IDBFS / asset verification / world startup | code/web host, real stage messages | Platform and standalone; slow/missing/corrupt assets, no premature ready |
 | Startup / runtime failure | DOM recovery, OG.loading.fail capability detection | iframe replacement, fresh session, IDBFS preserved |
 | Overview | Painter hangar, DOM navigation | Brand/title final approval |
-| Play / map / bot / mode selection | Explicit return to original engine menu | Coordinated q3_ui arena catalogue + validated launch interface, not arbitrary command text |
+| Play / map / bot / mode selection | VFS catalogue, supported-mode masks, eight bot slots, skill and transactional limits | Full-content/multimode acceptance; unavailable assets remain disabled |
 | Settings: volume/music/sensitivity/pitch/FOV | Numeric C allowlist, live readback, archived engine saves | Actual map input/audio and browser reload; FOV disabled until registered |
 | Display | Real live texture filtering, crosshair style/size, FPS | Resolution/picmip preview-confirm-rollback transaction; no misleading live browser gamma |
 | Key bindings | 30 fixed actions, per-key slots/add/clear, explicit conflict replacement, custom-command protection | Non-US keyboard layout testing; original custom console scripts remain outside editor |
-| Player profile | Transactional ASCII name, handicap, two colors | Installed model/skin catalogue + validated selection; Unicode requires engine text support |
+| Player profile | Transactional ASCII name, handicap, colors and installed model/skin selection | Full remade-character catalogue; Unicode requires engine text support |
 | Field manual | Accessible DOM navigation, PC lifecycle instructions | Update alongside final bindings |
 | In-match menu / resume | F10, UI VM open/close, releases held input | Remote game continues; local pause semantics belong to engine |
-| Lobby / join / reconnect | Host session injection and network status | Platform room catalogue + fresh capability flow + failure/rejoin UX |
-| HUD / scoreboard / death / respawn / intermission | Original cgame | Main-thread coordinated snapshot contract and engine-native gameplay HUD; no duplicate game rules |
+| Lobby / join / reconnect | Native list/create/join/leave/owner-close reservation UI, 20s heartbeat, explicit unavailable entry | Persistent shell/engine teardown + fresh-session handoff; published release and multiplayer match acceptance |
+| HUD / scoreboard / death / respawn / intermission | Leased production VM snapshot → DOM vitals/inventory/scoreboard/phases; real held respawn/scores, restart/team/leave actions | Full-content modes and multiplayer; original native HUD restores when lease expires |
 | Credits / licenses / provenance | This asset record and engine source licenses | Complete product-level asset ledger and public source offer before release |
 
 ## Delivery dependencies
@@ -111,17 +111,77 @@ events on rebound K move the authoritative player position forward more than
 20 units along view yaw. A gravity-only displacement cannot satisfy this check.
 The observer is not included in production builds.
 
-### Concrete shared interfaces still needed
+### Production match UI (2026-09-10)
 
-- **q3_ui catalogue**: versioned records `{id,map,displayName,supportedModes}`,
-  bot records `{id,name,modelId}`, and installed model/skin IDs enumerated through
-  VFS. Read-only data must distinguish missing content from an empty list.
-- **Play action**: validated numeric map/mode/bot/skill IDs with finite limits,
-  rejection reason and transition state. No free-form command or arbitrary VFS
-  path from the browser. Model selection likewise consumes only catalogue IDs.
-- **cgame HUD**: production read-only health/armor/ammo/weapon/team/score/match
-  time/intermission snapshot; fixed scoreboard/respawn actions. Test observer
-  exports are not a substitute for a production contract or duplicate game rules.
-- **Platform lobby**: room list/status, short-lived join capability and fresh
-  native session acquisition, explicit full/error/reconnect states. Credentials
-  remain exclusively in the existing in-memory session path.
+`cg_ui_snapshot.c` owns the v1 read-only snapshot. Supporting CG_INIT returns a
+capability magic; CG_UI_SNAPSHOT returns a VM-local static offset, never a host
+pointer. The client validates bounds/version/size and copies into its own cache.
+DOM calls OG_WebHUDRefresh once per animation frame, reads that cache and only
+then renews OG_WebHUDEnabled. The ROM, non-archived cg_webHUD defaults to zero;
+the one-second heartbeat lease restores native rendering if JS stops. No
+observer exports are required. Health/armor/ammo use player state; team scores
+use current configstrings rather than an older requested scoreboard response.
+The displayed clock freezes at the first observed intermission snapshot, then
+resets with the next match. It does not simulate server time.
+
+Original crosshair, pickups, rewards, powerups, votes, lagometer and CTF flag
+status remain engine-owned. DOM weapon slots use the real inventory bitmask;
+CG_DrawWeaponSelect suppresses only duplicate pixels under the same lease.
+Scoreboard visibility/fade and deferred player loading retain original rules.
+Respawn is a held +attack/-attack with a dedicated input identity, not a direct
+health write or zero-duration pulse. Keyboard/pointer release, blur and failure
+clear that held action. Restart is local-server-only; action acceptance is not
+a claim of server completion.
+
+Play/character records come from the q3_ui VFS catalogue and are scoped to an
+explicit generation. Mode support and availability are not guessed by JS.
+Eight bot slots and integer limits stage before a validated launch; SP retains
+the original arena roster/limits. A rejected transaction requires Refresh
+content, avoiding hidden staged limits leaking into an SP retry. Accepted launch
+releases C menu ownership before DOM hides, even if the client is connecting.
+Existing Painter hangar artwork/provenance is reused; no duplicate paid artwork
+was generated and no controls/numbers are baked into images.
+
+Executed on Chromium/SwiftShader at 1280×720 DPR2 with Emscripten 3.1.58,
+observer OFF, privately transferred official Demo data and freshly matched QVMs
+plus the existing inv.h compatibility override (not a publishable asset set):
+
+- `node --test code/web/hud.test.mjs code/web/play.test.mjs`: snapshot field/row
+  mapping, one refresh, clock boundaries, literal names, catalogue generation,
+  unavailable content and stale/missing rejection semantics pass.
+- `cc -std=c99 code/web/tests/ui-snapshot.c code/cgame/cg_ui_snapshot.c -o /tmp/ui-snapshot && /tmp/ui-snapshot`:
+  production snapshot version/size, asymmetric values, invalid clients,
+  current-vs-old team scores, intermission and disconnected clearing pass.
+- `bash code/web/tests/match-browser.sh <private-test-server>`: real DOM
+  catalogue/model/limits → q3dm1 → Gauntlet/infinite ammo/inventory → actual
+  death → keyboard-held respawn → Bot standings/timed intermission → local
+  restart → spectator → disconnect passes. First fraglimit-2 match also ended
+  with Grunt score 2; restart read score 0 and elapsed 822ms.
+- `menu-browser.sh` rerun passes actual settings/IDBFS/fullscreen/FOV/resume and
+  terminal input-failure/reload regression. Model/headmodel `visor/default`
+  were independently read back from the engine-written q3config.cfg.
+- Original-roster SP launch and q3tourney2 Tournament launch read matching
+  production map/mode/limits. Two-bot Tournament is rejected without launching.
+- The requested FFA-no-bots q3dm1 → Tournament q3tourney2, bot 0, skill 2,
+  fraglimit 3 / timelimit 7 regression also passes after the disconnect-before-map
+  lifecycle fix: after 15 seconds the production HUD reports q3tourney2 / 1 / 3 / 7.
+- `tests/lobby-fixture.mjs` is explicitly a DOM/SDK contract fixture, not real
+  platform admission: full-room disable, visibility, code validation, owner
+  close, leave and sanitized failures pass without acquiring a session.
+
+Inspected real Play available/rejected/SP, character profile, active HUD,
+death/standings, in-match menu, spectator and intermission captures. Final-frame
+artwork integration, ultrawide/physical GPU/other browsers, complete CTF assets,
+and production embedded multiplayer remain release gates. The private Demo has
+no complete CTF artwork/maps; a controlled CTF-mode HUD check showed missing
+flag shader placeholders, not a validated CTF match.
+
+**Native entry remains honestly unavailable.** OG.native presence is SDK
+support, not proof of a provisioned release. Admission returns reservations,
+not connected players. The UI never calls getSession or places tokens in URLs,
+storage or cvars. The platform currently has no public iframe-remount/transport
+teardown API; loading Retry is not a room-switch API. A trusted persistent
+shell must close all old transports before obtaining a fresh session and
+starting a new engine instance. Until integrated, the entry button stays
+disabled and local play remains available. Reconnect/409/expiry and actual
+multi-client matches must be tested on that real lifecycle, not this fixture.

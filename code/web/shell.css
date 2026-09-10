@@ -112,3 +112,19 @@ body[data-state="failed"] #status { color: #efac7b; }
 .weapon-inventory { position: absolute; bottom: 26px; right: 4vw; display: flex; justify-content: end; flex-wrap: wrap; gap: 3px; max-width: 65vw; }
 .weapon-inventory span { padding: 5px 8px; background: #11191ddd; border-bottom: 2px solid #53696a; color: #adc4c3; font-size: 9px; text-transform: uppercase; }
 .weapon-inventory span[data-selected="true"] { border-color: #e7ad81; color: #fff0d9; background: #48382bf2; }
+#match-setup { display: grid; grid-template-columns: 1fr 1fr; gap: 0 22px; }
+#match-setup > .setting-row { font-size: 12px; gap: 8px; }
+#match-setup > .setting-row select { width: 180px; }
+.bot-roster { grid-column: 2; grid-row: 1 / 4; height: 146px; overflow: auto; padding: 0 8px; border: 1px solid #526567; }
+.bot-roster p { position: sticky; top: 0; height: 24px; line-height: 24px; margin: 0; font-size: 9px; color: #b4d7d1; background: #142023; }
+.bot-roster .setting-row { height: 40px; font-size: 11px; padding: 5px 0; gap: 8px; }
+.bot-roster select { width: 145px; font-size: 11px; padding: 6px; }
+.bot-roster:focus-visible { outline: 2px solid #9be4dc; }
+.match-limits { grid-column: 1 / -1; display: flex; gap: 30px; }
+.match-limits .setting-row { flex: 1; font-size: 12px; gap: 8px; }
+.match-limits input { width: 82px; }
+#match-setup > .setting-row:has(#arena-model), #arena-rule-note, .launch-actions { grid-column: 1 / -1; }
+#match-setup > .setting-row:has(#arena-model) select { margin-left: auto; width: 240px; }
+#match-setup button[data-apply-model] { padding: 8px 14px; }
+.launch-actions { display: flex; align-items: baseline; gap: 12px; }
+#arena-rule-note { margin-bottom: 0; }

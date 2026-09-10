@@ -1286,6 +1286,16 @@ static void CG_DrawLowerRight( void ) {
 
 	if ( !cg_webHUD.integer ) {
 		y = CG_DrawScores( y );
+	} else if ( cgs.gametype == GT_CTF ) {
+		/* The v1 DOM score strip owns numbers, not flag status. Keep the
+		 * original server-driven flag shaders visible above the ammo panel. */
+		y = 340;
+		if ( cgs.redflag >= 0 && cgs.redflag <= 2 ) {
+			CG_DrawPic( 560, y, 32, 32, cgs.media.redFlagShader[cgs.redflag] );
+		}
+		if ( cgs.blueflag >= 0 && cgs.blueflag <= 2 ) {
+			CG_DrawPic( 600, y, 32, 32, cgs.media.blueFlagShader[cgs.blueflag] );
+		}
 	}
 	CG_DrawPowerups( y );
 }
@@ -2659,5 +2669,4 @@ void CG_DrawActive( stereoFrame_t stereoView ) {
 	// draw status bar and other floating elements
  	CG_Draw2D(stereoView);
 }
-
 

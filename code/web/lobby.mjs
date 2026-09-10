@@ -7,13 +7,15 @@ export function createLobby(og) {
     const rooms = document.querySelector('#lobby-rooms');
     const api = og?.native;
     const supported = ['list', 'create', 'join', 'leave', 'close'].every(name => typeof api?.[name] === 'function');
-    let current = null, busy = false, visible = false, stopped = false, timer;
+    let current = null, busy = false, visible = false, stopped = false, timer, renewedAt = 0;
     const describe = () => current ? `Reserved room ${current.code} · ${current.players}/${current.capacity} members. Engine entry unavailable until trusted session lifecycle is connected.` : 'Choose a room or create one. Membership is a reservation, not an active match.';
     function enable() {
         for (const button of controls.querySelectorAll('button')) button.disabled = busy || button.dataset.full === 'true' || (rooms.contains(button) && !!current);
         document.querySelector('#lobby-create').disabled = busy || !!current;
         document.querySelector('#lobby-leave').disabled = busy || !current;
         document.querySelector('#lobby-join button').disabled = busy || !!current;
+        document.querySelector('#lobby-close').disabled = busy || !current?.owner;
+        document.querySelector('#lobby-enter').disabled = true;
     }
     function schedule() {
         clearTimeout(timer);
@@ -31,7 +33,11 @@ export function createLobby(og) {
     }
     async function refresh() {
         await run(async () => {
+            // A listed room still existing does not prove this player's seat
+            // survived a throttled/background tab's 60-second reservation TTL.
+            if (current && Date.now() - renewedAt >= 60000) current = null;
             const result = await api.list();
+            renewedAt = Date.now();
             rooms.replaceChildren();
             if (current) {
                 const updated = result.rooms.find(room => room.roomId === current.roomId);
@@ -52,7 +58,7 @@ export function createLobby(og) {
         });
     }
     async function reserve(operation) {
-        const ok = await run(async () => { current = await operation(); status.textContent = describe(); });
+        const ok = await run(async () => { current = await operation(); renewedAt = Date.now(); status.textContent = describe(); });
         // Reconcile server ownership/listing; list also extends the reservation.
         if (ok) await refresh();
     }
@@ -70,10 +76,19 @@ export function createLobby(og) {
         if (result.left !== true) throw new Error('No leave confirmation');
         current = null; status.textContent = 'Reservation released. This does not assert transport teardown.';
     }));
+    document.querySelector('#lobby-close').addEventListener('click', () => run(async () => {
+        if (!current?.owner) return;
+        const result = await api.close(current.roomId);
+        if (result.closed !== true) throw new Error('No close confirmation');
+        current = null; status.textContent = 'Room closed by its owner. Members must reserve another room.';
+    }));
     controls.hidden = !supported;
     enable();
     return {
         show(value) { visible = value; if (visible && supported) void refresh(); else schedule(); },
         stop() { stopped = true; clearTimeout(timer); },
+        // For a future trusted persistent shell. This is not a session/token,
+        // and calling it must never be mistaken for engine entry or teardown.
+        reservation() { return current?.roomId ?? null; },
     };
 }
