@@ -17,8 +17,8 @@ def package(source, receipt_path, placement_path, output):
     entry, = placement['replacements']
     if placement['schemaVersion'] != 1 or placement['map'] != 'q3dm1' or entry['surface'] != 2050:
         raise ValueError('Unreviewed placement target')
-    if entry['angles'] != [0, 180, 0] or not 0 < entry['scale'] <= 1:
-        raise ValueError('This measured placement expects 180-degree yaw and uniform scale')
+    if entry['angles'] != [0, 0, 0] or not 0 < entry['scale'] <= 1:
+        raise ValueError('This engine-reviewed placement expects zero yaw and uniform scale')
     expected = {'models/remaster/environment_wall_crest.md3',
                 'models/remaster/environment_wall_crest.tga',
                 'scripts/remaster_environment_wall_crest_v1.shader'}
@@ -28,8 +28,8 @@ def package(source, receipt_path, placement_path, output):
         files = {name: archive.read(name) for name in archive.namelist()}
     model = read_md3(files[entry['model']])
     points = [p for surface in model['surfaces'] for p in surface['positions']]
-    # Exactly equivalent to AnglesToAxis(0,180,0), without tiny sin(pi) error.
-    transformed = [[entry['origin'][a] + p[a] * entry['scale'] * (-1 if a < 2 else 1)
+    # Actual engine front-view acceptance fixes AnglesToAxis(0,0,0).
+    transformed = [[entry['origin'][a] + p[a] * entry['scale']
                     for a in range(3)] for p in points]
     bounds = [[min(p[a] for p in transformed) for a in range(3)],
               [max(p[a] for p in transformed) for a in range(3)]]

@@ -1,6 +1,6 @@
 {
   "asset_id": "environment-wall-crest-v1",
-  "status": "generated-blender-cleaned-exported-and-measured-awaiting-map-runtime-review",
+  "status": "runtime-front-orientation-corrected-and-four-state-reviewed-not-final-art",
   "prototype": "environment-wall-crest-prototype.png",
   "prototype_sha256": "3be476cb7f8285b5b9f9cd5446bdcfb613cbd61c189b8ec81d0c97d1b59a80d0",
   "source_attachment": "https://ampcode.com/user-content/attachments/b427fb131b65244a21f1070275842c1f396fc57f2ba3d60993ce4cd85c6d9013-file.png",
@@ -36,11 +36,13 @@
     "maximum_vertices_per_surface": 999,
     "maximum_indices_per_surface": 1152,
     "decoded_md3_views": "assets/remaster/work/environment-wall-crest-v1/orthographic/",
-    "findings": "Decorated front is local -Y. Connected backing/relief, no obvious holes or floating parts in six-view export inspection. Inferred back has nonfunctional relief and dark material. Ivory edge fringe and scattered source-texture speckles remain art issues; not final approval.",
+    "findings": "The preview-derived local -Y front assumption did not transfer to actual renderer visibility: yaw180 displayed the generated back. A same-camera yaw0 control exposed the ivory front. Runtime-verified placement now uses yaw0. Connected backing/relief; ivory edge fringe and source-texture speckles remain art issues.",
     "material": "Opaque baked diffuse; no preserved PBR or dynamic emission claim",
     "placement": "environment-wall-crest-placement.json",
     "runtime_package": "environment-wall-crest-q3dm1-v1.pk3",
-    "runtime_package_sha256": "d7eeef0944a46b36685980c9508a47cc1b82f0edc6063baf2d82b24ffa5da1c2",
+    "runtime_package_sha256": "c41774d3f005bca2bbd5f0dcaa7efdb9c2940b1fdf7081f2aa1179a4fe9b9fc5",
+    "superseded_yaw180_package_sha256": "d7eeef0944a46b36685980c9508a47cc1b82f0edc6063baf2d82b24ffa5da1c2",
+    "runtime_review": "Local WASM at renderer commit394df0f7: v1/v2 light packages crossed with HDR0/1 all bound at identical camera [674,1334.49866,287], yaw-90, no context loss. v2 correct front shows ivory shield/cyan; v1 correct front has warm gold-brown cast. No model, texture, exposure or renderer brightness changes. See environment-lighting-v2.json.",
     "bounds_verified": true
   },
   "recovery": {

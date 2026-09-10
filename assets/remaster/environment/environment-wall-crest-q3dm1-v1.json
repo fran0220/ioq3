@@ -1,7 +1,7 @@
 {
   "source_package_sha256": "57eba5f42ecd4429529be131faceba910ee60ecab60423313a6bcf1cfe7945b6",
-  "placement_sha256": "ee6a30a1899526b55dc02385682a09c0ebe91c1d8c43be69907927ed3f88557b",
-  "runtime_package_sha256": "d7eeef0944a46b36685980c9508a47cc1b82f0edc6063baf2d82b24ffa5da1c2",
+  "placement_sha256": "428118dd4fc48328f7b33f205be267dd282cccefa8705f4d34748a202a38874f",
+  "runtime_package_sha256": "c41774d3f005bca2bbd5f0dcaa7efdb9c2940b1fdf7081f2aa1179a4fe9b9fc5",
   "local_bounds": [
     -43.15625,
     -6.3125,
@@ -12,12 +12,12 @@
   ],
   "world_bounds": [
     [
-      637.6615625000001,
+      637.6615625,
       1200.3225,
       296.37
     ],
     [
-      710.1509375,
+      710.1509374999999,
       1210.9275,
       336.020625
     ]

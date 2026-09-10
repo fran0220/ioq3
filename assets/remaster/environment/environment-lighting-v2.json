@@ -1,7 +1,7 @@
 {
   "classification": "private-reference-lighting-candidate-not-release",
-  "reason": "Actual surface2050 placement reported by renderer owner is correctly attached but dark brown; old neutral lightmap conflicts with original colored model lightgrid and vertex lighting.",
-  "evidence_scope": "Renderer-owner original screenshot downloaded and inspected locally; replacement renderer not yet pushed at time of this record. No local crest-v2 visual success claimed.",
+  "reason": "Old neutral lightmap conflicts with original colored model lightgrid and vertex lighting. CORRECTION: initial nearly-black crest also displayed its generated back at yaw180; this cannot establish insufficient front illumination.",
+  "evidence_scope": "Local rebuild at renderer commit394df0f7; same-camera original yaw180 controls and corrected yaw0 front, each crossed with lighting v1/v2 and HDR0/1. Correct front is readable without brightness compensation; neutral v2 removes original gold/brown cast.",
   "input_package": "assets/remaster/work/environment-private/zzzz-environment-private-maps.pk3",
   "input_package_sha256": "b45486259288faacb14fed39f92c736ddb6d9a331f41ee39c8cf1ebb0e89a742",
   "candidate_package": "assets/remaster/work/environment-lighting-v2/zzzz-environment-private-maps.pk3",
@@ -25,12 +25,16 @@
     "walk": "PASS keyboard movement >100 units, armor pickup, airborne jump, land, five motion-linked views",
     "bot": "PASS falling death/click respawn, shooting hit, fraglimit3 score screen, restart",
     "reliability": "PASS HDR0/1 vid_restart, q3tourney2/q3dm17/q3dm1 switch, forced context loss/full reload",
-    "visual": "Courtyard render inspected; does not verify wall crest because this local build lacks surface replacement",
+    "visual": "Actual surface2050 ivory front and thin cyan visible in corrected yaw0 v2 HDR/LDR. Four-state binding/camera/context assertions PASS and images inspected. Some faceting/edge softness and thin dim cyan remain art limitations.",
+    "crest_renderer_commit": "394df0f7d950592b5f6ad752c59ba4510972eb64",
+    "crest_camera": {"origin": [674, 1334.49866, 287], "angles": [0, -90, 0]},
+    "crest_package_sha256": "c41774d3f005bca2bbd5f0dcaa7efdb9c2940b1fdf7081f2aa1179a4fe9b9fc5",
+    "crest_comparisons": "assets/remaster/work/environment-lighting-v2/{crest-comparison,crest-front-comparison}/",
     "build": "Same Emscripten3.1.58 observer engine recorded in environment-verification.json; Chromium SwiftShader, not physical GPU",
     "private_logs": "assets/remaster/work/environment-lighting-v2/{walk,bot,reliability}/",
     "invariants": "assets/remaster/work/environment-lighting-v2/{logic-invariants,aas-invariants,package-hashes}.json"
   },
-  "remaining_gate": "Matched camera v1/v2 crest comparison in both HDR/LDR after surface replacement integration; correct dark illumination at its actual cause rather than assume neutralization is sufficient.",
+  "remaining_gate": "Further art polish, oblique/moving sightlines and integrated all-content scene. Four near-camera states do not establish complete environment or final material quality.",
   "runtime_art_accepted": false,
   "release_accepted": false
 }

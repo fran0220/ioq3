@@ -104,17 +104,22 @@ with `maps/q3dm1.remaster.json`. The 1800-triangle, five-surface opaque model us
 Painter cost remains unknown. The source receipt is
 `assets/remaster/receipts/environment-wall-crest-v1.json`.
 
-Placement uses local -Y front → world +Y via yaw180, uniform scale0.84 and origin
-[673.8996875,1205.625,296.37]. Exported vertices fit wholly inside original
+Placement now uses runtime-verified yaw0, uniform scale0.84 and origin
+[673.9128125,1205.625,296.37]. The earlier preview-derived yaw180 was wrong:
+it displayed the generated back, not a severely underlit ivory front. A same-camera
+yaw0 control exposed the front without model, texture or exposure changes.
+Exported vertices fit wholly inside original
 surface2050's AABB. This is not an inferred center-pivot placement: the exporter
 uses XY-centered, Z-bottom coordinates. The five environment tests include an
 asymmetric transform and rejection on both sides of the allowed envelope.
 
-The renderer owner is implementing original-surface/leaf visibility registration;
-this package does not use testmodel or hide every instance of a material. Actual
-on-wall runtime/occlusion review remains pending. Orthographic inspection found
-connected backing and no obvious holes, but source texture edge fringe/speckles
-remain art issues. Do not mark geometry or runtime acceptance complete yet.
+The renderer's original-surface/leaf registration is integrated and locally tested;
+this package does not use testmodel or hide every instance of a material. Four
+matched-camera WASM states (v1/v2 lighting × HDR/LDR) passed binding and context
+checks. Inspected v2 front views show ivory and cyan; v1 front views retain warm
+gold/brown cast. The initial dark-back captures do not establish front-lighting
+quality. Source texture fringe, faceting and thin cyan remain art issues; broader
+moving/oblique visibility and complete-level acceptance are still outstanding.
 
 `package_crest.py SOURCE_PK3 RECEIPT PLACEMENT OUTPUT_PK3` reproduces the combined
 package and verifies the receipt hash and every transformed vertex. Source GLB,

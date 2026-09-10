@@ -25,14 +25,19 @@ class CrestPlacementTests(unittest.TestCase):
             receipt = root / 'receipt.json'
             receipt.write_text(json.dumps({'package': {'sha256': hashlib.sha256(source.read_bytes()).hexdigest()}}))
             spec = {'schemaVersion': 1, 'map': 'q3dm1', 'replacements': [{
-                'surface': 2050, 'model': model + '.md3', 'angles': [0, 180, 0],
-                'scale': .5, 'origin': [10, 20, 30], 'bounds': [[8, 18.5, 30], [11, 20.5, 31]]}]}
+                'surface': 2050, 'model': model + '.md3', 'angles': [0, 0, 0],
+                'scale': .5, 'origin': [10, 20, 30], 'bounds': [[9, 19.5, 30], [12, 21.5, 31]]}]}
             placement = root / 'placement.json'
             placement.write_text(json.dumps(spec))
             with contextlib.redirect_stdout(io.StringIO()):
                 package(source, receipt, placement, root / 'result.pk3')
             result = json.loads((root / 'result.json').read_text())
-            self.assertEqual(result['world_bounds'], [[8, 18.5, 30], [11, 20.5, 31]])
+            self.assertEqual(result['world_bounds'], [[9, 19.5, 30], [12, 21.5, 31]])
+            spec['replacements'][0]['angles'] = [0, 180, 0]
+            placement.write_text(json.dumps(spec))
+            with self.assertRaisesRegex(ValueError, 'zero yaw'):
+                package(source, receipt, placement, root / 'bad.pk3')
+            spec['replacements'][0]['angles'] = [0, 0, 0]
             for delta in (-.01, .01):
                 spec['replacements'][0]['origin'][0] = 10 + delta
                 placement.write_text(json.dumps(spec))
