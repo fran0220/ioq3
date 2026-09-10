@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "asset_id": "character-sarge-v1",
+  "classification": "authorized-character-remake-candidate",
+  "authorization": "2026-09-09 user authorized original character remake/publication and unlimited generation",
+  "reference": {
+    "scope": "private-demo-not-full-base-game",
+    "archive_sha256": "e77abad2466f45a0a7ea018445528f9b95a0fe7789fa1abc1a7718bbf0754b08",
+    "portrait": "models/players/sarge/icon_default.tga"
+  },
+  "prototype": {
+    "generator": "Amp Painter",
+    "attachment": "https://ampcode.com/user-content/attachments/e9082cb82448adbba2ff8bae88008c88c4e560798e3f84bf04a8431da4381ee0-file.png",
+    "actual_usd": null,
+    "cost_status": "not-exposed-by-tool"
+  },
+  "shape_model": "hunyuan3d-2",
+  "processing": {
+    "height_meters": 1.8,
+    "units_per_meter": 40,
+    "runtime": "segmented-iqm2",
+    "contract": "assets/remaster/characters/contract.md"
+  }
+}

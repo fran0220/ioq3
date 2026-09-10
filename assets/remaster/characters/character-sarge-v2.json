@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "asset_id": "character-sarge-v2",
+  "supersedes": "v1 publisher admission 403, no task returned; failed operation and unreconciled receipt retained. This is a new explicitly coordinated default-identity operation, not replay of v1.",
+  "classification": "authorized-character-remake-candidate",
+  "authorization": "2026-09-09 original character remake/publication and unlimited generation; 2026-09-10 integration confirms default xiaomao generation identity separate from og-atlas publication",
+  "reference": {
+    "scope": "private-demo-not-full-base-game",
+    "archive_sha256": "e77abad2466f45a0a7ea018445528f9b95a0fe7789fa1abc1a7718bbf0754b08",
+    "portrait": "models/players/sarge/icon_default.tga"
+  },
+  "prototype": {
+    "generator": "Amp Painter",
+    "attachment": "https://ampcode.com/user-content/attachments/e9082cb82448adbba2ff8bae88008c88c4e560798e3f84bf04a8431da4381ee0-file.png",
+    "sha256": "01e2269ea4e47bf84769a370c9a018596458b221f6157b1e672c4bcb89c58b02",
+    "actual_usd": null,
+    "cost_status": "not-exposed-by-tool; reuses v1 image, no new Painter request"
+  },
+  "shape_model": "hunyuan3d-2",
+  "processing": {
+    "height_meters": 1.8,
+    "units_per_meter": 40,
+    "runtime": "segmented-iqm2",
+    "contract": "assets/remaster/characters/contract.md"
+  }
+}

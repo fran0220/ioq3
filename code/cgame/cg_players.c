@@ -519,6 +519,20 @@ static qboolean	CG_RegisterClientSkin( clientInfo_t *ci, const char *teamName, c
 CG_RegisterClientModelname
 ==========================
 */
+static qhandle_t CG_RegisterPlayerModel( const char *filename ) {
+	char iqmName[MAX_QPATH];
+
+	// An installed skeletal replacement must win even when the original MD3
+	// exists in a lower-priority pak. Keep the legacy registration path when
+	// no replacement was supplied (including the renderer's format fallback).
+	COM_StripExtension( filename, iqmName, sizeof( iqmName ) );
+	Q_strcat( iqmName, sizeof( iqmName ), ".iqm" );
+	if ( CG_FileExists( iqmName ) ) {
+		return trap_R_RegisterModel( iqmName );
+	}
+	return trap_R_RegisterModel( filename );
+}
+
 static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelName, const char *skinName, const char *headModelName, const char *headSkinName, const char *teamName ) {
 	char	filename[MAX_QPATH];
 	const char		*headName;
@@ -531,10 +545,10 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 		headName = headModelName;
 	}
 	Com_sprintf( filename, sizeof( filename ), "models/players/%s/lower.md3", modelName );
-	ci->legsModel = trap_R_RegisterModel( filename );
+	ci->legsModel = CG_RegisterPlayerModel( filename );
 	if ( !ci->legsModel ) {
 		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/lower.md3", modelName );
-		ci->legsModel = trap_R_RegisterModel( filename );
+		ci->legsModel = CG_RegisterPlayerModel( filename );
 		if ( !ci->legsModel ) {
 			Com_Printf( "Failed to load model file %s\n", filename );
 			return qfalse;
@@ -542,10 +556,10 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 	}
 
 	Com_sprintf( filename, sizeof( filename ), "models/players/%s/upper.md3", modelName );
-	ci->torsoModel = trap_R_RegisterModel( filename );
+	ci->torsoModel = CG_RegisterPlayerModel( filename );
 	if ( !ci->torsoModel ) {
 		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/upper.md3", modelName );
-		ci->torsoModel = trap_R_RegisterModel( filename );
+		ci->torsoModel = CG_RegisterPlayerModel( filename );
 		if ( !ci->torsoModel ) {
 			Com_Printf( "Failed to load model file %s\n", filename );
 			return qfalse;
@@ -558,11 +572,11 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 	else {
 		Com_sprintf( filename, sizeof( filename ), "models/players/%s/head.md3", headName );
 	}
-	ci->headModel = trap_R_RegisterModel( filename );
+	ci->headModel = CG_RegisterPlayerModel( filename );
 	// if the head model could not be found and we didn't load from the heads folder try to load from there
 	if ( !ci->headModel && headName[0] != '*' ) {
 		Com_sprintf( filename, sizeof( filename ), "models/players/heads/%s/%s.md3", headModelName, headModelName );
-		ci->headModel = trap_R_RegisterModel( filename );
+		ci->headModel = CG_RegisterPlayerModel( filename );
 	}
 	if ( !ci->headModel ) {
 		Com_Printf( "Failed to load model file %s\n", filename );
@@ -2632,4 +2646,3 @@ void CG_ResetPlayerEntity( centity_t *cent ) {
 		CG_Printf("%i ResetPlayerEntity yaw=%f\n", cent->currentState.number, cent->pe.torso.yawAngle );
 	}
 }
-
