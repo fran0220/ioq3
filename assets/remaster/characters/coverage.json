@@ -20,6 +20,9 @@
     "clips_reviewed": false,
     "team_skins_reviewed": false,
     "runtime_package": null,
+    "combat_test_candidate": "assets/remaster/work/character-sarge-v2/zz-character-sarge-v2-segmented.pk3",
+    "combat_test_candidate_sha256": "a4cada48dcab6f50924e3666bff77fc9ca0fc985a06e175d26cd0162ba412b85",
+    "combat_test_scope": "Actual native/browser CG_Player, 191 lower / 306 weapon-specific upper / 1 head frames; not final acceptance",
     "inspection_package": "assets/remaster/work/character-sarge-v2/character-sarge-v2-review.pk3",
     "inspection_package_sha256": "3f844d59639740a09754dd5147877f829e464c1b606378b53dfd01b7a6a7df94",
     "inspection_scope": "Whole-rig native GL2 and browser WebGL testmodel only; not cgame combat acceptance",
@@ -33,8 +36,8 @@
   ],
   "remaining_production_not_external_inputs": [
     "Complete clip and final material/topology review beyond the inspected whole-rig candidate",
-    "Blender waist/neck segment interfaces, rig, weights and complete event-aligned animation library",
-    "Default/red/blue/krusade skins with shape-based team identification",
+    "Complete animation authoring/review beyond current segmented rig and independent-clock seam checks",
+    "Finish all-team/direction/pose readability checks for default/red/blue/krusade and authored shape insignia",
     "Native and browser real combat pose/tag/skin acceptance and inspected captures",
     "Full verified reference roster expansion after first playable vertical slice",
     "Durable off-orb source/master backup with verified hashes"

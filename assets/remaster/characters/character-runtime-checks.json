@@ -20,15 +20,17 @@
     "PK3 sorted before pak0 caused old skins to override new IQM surface mappings; combat-test package now has zz prefix",
     "Cut vertices need orthogonalized tangents; zero-area clipping slivers removed without weakening writer validation",
     "Native command-line batch exceeded startup command limits; switched to exec cfg",
-    "Team mode uses team_model/team_headmodel, not model/headmodel; tested with correct cvars"
+    "Team mode uses team_model/team_headmodel, not model/headmodel; tested with correct cvars",
+    "Root-flattened attachment tags passed frame endpoints but produced .776-unit interpolated waist separation. Bone-parented tags reduce asymmetric interpolation error to .001031 units at 254 waist pairs / .000009 at 326 neck pairs",
+    "Wrist-origin weapon fitting buried the hands; current candidate computes actual weighted palm anchors and separate machinegun/rocket support targets"
   ],
   "pending_acceptance": [
     "Original baseline regression fails mouse-turn >30 assertion: capture already changes spawn yaw to -72.828; aim(-90) yields correct -89.989 but delta17.16. Observed twice including new browser; not waived or called passing",
     "Run/walk/jump while aiming and firing, hit/pain, three deaths, respawn in both native and browser",
     "Final material normal/F0/emission review",
     "Blue readability and both team shape symbols during combat, beyond default front/side/rear checks",
-    "Back-jump, turn and idle authoring rather than temporary retimed review motions",
-    "Final weapon-thread gun origin and offhand alignment",
+    "Engine review of newly authored back-jump counterbalance and turn shuffle; idle is deliberately static planted stance",
+    "Final offhand/finger/arm deformation: latest native rocket side review still reports upper-arm seam and compressed grip; browser full side shows contact, but opposite side hides the second hand",
     "External durable source backup, beyond two orb copies",
     "Full authorized original character/skin inventory beyond private Demo subset"
   ],

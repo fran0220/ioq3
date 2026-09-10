@@ -74,9 +74,13 @@ integer overflow and malformed/duplicate metadata are rejected. The original
 `pe.torso` clock and `CG_MapTorsoToWeaponFrame` input are never rewritten.
 
 Initial actual-generated-gun fitting targets, in standing player coordinates:
-machinegun right=(7,-4,27), left=(14.6,-4,27); rocket right=(4,-3,28),
-left=(19.2,-3,27.2). These preserve the weapon author's local forward support
-distances 7.6 and 15.2 units while bringing the grips within the real arm reach.
+machinegun right=(9,-4,27), left=(16.6,-4,26); rocket right=(11,-3,28),
+left=(26.2,-3,26.2). These are **palm** anchors computed from the actual weighted
+hand mesh, not wrist positions. Right fingers orient along the vertical grip;
+left fingers cross below the support. Shoulders protract 1/3 units to clear the
+receiver from the chest without stretching forearm lengths. These preserve the
+weapon author's forward support distances 7.6 and 15.2 units with palms lowered
+one unit below the estimated support center.
 They are fitting candidates, not a claim of final finger/grip acceptance.
 
 ## Materials and acceptance

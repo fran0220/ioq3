@@ -78,6 +78,12 @@ def main():
     neck = Matrix.Translation((1.47,-.02,37.3))
     hip_offset = rest[names['Hips']].inverted() @ waist
     head_offset = rest[names['Head']].inverted() @ neck
+    palm = {}
+    for side in ('Left','Right'):
+        bone = names[side+'Hand']
+        points = [Vector(v['position']) for m in source['meshes'] for v in m['vertices']
+                  if sum(w for j,w in v['influences'] if j == bone) > .75]
+        palm[side] = rest[bone].inverted() @ (sum(points,Vector())/len(points))
 
     def socket(pose, part):
         return pose[names['Hips']] @ hip_offset if part == 'upper' else pose[names['Head']] @ head_offset
@@ -85,7 +91,12 @@ def main():
     def ik(pose, side, target):
         a,b,h = (names[side+n] for n in ('Arm','ForeArm','Hand'))
         shoulder = pose[a].translation.copy()
-        target = Vector(target)
+        # Targets refer to the actual palm mass, not the wrist joint. Right
+        # fingers follow the vertical grip; left fingers cross underneath it.
+        hand_rotation = rest[h].to_quaternion()
+        if side == 'Left':
+            hand_rotation = Quaternion((1,0,0),-math.pi/2) @ hand_rotation
+        target = Vector(target) - hand_rotation @ palm[side]
         l1 = (rest[b].translation-rest[a].translation).length
         l2 = (rest[h].translation-rest[b].translation).length
         direction = target-shoulder
@@ -99,12 +110,18 @@ def main():
         for index,origin,end,old_end in ((a,shoulder,elbow,rest[b].translation),(b,elbow,target,rest[h].translation)):
             rotation = (old_end-rest[index].translation).rotation_difference(end-origin) @ rest[index].to_quaternion()
             pose[index] = Matrix.Translation(origin) @ rotation.to_matrix().to_4x4()
-        pose[h] = Matrix.Translation(target) @ Vector((1,0,0)).to_track_quat('Y','Z').to_matrix().to_4x4()
+        pose[h] = Matrix.Translation(target) @ hand_rotation.to_matrix().to_4x4()
 
     firearm = 'machinegun'
     def holding(recoil=0, lowered=0, jab=0, wave=0):
         pose = [m.copy() for m in rest]
-        grip, support = ((7,-4,27),(7.6,0,0)) if firearm == 'machinegun' else ((4,-3,28),(15.2,0,-.8))
+        grip, support = ((9,-4,27),(7.6,0,-1)) if firearm == 'machinegun' else ((11,-3,28),(15.2,0,-1.8))
+        # Protract the shoulders for the heavier forward hold so the launcher
+        # rear clears the chest without stretching either forearm length.
+        protraction = 1 if firearm == 'machinegun' else 3
+        for side in ('Left','Right'):
+            for name in ('Shoulder','Arm','ForeArm','Hand'):
+                pose[names[side+name]].translation.x += protraction
         ik(pose,'Right',(grip[0]-recoil+12*jab,grip[1]-4*lowered,grip[2]-14*lowered+recoil))
         ik(pose,'Left',(grip[0]+support[0]-recoil,grip[1]+support[1]+6*wave,grip[2]+support[2]-14*lowered+18*wave))
         return pose
@@ -137,32 +154,58 @@ def main():
         lower.append(pose)
     jump = sample('jump',16)
     lower += jump
-    lower += sample('jump',8)+[copy.deepcopy(jump[-1])]
+    # Backward takeoff uses the paid neutral jump with authored forward leg
+    # counterbalance. This changes only skin poses, never player displacement.
+    backjump = sample('jump',8)
+    for i,pose in enumerate(backjump):
+        for side in ('Left','Right'):
+            pivot = pose[names[side+'UpLeg']].translation.copy()
+            change = Matrix.Translation(pivot) @ Matrix.Rotation(-.16*math.sin(math.pi*i/7),4,'Y') @ Matrix.Translation(-pivot)
+            for suffix in ('UpLeg','Leg','Foot','ToeBase'):
+                index = names[side+suffix]
+                pose[index] = change @ pose[index]
+    lower += backjump+[copy.deepcopy(jump[-1])]
     lower += [[m.copy() for m in rest] for _ in range(10)]
     lower += [copy.deepcopy(source_clips['crouch'][0]) for _ in range(8)]
-    lower += sample('walk',7)
+    # A planted, alternating knee/ankle shuffle rather than a truncated walk.
+    # CG_PlayerAngles supplies turning yaw; no extra root yaw is authored here.
+    for i in range(7):
+        pose = [m.copy() for m in rest]
+        for side,phase in (('Left',0),('Right',math.pi)):
+            swing = math.sin(i*2*math.pi/7+phase)
+            hip, knee = .06*swing, .14*max(0,swing)
+            chain = ('UpLeg','Leg','Foot','ToeBase')
+            for first,angle in ((0,hip),(1,knee),(2,-hip-knee)):
+                pivot = pose[names[side+chain[first]]].translation.copy()
+                change = Matrix.Translation(pivot) @ Matrix.Rotation(angle,4,'Y') @ Matrix.Translation(-pivot)
+                for suffix in chain[first:]:
+                    index = names[side+suffix]
+                    pose[index] = change @ pose[index]
+        lower.append(pose)
     assert len(upper) == 306 and len(lower) == 191
     out = work/'segmented'
     out.mkdir(parents=True,exist_ok=True)
     report = {'classification':'generated-segmented-combat-test-candidate','runtime_accepted':False,
-              'source':'prepared/iqm/source.json','authoring':'Paid rig; paid source locomotion/deaths/jump/crouch; explicit hand-authored two-bone IK upper gesture/recoil/jab/drop/raise/stance and lower flutter kick/idle. Back jump currently retimed forward jump: must review and replace before final acceptance.',
+              'source':'prepared/iqm/source.json','authoring':'Paid rig; paid source locomotion/deaths/jump/crouch; explicit hand-authored two-bone IK upper gesture/recoil/jab/drop/raise/stance; lower flutter kick, static planted idle, backward-jump leg counterbalance and alternating turn shuffle. Complete engine motion review still required.',
               'waist':list(waist.translation),'neck':list(neck.translation),'parts':{},
               'weapon_frame_offsets':{'2':0,'5':153},
-              'grip_targets':{'machinegun':{'right':[7,-4,27],'left':[14.6,-4,27]},
-                              'rocket':{'right':[4,-3,28],'left':[19.2,-3,27.2]}}}
+              'grip_targets':{'machinegun':{'right':[9,-4,27],'left':[16.6,-4,26]},
+                              'rocket':{'right':[11,-3,28],'left':[26.2,-3,26.2]}},
+              'palm_local_anchors':{key:list(value) for key,value in palm.items()}}
     for part,poses,origin in (('lower',lower,Matrix.Identity(4)),('upper',upper,waist),('head',[rest],neck)):
         inverse = origin.inverted()
         bind = [inverse @ p for p in rest]
         segment_joints = [{**j,**t} for j,t in zip(joints,locals_for(joints,bind))]
         tags = ['tag_torso'] if part == 'lower' else ['tag_head','tag_weapon'] if part == 'upper' else []
+        tag_parents = [names['Hips']] if part == 'lower' else [names['Head'],names['RightHand']] if part == 'upper' else []
         def tags_for(pose):
             if part == 'lower':
                 return [socket(pose,'upper')]
             if part == 'upper':
-                return [socket(pose,'head'), Matrix.Translation(pose[names['RightHand']].translation)]
+                return [socket(pose,'head'), Matrix.Translation(pose[names['RightHand']] @ palm['Right'])]
             return []
-        for name,tag in zip(tags,tags_for(rest)):
-            segment_joints.append({'name':name,'parent':-1,**trs(inverse @ tag)})
+        for name,parent,tag in zip(tags,tag_parents,tags_for(rest)):
+            segment_joints.append({'name':name,'parent':parent,**trs(rest[parent].inverted() @ tag)})
         meshes = []
         for mesh in source['meshes']:
             dest = {'name':part,'material':'models/remaster/characters/sarge_default','vertices':[],'triangles':[]}
@@ -232,7 +275,7 @@ def main():
         for pose in poses:
             current_inverse = socket(pose,part).inverted() if part in ('upper','head') else Matrix.Identity(4)
             frame = locals_for(joints,[current_inverse @ p for p in pose])
-            frame += [trs(current_inverse @ tag) for tag in tags_for(pose)]
+            frame += [trs(pose[parent].inverted() @ tag) for parent,tag in zip(tag_parents,tags_for(pose))]
             frames.append(frame)
         document = {'schema_version':1,'coordinate_system':'q3-x-forward-y-left-z-up',
                     'joints':segment_joints,'meshes':meshes,'attachments':tags,

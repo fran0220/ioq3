@@ -29,6 +29,18 @@ def main():
     files['models/players/sarge/weapon_frames.cfg'] = ''.join(f'{weapon} {offset}\n' for weapon,offset in report['weapon_frame_offsets'].items()).encode()
     shaders = []
     image = Image.open(work/'prepared/body.tga').convert('RGB')
+    # Dye armor, not the face or exposed arms. Preserve the complete arm UV
+    # islands conservatively, including gloves, rather than guessing skin hue.
+    rig = json.loads((work/'prepared/iqm/source.json').read_text())
+    protected = {i for i,j in enumerate(rig['joints'])
+                 if j['name'] in ('LeftArm','LeftForeArm','LeftHand','RightArm','RightForeArm','RightHand','neck','Head','head_end','headfront')}
+    dye_mask = Image.new('L',image.size,255)
+    mask_draw = ImageDraw.Draw(dye_mask)
+    for mesh in rig['meshes']:
+        for triangle in mesh['triangles']:
+            vertices = [mesh['vertices'][i] for i in triangle]
+            if any(sum(w for j,w in v['influences'] if j in protected) > .25 for v in vertices):
+                mask_draw.polygon([(v['uv'][0]*image.width,v['uv'][1]*image.height) for v in vertices],fill=0)
     normal = 'models/remaster/characters/sarge_normal'
     specular = 'models/remaster/characters/sarge_specular'
     files[normal+'.tga'] = (work/'prepared/normal.tga').read_bytes()
@@ -41,8 +53,13 @@ def main():
     report['material'] = {'normal':json.loads((work/'prepared/material-bake.json').read_text()),
                           'response':'authored dielectric F0 .04, roughness .72; coated armor/cloth; no metal or emission',
                           'renderer':'r_pbr 0 / r_glossType 1; specular RGB linear, A=1-roughness'}
-    for skin, color in (('default',None),('red','#b42c20'),('blue','#2268c5'),('krusade','#786332')):
-        texture = image if color is None else Image.blend(image,ImageOps.colorize(ImageOps.grayscale(image),'#12161c',color),.65)
+    portrait = Image.open(work/'prepared/portrait.png').convert('RGBA')
+    for skin, color in (('default',None),('red','#e52c20'),('blue','#123cff'),('krusade','#786332')):
+        data = io.BytesIO()
+        portrait.save(data,format='TGA')
+        files['models/players/sarge/icon_'+skin+'.tga'] = data.getvalue()
+        dyed = image if color is None else Image.blend(image,ImageOps.colorize(ImageOps.grayscale(image),'#080a10',color),.9)
+        texture = Image.composite(dyed,image,dye_mask)
         data = io.BytesIO()
         texture.save(data,format='TGA')
         name = 'models/remaster/characters/sarge_'+skin
@@ -65,7 +82,8 @@ def main():
             model = (source/(part+'.iqm')).read_bytes()
             decoded = read_iqm(model)
             files['models/players/sarge/'+part+'.iqm'] = model
-            files['models/players/sarge/'+part+'_'+skin+'.skin'] = ''.join(m['name']+','+(symbol if m['name'].startswith('insignia_') else name)+'\n' for m in decoded['meshes']).encode()
+            body_shader = 'models/remaster/characters/sarge_default' if part == 'head' else name
+            files['models/players/sarge/'+part+'_'+skin+'.skin'] = ''.join(m['name']+','+(symbol if m['name'].startswith('insignia_') else body_shader)+'\n' for m in decoded['meshes']).encode()
     files['scripts/character_sarge_segmented.shader'] = ''.join(shaders).encode()
     report['limitations'] = ['Candidate awaiting actual player combat acceptance',
                              'Authored team insignia placement awaiting all-direction runtime review',

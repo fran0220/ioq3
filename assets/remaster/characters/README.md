@@ -116,9 +116,32 @@ browser WebGL, including head/waist assembly, original gun attachment, and team
 red. A subsequent candidate adds authored armor ID plates (chevron versus two
 bars); front and side were inspected. Rear projection was corrected against
 the actual armor and its readable chevron inspected in native GL2.
-It is still **not accepted**: review placeholders remain for backward jump/turn,
-final material maps and complete combat/timing tests. See
+It is still **not accepted**: final motion/material review and complete
+combat/timing tests remain. See
 `character-runtime-checks.json`; do not promote render checks to rules coverage.
+
+The subsequent parented-socket candidate replaces the backward-jump/turn
+placeholders with an authored leg counterbalance over the paid neutral jump
+and a planted alternating knee/ankle shuffle. Idle deliberately remains a
+static planted stance. This is authoring, not completed motion acceptance.
+`tag_torso`, `tag_head`, `tag_weapon` are children of Hips, Head, RightHand:
+flattening tags to roots had passed endpoint tests but produced a 0.776-unit
+waist gap during asymmetric SLERP. The new independent interpolation check
+measures <=.001031 units at 254 waist pairs and <=.000009 at 326 neck pairs.
+Authored lower clips preserve limb lengths within .000023 units and turn
+introduces no root transform. Generated portraits now replace reference icons.
+Current palm fitting is weapon-specific, not a single shared offhand point;
+see `contract.md`. Final hand contact and every combat pose still need review.
+
+Team dyes use a conservative UV triangle mask derived from the actual rig's
+head/arm weights; exposed skin and gloves keep their source color, and head
+skins explicitly use the default material. The original 65% whole-image tint
+made blue look olive in q3dm1 and tinted the face. The new 90% armor-only dye
+was inspected in browser front/back: blue/red armor are distinguishable while
+skin remains natural; two bars/chevron provide a second identification channel.
+Front chest marks can still be occluded by the gun. Test skin changes with
+`cg_deferPlayers 0` or a genuine reload: deferred models intentionally retain
+the previous appearance, so setting a cvar alone does not prove skin loading.
 
 `bake_material.py` bakes the original paid rig's high-resolution geometry to
 the reduced UV mesh in bind pose (1024² tangent +Y, explicit cage/ray distances).
