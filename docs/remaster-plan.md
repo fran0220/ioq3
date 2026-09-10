@@ -23,7 +23,7 @@
 
 本轮主线程整合记录：
 
-- HUD v1 有界 VM 拷贝、能力握手、初始化前保护及 `cg_webHUD` 超时回退已接线；Play 使用真实 q3_ui VFS catalogue、generation、8-slot Bot roster、限额和模型校验。真实 observer OFF 浏览器中 FFA q3dm1→Tournament q3tourney2 曾出现旧 serverinfo 地图名残留，单删 wait 无效；[新比赛先断开旧连接](https://github.com/fran0220/ioq3/commit/82eab124) 后相同输入得到正确地图、mode 1、fraglimit 3/time 7。native/Web 构建及生产 Play/HUD C probe 通过；UI 线程的 SP 起始路径未复现，不能把它当作同一负控。
+- HUD v1 有界 VM 拷贝、能力握手、初始化前保护及 `cg_webHUD` 超时回退已接线；Play 使用真实 q3_ui VFS catalogue、generation、8-slot Bot roster、限额和模型校验。主 orb 的真实 observer OFF 浏览器中 FFA q3dm1→Tournament q3tourney2 曾出现 HUD 旧地图名，单删 wait 无效；[新比赛先断开旧连接](https://github.com/fran0220/ioq3/commit/82eab124) 后相同输入得到正确地图、mode 1、fraglimit 3/time 7。native/Web 构建及生产 Play/HUD C probe 通过。UI 线程使用旧 9acda36a WASM 与同批 QVM，在 SP 和相同 FFA 起始路径均正确返回目标地图，未复现；因此旧连接 serverinfo 残留只是待核实原因，不能宣称跨 orb 负控失败或根因已证实。新增 disconnect 边界的完整 DOM 比赛回归由 UI 线程继续执行。
 - 墙徽、角色 Sarge v2、rocket/machinegun/hands/muzzle 六份恢复归档已在主 orb 保存第二份私有副本并逐一核对 SHA-256；角色因工具 100 MiB 限制分片传输后合并核验。付费状态保留，不重提交；外部持久备份仍未完成。角色 whole-rig walk/jump、墙徽离线六视图和火箭旧候选不是正式整合验收；IQM CW 绕序修复后的武器候选须重新导出与实测。
 
 - **外部内容输入仍缺失。** 主线程检查 `assets`、`build-demo-web` 与 `.amp`，仅发现官方 Demo、测试 QVM 和立柱样件 PK3。需要完整版基础 Q3A 数据的私有路径/下载入口与版本、覆盖顺序；地图源若存在一并提供。授权已确认，缺的是数据本体。Demo 不可代替全量参考或发布包。

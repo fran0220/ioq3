@@ -158,9 +158,8 @@ int UI_WebLaunch(int mapId, int mode, int skill) {
 		trap_Cvar_SetValue("g_friendlyfire", trap_Cvar_VariableValue(mode == GT_CTF ? "ui_ctf_friendly" : "ui_team_friendly"));
 		trap_Cvar_Set("g_localTeamPref", "Red");
 	}
-	/* A new local match must not replay the previous connection's reliable
-	 * serverinfo updates after loading its new gamestate. Merely delaying map
-	 * leaves those commands queued when the mode/limits change above. */
+	/* Start a fresh client connection for a new local match, rather than
+	 * preserving the previous connection's reliable-command stream. */
 	trap_Cmd_ExecuteText(EXEC_APPEND, va("disconnect\nmap %s\nwait 3\n", map));
 	for (i = 0; i < count; i++)
 		trap_Cmd_ExecuteText(EXEC_APPEND, va("addbot %s %d %s\n", bots[i], skill, mode >= GT_TEAM ? (i % 2 ? "Red" : "Blue") : ""));
