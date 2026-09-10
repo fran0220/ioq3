@@ -149,14 +149,14 @@ The renderer reads `maps/<baseName>.remaster.json` at world registration:
   "surface":2050,"shader":"textures/remaster_environment/panel",
   "bounds":[[636.578125,1191.609375,292.59375],[711.234375,1219.640625,339.796875]],
   "model":"models/remaster/environment_wall_crest.md3",
-  "origin":[673.8996875,1205.625,296.37],"angles":[0,180,0],"scale":0.84
+  "origin":[673.9128125,1205.625,296.37],"angles":[0,0,0],"scale":0.84
 }]}
 ```
 
-This is the historical technical fixture, not an accepted art placement:
-the environment thread's yaw=0 counterexample revealed that yaw=180 shows
-the crest's rear. Use its corrected placement pack with recomputed pivot and
-bounds for front-face review; do not compensate the rear view with brightness.
+This corrected yaw=0 placement displays the ivory front in real WASM HDR/LDR
+captures. The earlier yaw=180 fixture displayed the rear; its darkness must
+not be compensated with brightness. This placement check is not full-game
+art acceptance.
 
 Bindings require the exact map, surface index, shader and original AABB
 (0.01 unit tolerance). This example targets the private remaster BSP, not the

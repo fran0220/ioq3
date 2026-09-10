@@ -62,10 +62,29 @@ placement and reported that the ivory center shield became visible immediately.
 Its `assets/remaster/work/environment-lighting-v2/crest-yaw0-small.jpg` was
 downloaded and inspected here: the distinct ivory shield supports a wrong-side
 orientation explanation, not exposure alone. That counterexample was run in
-the environment orb, not independently reproduced in this renderer orb yet.
+the environment orb; independent reproduction follows below.
 The preceding yaw=180 captures therefore verify substitution/fallback and the
 color change, not front-face material quality. Do not increase emission,
 exposure or material brightness to compensate for the rear view. The precise
-exporter/culling coordinate cause is not established. The corrected placement
-requires recomputed pivot/bounds and a matched HDR/LDR rerun from the environment
-thread's revised pack before front-face acceptance.
+exporter/culling coordinate cause is not established.
+
+## Corrected front independently reproduced
+
+Downloaded corrected crest PK3 SHA-256
+`c41774d3f005bca2bbd5f0dcaa7efdb9c2940b1fdf7081f2aa1179a4fe9b9fc5`.
+Entry comparison against the previous pack confirmed only
+`maps/q3dm1.remaster.json` changed; model/shader/texture bytes are identical.
+Yaw=0, origin `[673.9128125,1205.625,296.37]`, scale=0.84 preserves the
+original containment contract. Both private map lighting versions independently
+passed all six browser registration/fallback/near-far cases, each with GL error
+0 and no context loss. Same WASM, camera and exposure defaults as above.
+
+Inspected `.amp/in/artifacts/render-placement/front-lighting-comparison.jpg`
+(v1 top, v2 bottom; HDR left, LDR right): the ivory shield and fine cyan accents
+are visible in v2 HDR/LDR, while v1 front is readable but gold/orange tinted.
+Placement/silhouette remain stable with no duplicate source bull head. This
+confirms orientation correction and the continuing value of neutralized
+lightgrid colors, without any brightness/material compensation. Evidence and
+snapshots are under `render-placement/front-v1` and `front-v2`. This accepts
+the tested front-placement behavior, not full-game art, moving PVS, particles
+or shadow coverage. Software SwiftShader and earlier input-test limits remain.
