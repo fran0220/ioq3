@@ -1,0 +1,95 @@
+{
+  "asset_id": "weapon-machinegun-v1",
+  "classification": "remaster-weapon-production-candidate",
+  "manifest_sha256": "68d340c7ed85e63e10800a66172a30f1d528b8ac2fcfd52610020aaf85ed9956",
+  "prototype_review": {
+    "at": 1789016665,
+    "note": "Inspected entire isolated three barrel machinegun; graphite shroud ivory receiver, readable connected grip/magazine, cyan/orange accents; barrel will need separation in Blender before runtime spin",
+    "reviewer": "Amp weapon production visual review",
+    "sha256": "fecf0ba8ed898d9c5a24911424756150bd79d28268e74f44e5407c821abc6da5"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": null,
+      "task_id": null,
+      "request_id": null,
+      "request_sha256": null,
+      "response_sha256": null,
+      "generator_identity": null,
+      "model": "amp-painter",
+      "status": "downloaded",
+      "submissions": null,
+      "artifact": {
+        "bytes": 1618399,
+        "path": "prototype.png",
+        "sha256": "fecf0ba8ed898d9c5a24911424756150bd79d28268e74f44e5407c821abc6da5"
+      },
+      "image": {
+        "height": 1024,
+        "mime": "image/png",
+        "width": 1536
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "not-exposed-by-amp-painter"
+      }
+    },
+    "shape": {
+      "operation_id": "07ecc523-0e06-4775-8e8b-0154009b2a61",
+      "task_id": "task_gavqbK6cIOTFc5bduFrHw9GIw3YGSI9q",
+      "request_id": "202609100504259977436498268d9d6tkytcYvy",
+      "request_sha256": "f04b5bfbc050babe467b1b9e61cb5a3df6d96c7dc861d3b0bc13eb850fb50bec",
+      "response_sha256": "c5b1d4bdfa9d0cd59c79a680c3c8558dd780f53585c8f4c5567f4f0daff51bbd",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 3724948,
+        "path": "generated.glb",
+        "sha256": "4cc40944782cb6c96abfbe7450f987651e85c9faefb5b984c70b9a456535acd7"
+      },
+      "image": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 47.347405534,
+          "paint_load_and_generate_seconds": 45.326821142000014,
+          "shape_load_and_generate_seconds": 41.33174020399999,
+          "texture_bake_seconds": 0.37112573699999984,
+          "texture_delight_seconds": 1.7467208359999944,
+          "texture_export_verify_seconds": 0.8683436200000187,
+          "texture_inpaint_seconds": 18.793555263000002,
+          "texture_load_seconds": 12.923291094000007,
+          "texture_mesh_preparation_seconds": 2.364705504,
+          "texture_multiview_seconds": 6.069152630000005,
+          "texture_normal_render_seconds": 0.14617740600000673,
+          "texture_position_render_seconds": 0.10942741799999567,
+          "texture_uv_seconds": 4.855363400000002
+        }
+      },
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1789016666,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609100504259977436498268d9d6tkytcYvy",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    }
+  },
+  "processing": null,
+  "package": null
+}

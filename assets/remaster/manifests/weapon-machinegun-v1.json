@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "asset_id": "weapon-machinegun-v1",
+  "classification": "remaster-weapon-production-candidate",
+  "authorization": "2026-09-09 user authorized remake/publication and unlimited generation; no commercial mesh or texture used",
+  "style": "industrial-arena-v1",
+  "image_model": "amp-painter",
+  "prototype_url": "https://ampcode.com/user-content/attachments/969a5cb9741d99e65dfb47294f45720deb916bd5df3d655d19ef06974df7e5d5-file.png",
+  "shape_model": "hunyuan3d-2",
+  "processing": {
+    "height_meters": 0.28,
+    "units_per_meter": 40,
+    "target_triangles": 3600,
+    "texture_edge": 1024,
+    "rotation_z_degrees": 0,
+    "shader": "models/remaster/weapons/machinegun/body"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "asset_id": "weapon-rocket-v1",
+  "classification": "remaster-weapon-production-candidate",
+  "authorization": "2026-09-09 user authorized remake/publication and unlimited generation; no commercial mesh or texture used",
+  "style": "industrial-arena-v1",
+  "image_model": "amp-painter",
+  "prototype_url": "https://ampcode.com/user-content/attachments/2fa64c16765b91213748b52b8bd534395911bb7a058d742e4b2ac0bec3da9a40-file.png",
+  "shape_model": "hunyuan3d-2",
+  "processing": {
+    "height_meters": 0.3,
+    "units_per_meter": 40,
+    "target_triangles": 3600,
+    "texture_edge": 1024,
+    "rotation_z_degrees": 0,
+    "shader": "models/remaster/weapons/rocket/body"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "asset_id": "weapon-hands-v1",
+  "classification": "remaster-first-person-arm-production-candidate",
+  "manifest_sha256": "caa96a24e12241ac0fed435ecc7add59f9a7534ea65cdfdb5e0820a5fb369d36",
+  "prototype_review": {
+    "at": 1789017199,
+    "note": "Inspected right armored forearm with closed cuff; index extended and fingers partially grasping; needs digit silhouette and weapon grip fit review after 3D and rigging. Graphite ivory cyan orange style consistent.",
+    "reviewer": "Amp weapon production visual review",
+    "sha256": "ae2e19e4f1bee83dca5372be3ddc157e7ef1d3603a57ef9a92de20d00f777686"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": null,
+      "task_id": null,
+      "request_id": null,
+      "request_sha256": null,
+      "response_sha256": null,
+      "generator_identity": null,
+      "model": "amp-painter",
+      "status": "downloaded",
+      "submissions": null,
+      "artifact": {
+        "bytes": 1393429,
+        "path": "prototype.png",
+        "sha256": "ae2e19e4f1bee83dca5372be3ddc157e7ef1d3603a57ef9a92de20d00f777686"
+      },
+      "image": {
+        "height": 1177,
+        "mime": "image/png",
+        "width": 1337
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "not-exposed-by-amp-painter"
+      }
+    },
+    "shape": {
+      "operation_id": "936790c5-6d7c-446b-95aa-b33290c75b0d",
+      "task_id": "task_97F6nOerv7gvSIU5c69YIHD1i8CXyf1N",
+      "request_id": "202609100513204047496188268d9d6i6QKwlKC",
+      "request_sha256": "1190df95cc8890a97449c98bafe7b7361fd0e262f8e2d5fe38b5e2cb7e4e1eda",
+      "response_sha256": "0be25031d344838fd5375b1646612c79d92738edd57ed58dde9f76f754ca3ad1",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 3863532,
+        "path": "generated.glb",
+        "sha256": "d5397aec7a9738f0c467639abbe7a786b3946a2c639ccc14f9f83699158aec2c"
+      },
+      "image": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 0.9212607099999843,
+          "paint_load_and_generate_seconds": 32.91191626999995,
+          "shape_load_and_generate_seconds": 37.44737642000001,
+          "texture_bake_seconds": 0.3536945660000015,
+          "texture_delight_seconds": 1.6224217239999916,
+          "texture_export_verify_seconds": 0.8943933030000153,
+          "texture_inpaint_seconds": 10.287586403999967,
+          "texture_load_seconds": 8.365734559999964,
+          "texture_mesh_preparation_seconds": 4.101682530000005,
+          "texture_multiview_seconds": 6.066786132000004,
+          "texture_normal_render_seconds": 0.1218642500000442,
+          "texture_position_render_seconds": 0.10571836400004031,
+          "texture_uv_seconds": 5.694811006999998
+        }
+      },
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1789017200,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609100513204047496188268d9d6i6QKwlKC",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    }
+  },
+  "processing": null,
+  "package": null
+}

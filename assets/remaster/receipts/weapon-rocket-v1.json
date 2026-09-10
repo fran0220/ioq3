@@ -1,0 +1,154 @@
+{
+  "asset_id": "weapon-rocket-v1",
+  "classification": "remaster-weapon-production-candidate",
+  "manifest_sha256": "e337f68b0d04e2c417a21f16bd9c3598913fc9211098479f994589e8616f4a96",
+  "prototype_review": {
+    "at": 1789016259,
+    "note": "Inspected Painter output: whole isolated launcher, readable square shroud/circular bore, connected grip and foregrip, graphite ivory with restrained cyan/orange; hidden side requires generated mesh review",
+    "reviewer": "Amp weapon production visual review",
+    "sha256": "d930cd4ab27a041354489006576544571ee64191721dc77724fcb9b31ab3350a"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": null,
+      "task_id": null,
+      "request_id": null,
+      "request_sha256": null,
+      "response_sha256": null,
+      "generator_identity": null,
+      "model": "amp-painter",
+      "status": "downloaded",
+      "submissions": null,
+      "artifact": {
+        "bytes": 1701776,
+        "path": "prototype.png",
+        "sha256": "d930cd4ab27a041354489006576544571ee64191721dc77724fcb9b31ab3350a"
+      },
+      "image": {
+        "height": 1024,
+        "mime": "image/png",
+        "width": 1536
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "not-exposed-by-amp-painter"
+      }
+    },
+    "shape": {
+      "operation_id": "2076b765-2fd9-4110-af9e-692da89de6ae",
+      "task_id": "task_rRTxESu71TfRpEdHy0CRhaCHLB650VUZ",
+      "request_id": "202609100457402240452098268d9d67NhXZkcz",
+      "request_sha256": "2b8902ccf198991fa9c7d79af8ad7d0ac85e2854cfe900ac929cc96e0f867851",
+      "response_sha256": "5343f225d660073cd6fea2e96fb9ae93772a1cf0cff08c2e9a4d3a55caf59485",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 3408988,
+        "path": "generated.glb",
+        "sha256": "bacf877d7cab3acf6ed83edc9a0bbd7058e79c9ffd4f5192eb91cb258fc7b347"
+      },
+      "image": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 36.050491152000006,
+          "paint_load_and_generate_seconds": 32.13516332399999,
+          "shape_load_and_generate_seconds": 31.711739226,
+          "texture_bake_seconds": 0.4553883019999887,
+          "texture_delight_seconds": 1.0027374790000039,
+          "texture_export_verify_seconds": 0.7714226900000085,
+          "texture_inpaint_seconds": 7.974908584000005,
+          "texture_load_seconds": 12.680896853999997,
+          "texture_mesh_preparation_seconds": 1.9822536650000018,
+          "texture_multiview_seconds": 5.669006858000003,
+          "texture_normal_render_seconds": 0.19432394599999725,
+          "texture_position_render_seconds": 0.1428879409999979,
+          "texture_uv_seconds": 3.7135658320000005
+        }
+      },
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1789016260,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609100457402240452098268d9d67NhXZkcz",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    }
+  },
+  "processing": {
+    "files": [
+      {
+        "bytes": 5466492,
+        "path": "processed/cleaned.blend",
+        "sha256": "1c2fba1bc7afeaac3c39d94298f504a1585deac4386c357c07319ae9c8a08457"
+      },
+      {
+        "bytes": 1644291,
+        "path": "processed/diffuse.tga",
+        "sha256": "b6b122267dbad6aac139fd09663bd14823d6f2e3ae5e6c6cec8035b26df7f06c"
+      },
+      {
+        "bytes": 1622,
+        "path": "processed/geometry-report.json",
+        "sha256": "1626a6a5884263c7fde968917a8fed96206ac78218257ad57eee658e7f529653"
+      },
+      {
+        "bytes": 212708,
+        "path": "processed/model.md3",
+        "sha256": "6f0bd073330c18fd29c55f59e0c7959362cd09df1e6b8d634e78af77ae98f6b7"
+      },
+      {
+        "bytes": 135,
+        "path": "processed/remaster.shader",
+        "sha256": "5d427854fecec8f44939b4dcd49a451b52291855418fa34964091233417a8fee"
+      },
+      {
+        "bytes": 506805,
+        "path": "processed/review-back.png",
+        "sha256": "489ae96849830816629c7486b879dbb58c2a24520c81d7ea7d5593c336a5f845"
+      },
+      {
+        "bytes": 489479,
+        "path": "processed/review-front.png",
+        "sha256": "73092a9ca8b71f892d3a4dfe94d24c4e6faba06a55e61f8d6f60bd333ac5b543"
+      }
+    ],
+    "scripts": {
+      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
+      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
+    },
+    "source_sha256": "bacf877d7cab3acf6ed83edc9a0bbd7058e79c9ffd4f5192eb91cb258fc7b347"
+  },
+  "package": null,
+  "weapon_export": {
+    "runtime_accepted": false,
+    "material": "diffuse-only candidate; normal/specular/emission not yet baked",
+    "files": {
+      "models/remaster/weapons/rocket/weapon.iqm": "152b4d37aee861128dd8798c28b7e825eb5c821157ce91c7f07936a537be9cf3",
+      "models/remaster/weapons/rocket/body.tga": "b6b122267dbad6aac139fd09663bd14823d6f2e3ae5e6c6cec8035b26df7f06c",
+      "scripts/remaster_weapon_rocket_v1.shader": "62182c743677c583f35945ff2f16eaa4d3a368ce33133d8cb96fd43345c010b5"
+    },
+    "source_files": {
+      "rigged/weapon.blend": "e809c29519190729d495226c880faf8f0e9bab0760030537f7f68c02681d6dfb",
+      "rigged/iqm-config.json": "80116e8dea575b648d63a4bea90af85a402238ee031c0c50c21867b3c16a8d15",
+      "rigged/iqm/source.json": "c1e1f7e9540b9fdd601ebdafc59c51b043295c56b8690327581eb19a92dc12d9",
+      "rigged/iqm/animation-contract.json": "b78925248602629977753275fc57a8066aa1dbb09b1caae09a6ce8b84ab73cb1"
+    },
+    "package_sha256": "09a085fb96e335ac5db5749183ac7636f5f94cff8e6b43152a7d6cf555f32a57"
+  }
+}

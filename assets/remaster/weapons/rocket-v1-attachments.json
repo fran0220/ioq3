@@ -1,0 +1,9 @@
+{
+  "shader": "models/remaster/weapons/rocket/body",
+  "grip_meters": [-0.22, 0, 0.08],
+  "sockets_meters": {
+    "tag_flash": [0.35, 0, 0.205],
+    "tag_barrel": [0.35, 0, 0.205]
+  },
+  "status": "candidate-needs-full-object-and-runtime-review"
+}

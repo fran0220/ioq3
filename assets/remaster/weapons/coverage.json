@@ -1,0 +1,29 @@
+{
+  "scope": "base Quake III Arena, excludes Team Arena and grappling-hook debug weapon",
+  "source_of_truth": "code/game/bg_misc.c, code/game/bg_pmove.c, code/cgame/cg_weapons.c",
+  "release_ready": false,
+  "weapons": {
+    "gauntlet": {"content": "not-produced", "ammo": null, "effects": ["continuous-melee-flash", "flesh-impact"]},
+    "machinegun": {"content": "weapon-machinegun-v1 generation", "ammo": "ammo_bullets", "effects": ["muzzle", "brass", "bullet-tracer", "bullet-impact", "flesh-impact"]},
+    "shotgun": {"content": "not-produced", "ammo": "ammo_shells", "effects": ["muzzle", "shell-ejection", "pellet-impact", "flesh-impact"]},
+    "grenade": {"content": "not-produced", "ammo": "ammo_grenades", "effects": ["muzzle", "grenade-projectile", "smoke-trail", "bounce", "explosion", "scorch"]},
+    "rocket": {"content": "weapon-rocket-v1 candidate; not runtime accepted", "ammo": "ammo_rockets", "effects": ["muzzle", "rocket-projectile", "smoke-trail", "explosion", "scorch"]},
+    "lightning": {"content": "not-produced", "ammo": "ammo_lightning", "effects": ["continuous-muzzle", "lightning-beam", "lightning-impact", "flesh-impact"]},
+    "rail": {"content": "not-produced", "ammo": "ammo_slugs", "effects": ["muzzle", "rail-core", "rail-rings", "rail-impact", "flesh-impact"]},
+    "plasma": {"content": "not-produced", "ammo": "ammo_cells", "effects": ["muzzle", "plasma-projectile", "plasma-trail", "plasma-impact", "scorch"]},
+    "bfg": {"content": "not-produced", "ammo": "ammo_bfg", "effects": ["muzzle", "bfg-projectile", "bfg-explosion", "scorch"]}
+  },
+  "pickups_not_produced": [
+    "ammo_bullets", "ammo_shells", "ammo_grenades", "ammo_rockets", "ammo_lightning", "ammo_slugs", "ammo_cells", "ammo_bfg",
+    "item_armor_shard", "item_armor_combat", "item_armor_body",
+    "item_health_small", "item_health", "item_health_large", "item_health_mega",
+    "holdable_teleporter", "holdable_medkit",
+    "item_quad", "item_enviro", "item_haste", "item_invis", "item_regen", "item_flight",
+    "team_CTF_redflag", "team_CTF_blueflag"
+  ],
+  "shared_effects_not_produced": ["teleport-in", "teleport-out", "item-respawn", "pickup-ring", "armor-sphere", "blood-spurt", "blood-mark", "gibs", "bubble-trail", "water-impact", "haste-trail", "quad-shell", "regen-shell", "invisibility-shell", "flight-trail"],
+  "first_person_arms": "weapon-hands-v1 generation; no accepted rig or visible arm package yet",
+  "unchanged_rules": ["fire intervals", "ammo consumption", "weapon switch timing", "projectile physics", "damage", "knockback", "muzzleFlashTime", "EF_FIRING", "torso-to-hands frames"],
+  "required_runtime_matrix_per_weapon": ["first-person-rest", "third-person-rest", "switch-in", "switch-out", "single-fire", "held-fire", "ammo-consumption", "hit-damage", "projectile-or-hitscan", "near", "far", "HDR", "LDR"],
+  "reference_limit": "Official Demo obtained privately from integration thread. Full base Q3 commercial reference archive/version remains absent. Demo is not included in candidates."
+}

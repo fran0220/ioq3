@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "asset_id": "weapon-hands-v1",
+  "classification": "remaster-first-person-arm-production-candidate",
+  "authorization": "2026-09-09 user authorized remake/publication and unlimited generation; no commercial mesh or texture used",
+  "style": "industrial-arena-v1",
+  "image_model": "amp-painter",
+  "prototype_url": "https://ampcode.com/user-content/attachments/d4a19da58ab79d9656262180f80c4e1cd35268115c47fab61a8ba6e4f6c4792d-file.png",
+  "shape_model": "hunyuan3d-2",
+  "processing": {
+    "height_meters": 0.32,
+    "units_per_meter": 40,
+    "target_triangles": 3600,
+    "texture_edge": 1024,
+    "rotation_z_degrees": 0,
+    "shader": "models/remaster/weapons/hands/arm"
+  }
+}

@@ -23,6 +23,34 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // cg_weapons.c -- events and effects dealing with weapons
 #include "cg_local.h"
 
+// Explicit IQM paths: a valid stock MD3 is not overridden by an adjacent IQM.
+// Missing candidates retain the technical reference; release coverage must
+// reject those fallbacks. Only production-validated packages belong here.
+static const char *cg_remasterWeaponNames[] = {
+	NULL, "gauntlet", "machinegun", "shotgun", "grenade", "rocket",
+	"lightning", "rail", "plasma", "bfg"
+};
+static qboolean cg_remasterHands[WP_NUM_WEAPONS];
+static qhandle_t cg_referenceViewWeapon[WP_NUM_WEAPONS];
+
+static qhandle_t CG_RemasterWeaponModel( int weaponNum, const char *part ) {
+	char path[MAX_QPATH];
+	fileHandle_t file;
+	int length;
+
+	if ( weaponNum <= WP_NONE || weaponNum >= ARRAY_LEN( cg_remasterWeaponNames ) ) {
+		return 0;
+	}
+	Com_sprintf( path, sizeof(path), "models/remaster/weapons/%s/%s.iqm",
+		cg_remasterWeaponNames[weaponNum], part );
+	length = trap_FS_FOpenFile( path, &file, FS_READ );
+	if ( !file ) {
+		return 0;
+	}
+	trap_FS_FCloseFile( file );
+	return length > 0 ? trap_R_RegisterModel( path ) : 0;
+}
+
 /*
 ==========================
 CG_MachineGunEjectBrass
@@ -609,6 +637,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 	char			path[MAX_QPATH];
 	vec3_t			mins, maxs;
 	int				i;
+	qhandle_t		remaster;
 
 	weaponInfo = &cg_weapons[weaponNum];
 
@@ -635,7 +664,8 @@ void CG_RegisterWeapon( int weaponNum ) {
 	CG_RegisterItemVisuals( item - bg_itemlist );
 
 	// load cmodel before model so filecache works
-	weaponInfo->weaponModel = trap_R_RegisterModel( item->world_model[0] );
+	remaster = CG_RemasterWeaponModel( weaponNum, "weapon" );
+	weaponInfo->weaponModel = remaster ? remaster : trap_R_RegisterModel( item->world_model[0] );
 
 	// calc midpoint for rotation
 	trap_R_ModelBounds( weaponInfo->weaponModel, mins, maxs );
@@ -669,6 +699,27 @@ void CG_RegisterWeapon( int weaponNum ) {
 
 	if ( !weaponInfo->handsModel ) {
 		weaponInfo->handsModel = trap_R_RegisterModel( "models/weapons2/shotgun/shotgun_hand.md3" );
+	}
+
+	// Hands keep the stock 0..14 torso mapping and interpolation, including
+	// cross-clip transitions. Gun/barrel/flash IQMs are rigid frame-zero assets.
+	cg_remasterHands[weaponNum] = qfalse;
+	remaster = CG_RemasterWeaponModel( weaponNum, "hands" );
+	if ( remaster ) {
+		weaponInfo->handsModel = remaster;
+		cg_remasterHands[weaponNum] = qtrue;
+	}
+	// Legacy hand sockets locate the old model origin, not the new grip.
+	// Do not mount a new body on that incompatible first-person controller.
+	cg_referenceViewWeapon[weaponNum] = cg_remasterHands[weaponNum] ? 0 :
+		trap_R_RegisterModel( item->world_model[0] );
+	remaster = CG_RemasterWeaponModel( weaponNum, "flash" );
+	if ( remaster ) {
+		weaponInfo->flashModel = remaster;
+	}
+	remaster = CG_RemasterWeaponModel( weaponNum, "barrel" );
+	if ( remaster ) {
+		weaponInfo->barrelModel = remaster;
 	}
 
 	switch ( weaponNum ) {
@@ -847,6 +898,10 @@ void CG_RegisterItemVisuals( int itemNum ) {
 	itemInfo->icon = trap_R_RegisterShader( item->icon );
 
 	if ( item->giType == IT_WEAPON ) {
+		qhandle_t remaster = CG_RemasterWeaponModel( item->giTag, "weapon" );
+		if ( remaster ) {
+			itemInfo->models[0] = remaster;
+		}
 		CG_RegisterWeapon( item->giTag );
 	}
 
@@ -1231,7 +1286,8 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		}
 	}
 
-	gun.hModel = weapon->weaponModel;
+	gun.hModel = ps && cg_referenceViewWeapon[weaponNum] ?
+		cg_referenceViewWeapon[weaponNum] : weapon->weaponModel;
 	if (!gun.hModel) {
 		return;
 	}
@@ -1280,7 +1336,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		angles[ROLL] = CG_MachinegunSpinAngle( cent );
 		AnglesToAxis( angles, barrel.axis );
 
-		CG_PositionRotatedEntityOnTag( &barrel, &gun, weapon->weaponModel, "tag_barrel" );
+		CG_PositionRotatedEntityOnTag( &barrel, &gun, gun.hModel, "tag_barrel" );
 
 		CG_AddWeaponWithPowerups( &barrel, cent->currentState.powerups );
 	}
@@ -1331,7 +1387,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		flash.shaderRGBA[2] = 255 * ci->color1[2];
 	}
 
-	CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
+	CG_PositionRotatedEntityOnTag( &flash, &gun, gun.hModel, "tag_flash");
 	trap_R_AddRefEntityToScene( &flash );
 
 	if ( ps || cg.renderingThirdPerson ||
@@ -1431,6 +1487,12 @@ void CG_AddViewWeapon( playerState_t *ps ) {
 
 	hand.hModel = weapon->handsModel;
 	hand.renderfx = RF_DEPTHHACK | RF_FIRST_PERSON | RF_MINLIGHT;
+
+	// Stock hand MD3s are attachment-only. Generated skeletal arms contain
+	// visible surfaces and must be submitted as well as used for tag_weapon.
+	if ( cg_remasterHands[ps->weapon] ) {
+		CG_AddWeaponWithPowerups( &hand, cent->currentState.powerups );
+	}
 
 	// add everything onto the hand
 	CG_AddPlayerWeapon( &hand, ps, &cg.predictedPlayerEntity, ps->persistant[PERS_TEAM] );
