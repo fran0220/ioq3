@@ -4,6 +4,20 @@ This directory owns the image → generated GLB → Blender → **static** MD3/T
 sample pipeline. Characters remain IQM-first in the engine workstream. It does
 not publish a game, alter Gateway channels/accounts, or implement the web client.
 
+## Import an existing Painter prototype without regenerating it
+
+`pipeline.py import-image --manifest MANIFEST --image LOCAL_IMAGE --sha256 SHA256
+--source ATTACHMENT_ID` validates the decoded image and exact reviewed hash,
+copies it into the asset's private work directory and records its source with
+unknown Painter cost. This operation needs no Gateway credential and makes no
+network request. Identical imports are idempotent; existing paid/unknown image
+operations or different prototypes cannot be replaced. Use a new revision for a
+changed image, and keep signed URLs/credentials out of the source identifier.
+
+Import is **not** visual approval. After inspection run the existing `approve`
+command with reviewer/note, then `shape --credential default` and `resume`.
+The default generating identity remains distinct from the root publisher.
+
 ## Animated IQM2 export and actual-engine pose tests
 
 `blender_iqm.py` exports **prepared** Blender meshes, all rig/attachment joints,

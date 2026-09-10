@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 import zipfile
 
-from pipeline import Gateway, Production, check_glb, encoded, lock
+from pipeline import Gateway, Production, check_glb, encoded, lock, digest
 from md3_static import write_md3
 
 
@@ -35,6 +35,34 @@ class RecoveryTests(unittest.TestCase):
 
     def runner(self, gateway):
         return Production(self.manifest, self.work, gateway)
+
+    def test_imported_painter_hash_provenance_and_no_paid_overwrite(self):
+        from PIL import Image
+        source = self.work / 'external.png'
+        Image.new('RGB', (19, 23), (31, 127, 201)).save(source)
+        sha = digest(source.read_bytes())
+        runner = self.runner(FakeGateway([]))
+        with self.assertRaisesRegex(ValueError, 'SHA256'):
+            runner.import_image(source, '0' * 64, 'attachment:test')
+        self.assertFalse(runner.state['stages'])
+        destination = runner.import_image(source, sha, 'attachment:test')
+        state = runner.state_path.read_bytes()
+        self.assertEqual(destination.read_bytes(), source.read_bytes())
+        self.assertEqual(runner.import_image(source, sha, 'attachment:test'), destination)
+        self.assertEqual(runner.state_path.read_bytes(), state)
+        self.assertEqual(runner.gateway.calls, [])
+        self.assertNotIn('prototype_review', runner.state)
+        self.assertIsNone(runner.state['stages']['image']['cost']['actual_usd'])
+        with self.assertRaisesRegex(ValueError, 'Inspect prototype'):
+            runner.shape()
+        with self.assertRaisesRegex(ValueError, 'already exists'):
+            runner.import_image(source, sha, 'attachment:different')
+        runner.state['stages']['image'] = {'status': 'submission_unknown', 'operation_id': 'paid-1'}
+        runner.save()
+        state = runner.state_path.read_bytes()
+        with self.assertRaisesRegex(ValueError, 'already exists'):
+            runner.import_image(source, sha, 'attachment:test')
+        self.assertEqual(runner.state_path.read_bytes(), state)
 
     def test_image_timeout_is_never_resubmitted(self):
         gateway = FakeGateway([TimeoutError()])

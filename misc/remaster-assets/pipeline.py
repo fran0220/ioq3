@@ -237,6 +237,36 @@ class Production:
         self.save()
         return path
 
+    def import_image(self, path, expected_sha256, source):
+        """Import a Painter artifact without a generation request or art approval."""
+        data = Path(path).read_bytes()
+        if not re.fullmatch(r"[0-9a-f]{64}", expected_sha256 or "") or digest(data) != expected_sha256:
+            raise ValueError("Imported image differs from required SHA256")
+        if not source or len(source) > 2048 or any(c in source for c in "\r\n?\x00"):
+            raise ValueError("Use an attachment/source identifier without signed URL queries")
+        info = image_info(data)
+        previous = self.state["stages"].get("image")
+        if previous:
+            if previous.get("imported") and previous.get("source") == source:
+                existing = self.require_artifact("image")
+                if digest(existing.read_bytes()) == expected_sha256:
+                    return existing
+            raise ValueError("Image stage already exists; use a new revision, never replace paid provenance")
+        if self.state["stages"].get("shape"):
+            raise ValueError("Shape stage already exists; restore original image state")
+        extension = {"image/png": "png", "image/jpeg": "jpg", "image/webp": "webp"}[info["mime"]]
+        destination = self.work / ("prototype." + extension)
+        if destination.exists() and digest(destination.read_bytes()) != expected_sha256:
+            raise ValueError("Refusing to overwrite a different prototype")
+        atomic(destination, data)
+        self.state["stages"]["image"] = {
+            "model": "amp-painter", "status": "downloaded", "imported": True,
+            "artifact": self.artifact(destination), "image": info, "source": source,
+            "submissions": 0, "cost": {"status": "not-exposed-by-tool", "actual_usd": None},
+        }
+        self.save()
+        return destination
+
     def approve(self, reviewer, note):
         path = self.require_artifact("image")
         self.state["prototype_review"] = {"reviewer": reviewer, "note": note,
@@ -399,7 +429,7 @@ def lock(work):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["account", "image", "approve", "shape", "resume", "billing", "process", "package", "receipt"])
+    parser.add_argument("command", choices=["account", "image", "import-image", "approve", "shape", "resume", "billing", "process", "package", "receipt"])
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--identity", type=Path, default=ROOT / ".origingame-deploy.json")
     parser.add_argument("--credential", choices=["default", "publisher"], default="default",
@@ -408,6 +438,9 @@ def main():
     parser.add_argument("--wait", type=int, default=0)
     parser.add_argument("--reviewer")
     parser.add_argument("--note")
+    parser.add_argument("--image", type=Path)
+    parser.add_argument("--sha256")
+    parser.add_argument("--source", help="Painter attachment identifier, without signed query parameters")
     args = parser.parse_args()
     manifest = json.loads(args.manifest.read_text())
     if manifest.get("schema_version") != 1 or not re.fullmatch(r"[a-z0-9-]+", manifest["asset_id"]):
@@ -423,7 +456,11 @@ def main():
         if args.command in {"image", "shape"}:
             gateway.account()  # record actual generating account, not publishing attribution
         runner = Production(manifest, work, gateway)
-        if args.command == "approve":
+        if args.command == "import-image":
+            if not args.image or not args.sha256 or not args.source:
+                parser.error("import-image needs --image, --sha256 and --source; approval is separate")
+            result = runner.import_image(args.image, args.sha256, args.source)
+        elif args.command == "approve":
             if not args.reviewer or not args.note:
                 parser.error("approve needs --reviewer and --note after visual inspection")
             runner.approve(args.reviewer, args.note)
