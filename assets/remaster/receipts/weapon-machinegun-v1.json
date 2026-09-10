@@ -90,6 +90,49 @@
       }
     }
   },
-  "processing": null,
+  "processing": {
+    "files": [
+      {
+        "bytes": 5732568,
+        "path": "processed/cleaned.blend",
+        "sha256": "df9cd223d7280dc8f505f8e8ad992bc5aba3bd52131d0294fa4c378bb3abf5d0"
+      },
+      {
+        "bytes": 1616165,
+        "path": "processed/diffuse.tga",
+        "sha256": "882246a935658d8fc4694e56439e7baa09f06dbbeb56f8ae4ea1015d70c4020b"
+      },
+      {
+        "bytes": 1621,
+        "path": "processed/geometry-report.json",
+        "sha256": "d68ca6e91f0509b70ee558e0446d9df9d4d04ab71f31cbfe8c985120962abfa9"
+      },
+      {
+        "bytes": 213940,
+        "path": "processed/model.md3",
+        "sha256": "b595242f7d1e9185d4a494af0b19cc84f55eff842b0c4437f2086f24233c58f3"
+      },
+      {
+        "bytes": 143,
+        "path": "processed/remaster.shader",
+        "sha256": "cf924c995ef348bdfc1d57432b280dbb70a345d9ef6128425fdfdc4947b25bbb"
+      },
+      {
+        "bytes": 456436,
+        "path": "processed/review-back.png",
+        "sha256": "3edef4058503354c80c9912cf88be2dbd50a55dc41af9850eb96f24dbb39cacd"
+      },
+      {
+        "bytes": 471308,
+        "path": "processed/review-front.png",
+        "sha256": "3653a9fad9ce554673794d078815d8649128d8c4113e18a531da9e7bd951cd12"
+      }
+    ],
+    "scripts": {
+      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
+      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
+    },
+    "source_sha256": "4cc40944782cb6c96abfbe7450f987651e85c9faefb5b984c70b9a456535acd7"
+  },
   "package": null
 }

@@ -22,6 +22,10 @@ def prepare(source, config, output):
     if len(meshes) != 1:
         raise ValueError('Expected the single generated cleaned mesh')
     obj = meshes[0]
+    obj.data.use_auto_smooth = True
+    obj.data.auto_smooth_angle = .78539816339
+    for polygon in obj.data.polygons:
+        polygon.use_smooth = True
     grip = Vector(config['grip_meters'])
     for vertex in obj.data.vertices:
         vertex.co -= grip

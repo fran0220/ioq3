@@ -139,16 +139,22 @@
     "runtime_accepted": false,
     "material": "diffuse-only candidate; normal/specular/emission not yet baked",
     "files": {
-      "models/remaster/weapons/rocket/weapon.iqm": "152b4d37aee861128dd8798c28b7e825eb5c821157ce91c7f07936a537be9cf3",
+      "models/remaster/weapons/rocket/weapon.iqm": "185b1f64593e47c92cc3510d40949ab276e75c8238fb7a9068903759cc3acb49",
       "models/remaster/weapons/rocket/body.tga": "b6b122267dbad6aac139fd09663bd14823d6f2e3ae5e6c6cec8035b26df7f06c",
       "scripts/remaster_weapon_rocket_v1.shader": "62182c743677c583f35945ff2f16eaa4d3a368ce33133d8cb96fd43345c010b5"
     },
     "source_files": {
-      "rigged/weapon.blend": "e809c29519190729d495226c880faf8f0e9bab0760030537f7f68c02681d6dfb",
+      "rigged/weapon.blend": "a0926d952eb021c580f944448ba75320d8bf423eaec94805d25c1cecfc1d439e",
       "rigged/iqm-config.json": "80116e8dea575b648d63a4bea90af85a402238ee031c0c50c21867b3c16a8d15",
-      "rigged/iqm/source.json": "c1e1f7e9540b9fdd601ebdafc59c51b043295c56b8690327581eb19a92dc12d9",
-      "rigged/iqm/animation-contract.json": "b78925248602629977753275fc57a8066aa1dbb09b1caae09a6ce8b84ab73cb1"
+      "rigged/iqm/source.json": "7e035aaf0d88669e6383fcf69cd6d1b87124bbb21d86a7d44fb14840356c175a",
+      "rigged/iqm/animation-contract.json": "74c61dea5097f5799eecba9e029d8297e4e9c681134cf8fd677bd7f089e5115e"
     },
-    "package_sha256": "09a085fb96e335ac5db5749183ac7636f5f94cff8e6b43152a7d6cf555f32a57"
+    "export_scripts": {
+      "/home/user/workspace/repo/misc/remaster-assets/weapons/package_weapon.py": "284bf7c597cd9b96b0cadb0a2a9bfca5965518387eaaec92825ef52633dcb70c",
+      "/home/user/workspace/repo/misc/remaster-assets/weapons/rig_weapon.py": "5f348f0929b745fb1979c5bdea4eaa33545bd88c60f4f8d4422f576f10762b9c",
+      "/home/user/workspace/repo/misc/remaster-assets/blender_iqm.py": "4a9e62fc5e5286615e261cdecf838007251125ab27c0fc28ae2bbedc1775b963",
+      "/home/user/workspace/repo/misc/remaster-assets/iqm_export.py": "33c6d38fbaeab859ac2c8b3fc8fdea5ccd20465975ac17d0d8c46751cb65b931"
+    },
+    "package_sha256": "fb7226690875fc152ce318fe8d3583a3dc4d9dfd7ba83a74a70f5816d9006b3d"
   }
 }

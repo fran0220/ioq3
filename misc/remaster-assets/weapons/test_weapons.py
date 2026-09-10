@@ -4,11 +4,28 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+import zipfile
 
 from import_painter import import_image
+from iqm_validate import read_iqm, matrices
 
 
 class WeaponTests(unittest.TestCase):
+    def test_generated_hand_clip_socket_and_boundaries(self):
+        root = Path(__file__).resolve().parents[3]
+        with zipfile.ZipFile(root / 'assets/remaster/runtime/weapon-hands-v1-candidate.pk3') as archive:
+            model = read_iqm(archive.read('models/remaster/weapons/rocket/hands.iqm'))
+        self.assertEqual(len(model['frames']), 15)
+        index = next(i for i, joint in enumerate(model['joints']) if joint['name'] == 'tag_weapon')
+        expected = {0: (18,-6,-14), 1: (16.8,-6,-14.3), 6: (18,-6,-14),
+                    10: (18,-6,-26), 11: (18,-6,-26), 14: (18,-6,-14)}
+        for frame, origin in expected.items():
+            socket = matrices(model['joints'], model['frames'][frame])[index]
+            for axis in range(3):
+                self.assertAlmostEqual(socket[axis][3], origin[axis], delta=.001)
+                for other in range(3):
+                    self.assertAlmostEqual(socket[axis][other], int(axis == other), places=6)
+
     def test_import_is_idempotent_and_preserves_review(self):
         from PIL import Image
         with tempfile.TemporaryDirectory() as directory:

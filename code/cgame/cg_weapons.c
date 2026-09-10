@@ -32,6 +32,7 @@ static const char *cg_remasterWeaponNames[] = {
 };
 static qboolean cg_remasterHands[WP_NUM_WEAPONS];
 static qhandle_t cg_referenceViewWeapon[WP_NUM_WEAPONS];
+static qhandle_t cg_rocketMuzzleShader;
 
 static qhandle_t CG_RemasterWeaponModel( int weaponNum, const char *part ) {
 	char path[MAX_QPATH];
@@ -638,6 +639,8 @@ void CG_RegisterWeapon( int weaponNum ) {
 	vec3_t			mins, maxs;
 	int				i;
 	qhandle_t		remaster;
+	qhandle_t		remasterBody;
+	fileHandle_t	file;
 
 	weaponInfo = &cg_weapons[weaponNum];
 
@@ -664,8 +667,8 @@ void CG_RegisterWeapon( int weaponNum ) {
 	CG_RegisterItemVisuals( item - bg_itemlist );
 
 	// load cmodel before model so filecache works
-	remaster = CG_RemasterWeaponModel( weaponNum, "weapon" );
-	weaponInfo->weaponModel = remaster ? remaster : trap_R_RegisterModel( item->world_model[0] );
+	remasterBody = CG_RemasterWeaponModel( weaponNum, "weapon" );
+	weaponInfo->weaponModel = remasterBody ? remasterBody : trap_R_RegisterModel( item->world_model[0] );
 
 	// calc midpoint for rotation
 	trap_R_ModelBounds( weaponInfo->weaponModel, mins, maxs );
@@ -705,7 +708,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 	// cross-clip transitions. Gun/barrel/flash IQMs are rigid frame-zero assets.
 	cg_remasterHands[weaponNum] = qfalse;
 	remaster = CG_RemasterWeaponModel( weaponNum, "hands" );
-	if ( remaster ) {
+	if ( remasterBody && remaster ) {
 		weaponInfo->handsModel = remaster;
 		cg_remasterHands[weaponNum] = qtrue;
 	}
@@ -796,6 +799,14 @@ void CG_RegisterWeapon( int weaponNum ) {
 
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/rocket/rocklf1a.wav", qfalse );
 		cgs.media.rocketExplosionShader = trap_R_RegisterShader( "rocketExplosion" );
+		cg_rocketMuzzleShader = 0;
+		file = 0;
+		if ( trap_FS_FOpenFile( "gfx/remaster/rocket_muzzle.tga", &file, FS_READ ) > 0 ) {
+			cg_rocketMuzzleShader = trap_R_RegisterShader( "gfx/remaster/rocket_muzzle" );
+		}
+		if ( file ) {
+			trap_FS_FCloseFile( file );
+		}
 		break;
 
 #ifdef MISSIONPACK
@@ -1369,7 +1380,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	flash.renderfx = parent->renderfx;
 
 	flash.hModel = weapon->flashModel;
-	if (!flash.hModel) {
+	if ( !flash.hModel && !( weaponNum == WP_ROCKET_LAUNCHER && cg_rocketMuzzleShader ) ) {
 		return;
 	}
 	angles[YAW] = 0;
@@ -1388,6 +1399,15 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	}
 
 	CG_PositionRotatedEntityOnTag( &flash, &gun, gun.hModel, "tag_flash");
+	if ( weaponNum == WP_ROCKET_LAUNCHER && cg_rocketMuzzleShader ) {
+		// Same muzzleFlashTime gate and socket as the model flash; no new event,
+		// delay or persistent particle. Black-backed Painter art adds only light.
+		flash.reType = RT_SPRITE;
+		flash.customShader = cg_rocketMuzzleShader;
+		flash.radius = 14;
+		flash.rotation = angles[ROLL];
+		flash.shaderRGBA[0] = flash.shaderRGBA[1] = flash.shaderRGBA[2] = flash.shaderRGBA[3] = 255;
+	}
 	trap_R_AddRefEntityToScene( &flash );
 
 	if ( ps || cg.renderingThirdPerson ||

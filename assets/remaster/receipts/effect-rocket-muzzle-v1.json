@@ -1,0 +1,18 @@
+{
+  "asset_id": "effect-rocket-muzzle-v1",
+  "runtime_accepted": false,
+  "source": "Amp Painter; newly authored combustion sprite, no original game texture",
+  "source_url": "https://ampcode.com/user-content/attachments/b911d12c1e5f0514a6745509fdf3e6b494480d9d343581bfeaf5f9ec3e05d96b-file.png",
+  "prototype_sha256": "b759024e22399f4290bbd62236b5e42d714c253bda9d5c92f16bbcfd26420db6",
+  "review": "Inspected compact four-lobed orange/ivory ignition, black padding; additive-only, no alpha claim",
+  "cost": {
+    "status": "not-exposed-by-amp-painter",
+    "actual_usd": null
+  },
+  "derivation": "Pillow RGB Lanczos 256x256 TGA; zero-light black additive blend, no depthWrite",
+  "files": {
+    "gfx/remaster/rocket_muzzle.tga": "424d6fbcddf8bbe8c76148eb7ff88e04f25dfa5779af0fccb4ad66aa5727671e",
+    "scripts/remaster_rocket_muzzle.shader": "72f74edcd09cfe04296f86b00a0f9f48702f1c167d653b2b6614c4532bc79352"
+  },
+  "package_sha256": "4f50cf57e367105d7ceb4d7bc057e4d0755597f53dc4392858b5ce329da8f56c"
+}

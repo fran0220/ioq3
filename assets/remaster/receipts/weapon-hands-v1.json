@@ -90,6 +90,71 @@
       }
     }
   },
-  "processing": null,
-  "package": null
+  "processing": {
+    "files": [
+      {
+        "bytes": 6326332,
+        "path": "processed/cleaned.blend",
+        "sha256": "e2606d9b4f303192b5d30048fda9176c0efc8d2bfaf3f1491ea31f4205b26056"
+      },
+      {
+        "bytes": 2025425,
+        "path": "processed/diffuse.tga",
+        "sha256": "69c28c8eb62e148c348ddb0b2f029124fafc169bfa19098556950428e2c75051"
+      },
+      {
+        "bytes": 1625,
+        "path": "processed/geometry-report.json",
+        "sha256": "e0034134db407257fb97781385143a15d948ebb92e59057f376fbfe5df408c60"
+      },
+      {
+        "bytes": 214068,
+        "path": "processed/model.md3",
+        "sha256": "531e2b3bb76875b960f69e27888cc9c100f12a18df3394292fc389b8c5cc87f2"
+      },
+      {
+        "bytes": 131,
+        "path": "processed/remaster.shader",
+        "sha256": "8eea0d349cb3348b6df82351f7d8a80c667a8c1946c306a5a3687424369408fc"
+      },
+      {
+        "bytes": 513493,
+        "path": "processed/review-back.png",
+        "sha256": "e02045dd0ea3cceb83c03a1c95eef0ccd0635ddff2fc7860ff12fb9bdf1dfd36"
+      },
+      {
+        "bytes": 511935,
+        "path": "processed/review-front.png",
+        "sha256": "ecbe2a9a894550b0306b787b6b24ada5978a8562b667dee6f4780b0eb171a39a"
+      }
+    ],
+    "scripts": {
+      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
+      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
+    },
+    "source_sha256": "d5397aec7a9738f0c467639abbe7a786b3946a2c639ccc14f9f83699158aec2c"
+  },
+  "package": null,
+  "weapon_export": {
+    "runtime_accepted": false,
+    "material": "diffuse-only candidate; normal/specular/emission not yet baked",
+    "files": {
+      "models/remaster/weapons/rocket/hands.iqm": "5053b6d51b3bb46ffe3d1a4f36552d6cfce801db133588a86c4f688e28aee540",
+      "models/remaster/weapons/hands/arm.tga": "69c28c8eb62e148c348ddb0b2f029124fafc169bfa19098556950428e2c75051",
+      "scripts/remaster_weapon_hands_v1.shader": "4e1c942a8ab37c52f7a7374fcfa6c37d9ba86961459cebf538ad800f8267c9a4"
+    },
+    "source_files": {
+      "rigged/hands.blend": "5980c7b9486c7f91f7c3c88670280e3e0f1a60d2c6444aa6b7257c0def5239ea",
+      "rigged/iqm-config.json": "a7f3fb0cfaac85074197d75cacd45f9e12c93f5ec11d62f35c12feba0fad315e",
+      "rigged/iqm/source.json": "9c7a6d1fd71d129368b6f64d5becfeeaa4de6a111fe1050de5e9261788989348",
+      "rigged/iqm/animation-contract.json": "939f251b633e86605e91bd1650b55a6cb08a38156517c646c193066b7a5c999e"
+    },
+    "export_scripts": {
+      "/home/user/workspace/repo/misc/remaster-assets/weapons/package_weapon.py": "284bf7c597cd9b96b0cadb0a2a9bfca5965518387eaaec92825ef52633dcb70c",
+      "/home/user/workspace/repo/misc/remaster-assets/weapons/rig_hands.py": "c9933207b438b315a9cff7f50d22f8a471179ff222bfbf7cf32febe4f8e85a5c",
+      "/home/user/workspace/repo/misc/remaster-assets/blender_iqm.py": "4a9e62fc5e5286615e261cdecf838007251125ab27c0fc28ae2bbedc1775b963",
+      "/home/user/workspace/repo/misc/remaster-assets/iqm_export.py": "33c6d38fbaeab859ac2c8b3fc8fdea5ccd20465975ac17d0d8c46751cb65b931"
+    },
+    "package_sha256": "91b22939f74959ee8e8cdfb7be2e7ebcae015db5ddc78933902fed8d63cab91a"
+  }
 }
