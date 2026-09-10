@@ -797,11 +797,15 @@ void R_AddWorldSurfaces (void) {
 
 		for (i = 0; i < tr.world->numWorldSurfaces; i++)
 		{
+			msurface_t *surface = &tr.world->surfaces[i];
 			if (tr.world->surfacesViewCount[i] != tr.viewCount)
 				continue;
 
-			R_AddWorldSurface( tr.world->surfaces + i, tr.world->surfacesDlightBits[i], tr.world->surfacesPshadowBits[i] );
 			tr.refdef.dlightMask |= tr.world->surfacesDlightBits[i];
+			if (surface->replacementIndex && r_drawentities->integer
+				&& tr.world->surfaceReplacements[surface->replacementIndex - 1].entityNum >= 0)
+				continue;
+			R_AddWorldSurface( surface, tr.world->surfacesDlightBits[i], tr.world->surfacesPshadowBits[i] );
 		}
 
 		tr.refdef.dlightMask = ~tr.refdef.dlightMask;

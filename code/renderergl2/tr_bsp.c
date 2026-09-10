@@ -2445,6 +2445,186 @@ qboolean R_ParseSpawnVars( char *spawnVarChars, int maxSpawnVarChars, int *numSp
 	return qtrue;
 }
 
+static qboolean R_ReplacementNumber(const char *value, const char *end, float *out)
+{
+	char text[64], *tail;
+	unsigned int length;
+	if (JSON_ValueGetType(value, end) != JSONTYPE_VALUE)
+		return qfalse;
+	length = JSON_ValueGetString(value, end, text, sizeof(text));
+	if (!length || length >= sizeof(text))
+		return qfalse;
+	*out = strtof(text, &tail);
+	return tail != text && !*tail && isfinite(*out);
+}
+
+static qboolean R_ReplacementVector(const char *value, const char *end, vec3_t out)
+{
+	const char *items[3];
+	int i;
+	if (JSON_ArrayGetIndex(value, end, items, 3) != 3)
+		return qfalse;
+	for (i = 0; i < 3; i++)
+		if (!R_ReplacementNumber(items[i], end, &out[i]))
+			return qfalse;
+	return qtrue;
+}
+
+static qboolean R_ReplacementString(const char *object, const char *end, const char *key, char *out)
+{
+	const char *value = JSON_ObjectGetNamedValue(object, end, key);
+	unsigned int length;
+	if (JSON_ValueGetType(value, end) != JSONTYPE_STRING)
+		return qfalse;
+	length = JSON_ValueGetString(value, end, out, MAX_QPATH);
+	return length > 0 && length < MAX_QPATH;
+}
+
+static qboolean R_ReplacementTargetMatches(const world_t *world, int index, const char *shaderName, vec3_t bounds[2])
+{
+	const msurface_t *surface;
+	int corner, axis;
+	if (index < 0 || index >= world->numWorldSurfaces)
+		return qfalse;
+	surface = &world->surfaces[index];
+	if (surface->replacementIndex || !(surface->cullinfo.type & CULLINFO_BOX)
+		|| surface->shader->defaultShader || Q_stricmp(surface->shader->name, shaderName))
+		return qfalse;
+	for (corner = 0; corner < 2; corner++)
+		for (axis = 0; axis < 3; axis++)
+			if (fabsf(bounds[corner][axis] - surface->cullinfo.bounds[corner][axis]) > 0.01f)
+				return qfalse;
+	return qtrue;
+}
+
+static qboolean R_ReplacementModelFits(const refEntity_t *entity, vec3_t targetBounds[2])
+{
+	model_t *model = R_GetModelByHandle(entity->hModel);
+	vec3_t bounds[2];
+	int i, axis, corner;
+	if (model->type == MOD_MESH)
+	{
+		int lod;
+		if (!model->numLods)
+			return qfalse;
+		ClearBounds(bounds[0], bounds[1]);
+		for (lod = 0; lod < model->numLods; lod++)
+		{
+			mdvModel_t *mdv = model->mdv[lod];
+			if (!mdv || mdv->numFrames != 1 || !mdv->numSurfaces)
+				return qfalse;
+			AddPointToBounds(mdv->frames[0].bounds[0], bounds[0], bounds[1]);
+			AddPointToBounds(mdv->frames[0].bounds[1], bounds[0], bounds[1]);
+			for (i = 0; i < mdv->numSurfaces; i++)
+			{
+				shader_t *shader;
+				if (!mdv->surfaces[i].numShaderIndexes)
+					return qfalse;
+				shader = R_GetShaderByHandle(mdv->surfaces[i].shaderIndexes[0]);
+				if (shader->defaultShader || shader->sort > SS_OPAQUE || !shader->numUnfoggedPasses)
+					return qfalse;
+			}
+		}
+	}
+	else if (model->type == MOD_IQM)
+	{
+		iqmData_t *iqm = model->modelData;
+		if (!iqm->bounds || iqm->num_frames > 1 || !iqm->num_surfaces)
+			return qfalse;
+		for (i = 0; i < iqm->num_surfaces; i++)
+		{
+			shader_t *shader = iqm->surfaces[i].shader;
+			if (shader->defaultShader || shader->sort > SS_OPAQUE || !shader->numUnfoggedPasses)
+				return qfalse;
+		}
+		R_ModelBounds(entity->hModel, bounds[0], bounds[1]);
+	}
+	else
+		return qfalse;
+
+	// Stay inside the original visibility owner's AABB. A model reaching into
+	// another leaf would need newly compiled visibility, not this substitution.
+	for (corner = 0; corner < 8; corner++)
+	{
+		vec3_t point;
+		VectorCopy(entity->origin, point);
+		for (axis = 0; axis < 3; axis++)
+			VectorMA(point, bounds[(corner >> axis) & 1][axis], entity->axis[axis], point);
+		for (axis = 0; axis < 3; axis++)
+			if (!isfinite(point[axis]) || point[axis] < targetBounds[0][axis] - 0.01f
+				|| point[axis] > targetBounds[1][axis] + 0.01f)
+				return qfalse;
+	}
+	return qtrue;
+}
+
+static void R_LoadSurfaceReplacements(world_t *world)
+{
+	char filename[MAX_QPATH], mapName[MAX_QPATH];
+	union { void *v; char *c; } buffer;
+	const char *end, *array, *entry;
+	int length, count, i;
+	float version;
+	Com_sprintf(filename, sizeof(filename), "maps/%s.remaster.json", world->baseName);
+	length = ri.FS_ReadFile(filename, &buffer.v);
+	if (!buffer.v)
+		return;
+	end = buffer.c + length;
+	array = JSON_ObjectGetNamedValue(buffer.c, end, "replacements");
+	count = JSON_ArrayGetIndex(array, end, NULL, 0);
+	if (!R_ReplacementNumber(JSON_ObjectGetNamedValue(buffer.c, end, "schemaVersion"), end, &version)
+		|| version != 1 || !R_ReplacementString(buffer.c, end, "map", mapName)
+		|| Q_stricmp(mapName, world->baseName) || count < 1 || count >= MAX_REFENTITIES)
+	{
+		ri.Printf(PRINT_WARNING, "Invalid surface replacement manifest %s; retaining BSP surfaces\n", filename);
+		ri.FS_FreeFile(buffer.v);
+		return;
+	}
+	world->surfaceReplacements = ri.Hunk_Alloc(count * sizeof(*world->surfaceReplacements), h_low);
+	for (i = 0; i < count; i++)
+	{
+		worldSurfaceReplacement_t replacement = {0};
+		char shaderName[MAX_QPATH], modelName[MAX_QPATH];
+		vec3_t bounds[2], angles;
+		float surfaceIndex, scale;
+		const char *corners[2];
+		int axis;
+		entry = JSON_ArrayGetValue(array, end, i);
+		if (!R_ReplacementNumber(JSON_ObjectGetNamedValue(entry, end, "surface"), end, &surfaceIndex)
+			|| surfaceIndex < 0 || surfaceIndex >= world->numWorldSurfaces || floorf(surfaceIndex) != surfaceIndex
+			|| !R_ReplacementString(entry, end, "shader", shaderName)
+			|| !R_ReplacementString(entry, end, "model", modelName)
+			|| JSON_ArrayGetIndex(JSON_ObjectGetNamedValue(entry, end, "bounds"), end, corners, 2) != 2
+			|| !R_ReplacementVector(corners[0], end, bounds[0]) || !R_ReplacementVector(corners[1], end, bounds[1])
+			|| !R_ReplacementVector(JSON_ObjectGetNamedValue(entry, end, "origin"), end, replacement.entity.origin)
+			|| !R_ReplacementVector(JSON_ObjectGetNamedValue(entry, end, "angles"), end, angles)
+			|| !R_ReplacementNumber(JSON_ObjectGetNamedValue(entry, end, "scale"), end, &scale) || scale <= 0)
+			goto rejected;
+		replacement.surfaceIndex = (int)surfaceIndex;
+		if (!R_ReplacementTargetMatches(world, replacement.surfaceIndex, shaderName, bounds))
+			goto rejected;
+		replacement.entity.hModel = RE_RegisterModel(modelName);
+		if (!replacement.entity.hModel)
+			goto rejected;
+		replacement.entity.reType = RT_MODEL;
+		AnglesToAxis(angles, replacement.entity.axis);
+		for (axis = 0; axis < 3; axis++)
+			VectorScale(replacement.entity.axis[axis], scale, replacement.entity.axis[axis]);
+		replacement.entity.nonNormalizedAxes = (scale != 1);
+		memset(replacement.entity.shaderRGBA, 255, sizeof(replacement.entity.shaderRGBA));
+		if (!R_ReplacementModelFits(&replacement.entity, bounds))
+			goto rejected;
+		replacement.entityNum = -1;
+		world->surfaceReplacements[world->numSurfaceReplacements++] = replacement;
+		world->surfaces[replacement.surfaceIndex].replacementIndex = world->numSurfaceReplacements;
+		ri.Printf(PRINT_ALL, "Surface replacement %s:%d -> %s\n", world->baseName, replacement.surfaceIndex, modelName);
+		continue;
+	rejected:
+		ri.Printf(PRINT_WARNING, "Rejected %s replacement %d; retaining original BSP surface\n", filename, i);
+	}
+	ri.FS_FreeFile(buffer.v);
+}
+
 void R_LoadEnvironmentJson(const char *baseName)
 {
 	char filename[MAX_QPATH];
@@ -3000,6 +3180,7 @@ void RE_LoadWorldMap( const char *name ) {
 
 	// only set tr.world now that we know the entire level has loaded properly
 	tr.world = &s_worldData;
+	R_LoadSurfaceReplacements(tr.world);
 
 	// make sure the VAO glState entry is safe
 	R_BindNullVao();

@@ -91,6 +91,7 @@ typedef struct dlight_s {
 // the client game, as well as some locally derived info
 typedef struct {
 	refEntity_t	e;
+	int         worldSurface;	// -1 for cgame entities, otherwise original BSP visibility owner
 
 	float		axisLength;		// compensate for non-normalized axis
 
@@ -1118,6 +1119,7 @@ typedef struct msurface_s {
 	struct shader_s		*shader;
 	int					fogIndex;
 	int                 cubemapIndex;
+	int                 replacementIndex;	// zero, or world surface replacement index + 1
 	cullinfo_t          cullinfo;
 
 	surfaceType_t		*data;			// any of srf*_t
@@ -1151,6 +1153,12 @@ typedef struct {
 } bmodel_t;
 
 typedef struct {
+	int surfaceIndex;
+	int entityNum;	// current scene-relative backend entity, -1 if allocation failed
+	refEntity_t entity;
+} worldSurfaceReplacement_t;
+
+typedef struct {
 	char		name[MAX_QPATH];		// ie: maps/tim_dm2.bsp
 	char		baseName[MAX_QPATH];	// ie: tim_dm2
 
@@ -1176,6 +1184,9 @@ typedef struct {
 	int         *surfacesViewCount;
 	int         *surfacesDlightBits;
 	int			*surfacesPshadowBits;
+
+	int numSurfaceReplacements;
+	worldSurfaceReplacement_t *surfaceReplacements;
 
 	int			nummarksurfaces;
 	int         *marksurfaces;

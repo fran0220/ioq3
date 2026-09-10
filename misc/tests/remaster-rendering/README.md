@@ -139,3 +139,37 @@ WASM heap, image-list allocation estimates and frame-time percentiles. Software
 SwiftShader frame timings are diagnostic CPU/software-rasterizer values, never
 physical GPU performance. Full q3dm1 environment/character/weapon/HUD match
 acceptance must be repeated with the content groups' final packs.
+
+## Static BSP visual replacements
+
+The renderer reads `maps/<baseName>.remaster.json` at world registration:
+
+```json
+{"schemaVersion":1,"map":"q3dm1","replacements":[{
+  "surface":2050,"shader":"textures/remaster_environment/panel",
+  "bounds":[[636.578125,1191.609375,292.59375],[711.234375,1219.640625,339.796875]],
+  "model":"models/remaster/environment_wall_crest.md3",
+  "origin":[673.8996875,1205.625,296.37],"angles":[0,180,0],"scale":0.84
+}]}
+```
+
+Bindings require the exact map, surface index, shader and original AABB
+(0.01 unit tolerance). This example targets the private remaster BSP, not the
+commercial original's wallhead shader. Only static MD3/IQM with valid opaque
+materials and bounds entirely inside the source AABB are accepted. MD3 LODs
+must all satisfy that contract. Angles use Quake pitch/yaw/roll; the exporter
+pivot is preserved. Missing/invalid models, mismatched binding, exhausted scene
+entity capacity, or `r_drawentities 0` retain the original surface. Other
+surfaces sharing the shader are untouched. No collision, BSP or PVS is edited.
+
+Replacement entities use the original surface's leaf traversal visibility for
+each view and normal model lighting; their lightgrid lighting can differ from
+the source surface lightmap. Existing depth-shadow views bypass PVS. This is
+bounded static visual substitution, not a general placement/animation system.
+
+Compile `surface-replacements.c` and `replacement-scene.c` using the native
+test command above. `placement-run.mjs CDP PRIVATE_HOST_URL OUTPUT` requires a
+private host with startup `activeAction` noclip/setviewpos and explicit
+hdr/noReplacement/missingModel/noEntities/far query variants. It checks
+registration/fallback and GL/context state, then captures images for inspection;
+it does not assert input, shadows, or final art acceptance.

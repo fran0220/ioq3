@@ -1555,6 +1555,15 @@ static void R_AddEntitySurface (int entityNum)
 
 	ent = tr.currentEntity = &tr.refdef.entities[tr.currentEntityNum];
 
+	// Replacement models inherit their original world surface's leaf/PVS and
+	// per-view visibility. Projected shadow-only views deliberately bypass PVS,
+	// just like the original world depth-shadow traversal.
+	if (ent->worldSurface >= 0 && (!r_drawworld->integer
+		|| (tr.refdef.rdflags & RDF_NOWORLDMODEL)
+		|| (!(tr.viewParms.flags & VPF_DEPTHSHADOW)
+			&& tr.world->surfacesViewCount[ent->worldSurface] != tr.viewCount)))
+		return;
+
 	ent->needDlights = qfalse;
 
 	// preshift the value we are going to OR into the drawsurf sort

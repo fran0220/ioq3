@@ -223,6 +223,7 @@ void RE_AddRefEntityToScene( const refEntity_t *ent ) {
 	}
 
 	backEndData->entities[r_numentities].e = *ent;
+	backEndData->entities[r_numentities].worldSurface = -1;
 	backEndData->entities[r_numentities].lightingCalculated = qfalse;
 
 	CrossProduct(ent->axis[0], ent->axis[1], cross);
@@ -455,6 +456,23 @@ Rendering a scene may require multiple views to be rendered
 to handle mirrors,
 @@@@@@@@@@@@@@@@@@@@@
 */
+static void R_AddWorldReplacementsToScene(void)
+{
+	int i;
+	for (i = 0; i < tr.world->numSurfaceReplacements; i++)
+	{
+		worldSurfaceReplacement_t *replacement = &tr.world->surfaceReplacements[i];
+		int before = r_numentities;
+		replacement->entityNum = -1;
+		RE_AddRefEntityToScene(&replacement->entity);
+		if (r_numentities != before)
+		{
+			replacement->entityNum = before - r_firstSceneEntity;
+			backEndData->entities[before].worldSurface = replacement->surfaceIndex;
+		}
+	}
+}
+
 void RE_RenderScene( const refdef_t *fd ) {
 	viewParms_t		parms;
 	int				startTime;
@@ -473,6 +491,11 @@ void RE_RenderScene( const refdef_t *fd ) {
 	if (!tr.world && !( fd->rdflags & RDF_NOWORLDMODEL ) ) {
 		ri.Error (ERR_DROP, "R_RenderScene: NULL worldmodel");
 	}
+
+	// Allocate real backend-owned entities before the scene snapshots its slice.
+	// Capacity failure leaves entityNum=-1, retaining the original BSP drawing.
+	if (!(fd->rdflags & RDF_NOWORLDMODEL))
+		R_AddWorldReplacementsToScene();
 
 	RE_BeginScene(fd);
 
