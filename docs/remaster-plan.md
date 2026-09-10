@@ -7,6 +7,20 @@
 
 ### 2026-09-10 剩余阻塞与继续执行
 
+最新用户指令优先完整游戏画面；平台已启动以下五个 high 线程，不再重复 RTC/admission 工程，也不再新建线程。先交付 q3dm1 完整环境、正式动画角色、全武器/拾取物/FX、HUD/menu 的可玩比赛纵向切片，再按 base Q3 清单扩展。以下所有权替代本文后面的历史启动分工：
+
+| 工作包 | 独占范围 |
+| --- | --- |
+| 环境 | `assets/remaster/environment/`、`misc/remaster-assets/environment/` 和 environment-* 专属记录/运行包 |
+| 角色 | `cg_players.c`、`tr_model_iqm.c`、角色专属内容与现有 IQM 专属工具 |
+| 武器/FX | `cg_weapons.c`、`cg_effects.c`、`cg_localents.c`、`cg_marks.c`、`cg_particles.c` 与 weapons/effects/pickups 内容 |
+| HUD/menu | Web 展示文件（不重写 host/persistence/network、不改共享 web_bridge）、UI 资产、`cg_draw.c`、`cg_drawtools.c`、`cg_scoreboard.c`、`cg_info.c`、新 `cg_ui_snapshot.c` |
+| Renderer | `code/renderergl2` 除角色持有的 `tr_model_iqm.c`，以及 remaster-rendering 测试 |
+
+主线程独占 `cg_local.h/cg_main.c/cg_public.h`、共享 HUD ABI、`cg_ents.c/cg_event.c/cg_view.c`、`cl_cgame.c/client.h`、`web_bridge.c/.h`、`q3_ui`、renderercommon 公共 ABI、CMake、STYLE 和聚合清单。旧 UI/资产/renderer 工作包完成交付后不再写上述新所有权范围。共享需求由主线程落地，禁止各线程新增相互独立的旁路。
+
+当前接口方向：角色采用 lower/upper/head 分段骨骼 IQM，保留 legs/torso 独立时钟与 animation.cfg 重映射；X 前/Y 左/Z 上、40 Q3 units/m、精确小写 tag_weapon、单位缩放。材质先用已可消费的 diffuse/normal/specular 与 additive emission，r_pbr=0/glossType=1，不把旧图全局重解释为 PBR。生产 HUD 使用版本化有界 VM 快照和显式 DOM 启用/超时回退，不使用测试 observer。每项仍需实际 loader、材质、附件动画和整局验证，接口约定不等于通过。
+
 - **外部内容输入仍缺失。** 主线程检查 `assets`、`build-demo-web` 与 `.amp`，仅发现官方 Demo、测试 QVM 和立柱样件 PK3。需要完整版基础 Q3A 数据的私有路径/下载入口与版本、覆盖顺序；地图源若存在一并提供。授权已确认，缺的是数据本体。Demo 不可代替全量参考或发布包。
 - **UI 属于未完成工程，不是外部阻塞。** [首轮交付](https://github.com/fran0220/ioq3/commit/6749b70c7463d03f6effb960be0c18939b426801) 已验证 DOM 导航、数值设置持久化、全屏、局内恢复和故障输入阻断。继续实现显示/键位/profile，以及结构化 Play、HUD、计分板、大厅；范围与接口见 `code/web/UI-PLAN.md`。
 - **本地比赛基线已通过，完整平台比赛仍待测。** [玩法记录](../misc/tests/gameplay/RESULTS.md) 包含移动/拾取/跳跃/射击、HDR/LDR 重启、三地图切换、死亡重生及两轮 Bot fraglimit 结算/重开。由玩法线程执行，不能写成主线程独立复跑；未覆盖玩家获胜、全部模式、正式 UI/iframe、音频、真实多人和物理 GPU。测试数据适配与 observer ON 构建不发布。
