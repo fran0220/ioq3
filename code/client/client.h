@@ -605,6 +605,8 @@ void CL_InitCGame( void );
 void CL_ShutdownCGame( void );
 qboolean CL_GameCommand( void );
 void CL_CGameRendering( stereoFrame_t stereo );
+qboolean CL_CGameUISnapshot( cg_ui_snapshot_t *out );
+void CL_CGameUIHUD( qboolean enabled );
 void CL_SetCGameTime( void );
 void CL_FirstSnapshot( void );
 void CL_ShaderStateChanged(void);
@@ -640,4 +642,3 @@ qboolean CL_VideoRecording( void );
 // cl_main.c
 //
 void CL_WriteDemoMessage ( msg_t *msg, int headerBytes );
-

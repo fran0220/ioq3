@@ -761,6 +761,21 @@ void *VM_ArgPtr( intptr_t intValue ) {
 	}
 }
 
+/* Copy a returned VM buffer after VM_Call restored currentVM. Unlike VMA,
+ * this never masks an invalid range back into the QVM address space. Native
+ * modules are trusted code and return ordinary host pointers. */
+qboolean VM_CopyFromVM( vm_t *vm, void *destination, intptr_t source, size_t size ) {
+	if ( !vm || !destination || !source ) return qfalse;
+	if ( vm->entryPoint ) {
+		memcpy( destination, (const void *)source, size );
+		return qtrue;
+	}
+	if ( source < 0 || (uintptr_t)source > (uintptr_t)vm->dataMask ||
+		size > (size_t)vm->dataMask + 1 - (size_t)source ) return qfalse;
+	memcpy( destination, vm->dataBase + source, size );
+	return qtrue;
+}
+
 void *VM_ExplicitArgPtr( vm_t *vm, intptr_t intValue ) {
 	if ( !intValue ) {
 		return NULL;

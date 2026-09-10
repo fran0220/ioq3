@@ -17,6 +17,123 @@ static const char *webActions[] = { "+forward", "+back", "+moveleft", "+moverigh
 static int webMenuOpen;
 static int webInputBlocked;
 
+static cg_ui_snapshot_t webHUD;
+static unsigned int webHUDReadTime;
+static int webHUDServerSequence;
+
+static int WebHUDValid(void)
+{
+    return !webInputBlocked && clc.state == CA_ACTIVE && webHUD.valid &&
+        webHUDServerSequence == clc.serverMessageSequence &&
+        (unsigned int)Sys_Milliseconds() - webHUDReadTime <= 1000;
+}
+
+EMSCRIPTEN_KEEPALIVE int OG_WebHUDRefresh(void)
+{
+    memset(&webHUD, 0, sizeof(webHUD));
+    if (webInputBlocked || !CL_CGameUISnapshot(&webHUD)) {
+        CL_CGameUIHUD(qfalse);
+        return 0;
+    }
+    webHUDServerSequence = clc.serverMessageSequence;
+    webHUDReadTime = (unsigned int)Sys_Milliseconds();
+    return 1;
+}
+
+EMSCRIPTEN_KEEPALIVE int OG_WebHUDEnabled(int enabled)
+{
+    if (enabled != 0 && enabled != 1) return 0;
+    if (enabled && !WebHUDValid()) {
+        CL_CGameUIHUD(qfalse);
+        return 0;
+    }
+    CL_CGameUIHUD(enabled ? qtrue : qfalse);
+    return 1;
+}
+
+EMSCRIPTEN_KEEPALIVE double OG_WebHUD(int field, int row)
+{
+    const cg_ui_score_t *score;
+    if (!WebHUDValid()) return NAN;
+    switch (field) {
+    case CG_UI_HEALTH: return webHUD.health;
+    case CG_UI_ARMOR: return webHUD.armor;
+    case CG_UI_AMMO: return webHUD.ammo;
+    case CG_UI_WEAPON: return webHUD.weapon;
+    case CG_UI_WEAPONS: return webHUD.weapons;
+    case CG_UI_TEAM: return webHUD.team;
+    case CG_UI_SCORE: return webHUD.score;
+    case CG_UI_TIME: return webHUD.time;
+    case CG_UI_ELAPSED: return webHUD.elapsed;
+    case CG_UI_PM_TYPE: return webHUD.pmType;
+    case CG_UI_INTERMISSION: return webHUD.intermission;
+    case CG_UI_SCORES_SHOWING: return webHUD.scoresShowing;
+    case CG_UI_LOCAL_CLIENT: return webHUD.localClient;
+    case CG_UI_GAMETYPE: return webHUD.gametype;
+    case CG_UI_TEAM_SCORE1: return webHUD.teamScores[0];
+    case CG_UI_TEAM_SCORE2: return webHUD.teamScores[1];
+    case CG_UI_FRAGLIMIT: return webHUD.fraglimit;
+    case CG_UI_TIMELIMIT: return webHUD.timelimit;
+    case CG_UI_SCORE_COUNT: return webHUD.scoreCount;
+    }
+    if (row < 0 || row >= webHUD.scoreCount) return NAN;
+    score = &webHUD.scores[row];
+    switch (field) {
+    case CG_UI_ROW_CLIENT: return score->client;
+    case CG_UI_ROW_TEAM: return score->team;
+    case CG_UI_ROW_SCORE: return score->score;
+    case CG_UI_ROW_PING: return score->ping;
+    case CG_UI_ROW_TIME: return score->time;
+    default: return NAN;
+    }
+}
+
+EMSCRIPTEN_KEEPALIVE int OG_WebHUDText(int kind, int row, int index)
+{
+    if (!WebHUDValid() || index < 0) return -1;
+    if (kind == CG_UI_TEXT_MAP && index < CG_UI_MAP_BYTES)
+        return (unsigned char)webHUD.mapName[index];
+    if (kind == CG_UI_TEXT_PLAYER && row >= 0 && row < webHUD.scoreCount && index < CG_UI_NAME_BYTES)
+        return (unsigned char)webHUD.scores[row].name[index];
+    return -1;
+}
+
+/* All command text is compile-time fixed. The reserved negative button identity
+ * lets DOM respawn release its own attack without releasing a physical binding. */
+EMSCRIPTEN_KEEPALIVE int OG_WebMatchAction(int action, int arg)
+{
+    static const char *teams[] = { "team free", "team red", "team blue", "team spectator" };
+    if (action == 1 && arg == 0) {
+        Cmd_ExecuteString("-attack -10042");
+        return 1;
+    }
+    if (webInputBlocked || clc.state != CA_ACTIVE || !cgvm || clc.demoplaying) return 0;
+    switch (action) {
+    case 0:
+        if (arg != 0 && arg != 1) return 0;
+        Cmd_ExecuteString(arg ? "+scores" : "-scores");
+        return 1;
+    case 1:
+        if (arg != 1 || !WebHUDValid() || webHUD.pmType != PM_DEAD || Key_GetCatcher()) return 0;
+        Cmd_ExecuteString("+attack -10042");
+        return 1;
+    case 2:
+        if (arg != 0) return 0;
+        Cbuf_AddText("disconnect\n");
+        return 1;
+    case 3:
+        if (arg != 0 || !com_sv_running || !com_sv_running->integer) return 0;
+        Cbuf_AddText("map_restart 0\n");
+        return 1;
+    case 4:
+        if (arg < 0 || arg >= (int)ARRAY_LEN(teams)) return 0;
+        CL_AddReliableCommand(teams[arg], qfalse);
+        return 1;
+    default:
+        return 0;
+    }
+}
+
 int OG_WebMenuOpen(void) { return webMenuOpen || webInputBlocked; }
 
 EMSCRIPTEN_KEEPALIVE int OG_WebUIState(void)
@@ -142,7 +259,14 @@ EMSCRIPTEN_KEEPALIVE int OG_WebMenu(int open)
 {
     /* Terminal failure releases menu ownership but blocks recapture until reload.
      * No VM invocation or attempts to revive a failed renderer/runtime. */
-    if (open == 3) { webMenuOpen = 0; webInputBlocked = 1; return 1; }
+    if (open == 3) {
+        webMenuOpen = 0;
+        webInputBlocked = 1;
+        Cmd_ExecuteString("-attack -10042");
+        CL_CGameUIHUD(qfalse);
+        memset(&webHUD, 0, sizeof(webHUD));
+        return 1;
+    }
     int state = OG_WebUIState();
     if ((state != 1 && state != 2) || open < 0 || open > 2) return 0;
     webMenuOpen = open == 1;
@@ -159,6 +283,7 @@ EM_JS(void, OG_WebFrame, (int playable, int configChanged), {
 
 EMSCRIPTEN_KEEPALIVE void OG_WebLoseFocus(void)
 {
+    Cmd_ExecuteString("-attack -10042");
     Key_ClearStates();
     S_ClearSoundBuffer();
 }

@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 //
 
+#include "cg_ui_public.h"
 
 #define	CMD_BACKUP			64	
 #define	CMD_MASK			(CMD_BACKUP - 1)
@@ -231,8 +232,11 @@ typedef enum {
 
 	CG_MOUSE_EVENT,
 //	void	(*CG_MouseEvent)( int dx, int dy );
-	CG_EVENT_HANDLING
+	CG_EVENT_HANDLING,
 //	void (*CG_EventHandling)(int type);
+	CG_UI_SNAPSHOT
+// const cg_ui_snapshot_t *CG_UISnapshot(int version, int size);
+// Optional: only call after CG_INIT returned CG_UI_CAPABILITY.
 } cgameExport_t;
 
 //----------------------------------------------

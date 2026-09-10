@@ -9,6 +9,20 @@ void OG_WebFrame(int playable, int configChanged);
 void OG_WebLoseFocus(void);
 void OG_WebResumeAudio(void);
 
+/* Production cgame snapshot; field IDs in cgame/cg_ui_public.h. Refresh once
+ * per DOM update, then read that cached snapshot. Invalid number = NaN, invalid
+ * text index = -1, text terminator = 0. Enable only after DOM is mounted;
+ * refresh + enable each update renews the 1-second original-HUD fallback lease. */
+int OG_WebHUDRefresh(void);
+double OG_WebHUD(int field, int row);
+int OG_WebHUDText(int kind, int row, int index);
+int OG_WebHUDEnabled(int enabled);
+/* Fixed actions: 0 scores (arg 1 down/0 up), 1 respawn attack (1 down/0 up),
+ * 2 disconnect (0), 3 local-server restart (0), 4 team (0 free/1 red/2 blue/3
+ * spectator). 1 means accepted for normal engine processing, not server success.
+ * Release respawn on pointerup/keyup/cancel/blur; never enable it while alive. */
+int OG_WebMatchAction(int action, int arg);
+
 /* Main-thread UI only. State: 0 unavailable, 1 menu, 2 active, 3 connecting.
  * Numeric settings: volume, music, sensitivity, pitch, FOV. NaN = unavailable.
  * Set/Menu return 0 on rejection. Never invoke from an uninitialized runtime. */

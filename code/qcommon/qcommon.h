@@ -367,6 +367,7 @@ void	VM_Debug( int level );
 
 void	*VM_ArgPtr( intptr_t intValue );
 void	*VM_ExplicitArgPtr( vm_t *vm, intptr_t intValue );
+qboolean VM_CopyFromVM( vm_t *vm, void *destination, intptr_t source, size_t size );
 
 #define	VMA(x) VM_ArgPtr(args[x])
 static ID_INLINE float _vmf(intptr_t x)

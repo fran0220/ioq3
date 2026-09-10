@@ -48,10 +48,12 @@ Q_EXPORT intptr_t vmMain( int command, int arg0, int arg1, int arg2, int arg3, i
 	switch ( command ) {
 	case CG_INIT:
 		CG_Init( arg0, arg1, arg2 );
-		return 0;
+		return CG_UI_CAPABILITY;
 	case CG_SHUTDOWN:
 		CG_Shutdown();
 		return 0;
+	case CG_UI_SNAPSHOT:
+		return (intptr_t)CG_UISnapshot( arg0, arg1 );
 	case CG_CONSOLE_COMMAND:
 		return CG_ConsoleCommand();
 	case CG_DRAW_ACTIVE_FRAME:
@@ -114,6 +116,7 @@ vmCvar_t	cg_crosshairY;
 vmCvar_t	cg_crosshairHealth;
 vmCvar_t	cg_draw2D;
 vmCvar_t	cg_drawStatus;
+vmCvar_t	cg_webHUD;
 vmCvar_t	cg_animSpeed;
 vmCvar_t	cg_debugAnim;
 vmCvar_t	cg_debugPosition;
@@ -218,6 +221,7 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_gibs, "cg_gibs", "1", CVAR_ARCHIVE  },
 	{ &cg_draw2D, "cg_draw2D", "1", CVAR_ARCHIVE  },
 	{ &cg_drawStatus, "cg_drawStatus", "1", CVAR_ARCHIVE  },
+	{ &cg_webHUD, "cg_webHUD", "0", CVAR_ROM },
 	{ &cg_drawTimer, "cg_drawTimer", "0", CVAR_ARCHIVE  },
 	{ &cg_drawFPS, "cg_drawFPS", "0", CVAR_ARCHIVE  },
 	{ &cg_drawSnapshot, "cg_drawSnapshot", "0", CVAR_ARCHIVE  },
@@ -1981,4 +1985,3 @@ void CG_KeyEvent(int key, qboolean down) {
 void CG_MouseEvent(int x, int y) {
 }
 #endif
-

@@ -35,6 +35,36 @@ extern qboolean loadCamera(const char *name);
 extern void startCamera(int time);
 extern qboolean getCameraInfo(int time, vec3_t *origin, vec3_t *angles);
 
+static qboolean cgUISupported;
+static qboolean cgUIHUDEnabled;
+static unsigned int cgUIHUDHeartbeat;
+
+qboolean CL_CGameUISnapshot( cg_ui_snapshot_t *out ) {
+	intptr_t address;
+	int i;
+	memset( out, 0, sizeof(*out) );
+	if ( !cgvm || !cgUISupported || clc.state != CA_ACTIVE ) return qfalse;
+	address = VM_Call( cgvm, CG_UI_SNAPSHOT, CG_UI_VERSION, sizeof(*out) );
+	if ( !VM_CopyFromVM( cgvm, out, address, sizeof(*out) ) ||
+		out->version != CG_UI_VERSION || out->size != sizeof(*out) || out->valid != 1 ||
+		out->scoreCount < 0 || out->scoreCount > CG_UI_MAX_SCORES ) {
+		memset( out, 0, sizeof(*out) );
+		return qfalse;
+	}
+	out->mapName[CG_UI_MAP_BYTES - 1] = 0;
+	for ( i = 0; i < out->scoreCount; i++ )
+		out->scores[i].name[CG_UI_NAME_BYTES - 1] = 0;
+	return qtrue;
+}
+
+void CL_CGameUIHUD( qboolean enabled ) {
+	enabled = enabled && cgUISupported && cgvm && clc.state == CA_ACTIVE;
+	if ( enabled ) cgUIHUDHeartbeat = (unsigned int)Sys_Milliseconds();
+	else if ( cgUIHUDEnabled ) Cmd_ExecuteString( "-attack -10042" );
+	cgUIHUDEnabled = enabled;
+	Cvar_Set( "cg_webHUD", enabled ? "1" : "0" );
+}
+
 /*
 ====================
 CL_GetGameState
@@ -384,6 +414,8 @@ CL_ShutdownCGame
 ====================
 */
 void CL_ShutdownCGame( void ) {
+	CL_CGameUIHUD( qfalse );
+	cgUISupported = qfalse;
 	Key_SetCatcher( Key_GetCatcher( ) & ~KEYCATCH_CGAME );
 	cls.cgameStarted = qfalse;
 	if ( !cgvm ) {
@@ -742,7 +774,9 @@ void CL_InitCGame( void ) {
 	// init for this gamestate
 	// use the lastExecutedServerCommand instead of the serverCommandSequence
 	// otherwise server commands sent just before a gamestate are dropped
-	VM_Call( cgvm, CG_INIT, clc.serverMessageSequence, clc.lastExecutedServerCommand, clc.clientNum );
+	CL_CGameUIHUD( qfalse );
+	cgUISupported = VM_Call( cgvm, CG_INIT, clc.serverMessageSequence,
+		clc.lastExecutedServerCommand, clc.clientNum ) == CG_UI_CAPABILITY;
 
 	// reset any CVAR_CHEAT cvars registered by cgame
 	if ( !clc.demoplaying && !cl_connectedToCheatServer )
@@ -793,6 +827,9 @@ CL_CGameRendering
 =====================
 */
 void CL_CGameRendering( stereoFrame_t stereo ) {
+	// A stopped/failed DOM renderer must not leave the original HUD hidden.
+	if ( cgUIHUDEnabled && (unsigned int)Sys_Milliseconds() - cgUIHUDHeartbeat > 1000 )
+		CL_CGameUIHUD( qfalse );
 	VM_Call( cgvm, CG_DRAW_ACTIVE_FRAME, cl.serverTime, stereo, clc.demoplaying );
 	VM_Debug( 0 );
 }
@@ -1077,6 +1114,4 @@ void CL_SetCGameTime( void ) {
 	}
 
 }
-
-
 
