@@ -29,6 +29,14 @@ def fixture():
 
 
 class IQMTests(unittest.TestCase):
+    def test_q3_clockwise_winding(self):
+        model = read_iqm(write_iqm(fixture()))
+        self.assertEqual(list(model['triangles'][0]), [0, 2, 1])
+        a, b, c = (model['arrays'][0][i] for i in model['triangles'][0])
+        u, v = [b[i]-a[i] for i in range(3)], [c[i]-a[i] for i in range(3)]
+        cross = [u[1]*v[2]-u[2]*v[1], u[2]*v[0]-u[0]*v[2], u[0]*v[1]-u[1]*v[0]]
+        self.assertLess(sum(x*y for x,y in zip(cross, model['arrays'][2][0])), 0)
+
     def test_byte_contract_skinning_and_attachment_use_independent_expected_values(self):
         d = write_iqm(fixture()); h = struct.unpack_from('<27I', d, 16)
         self.assertEqual(d[:20], b'INTERQUAKEMODEL\0\x02\0\0\0')

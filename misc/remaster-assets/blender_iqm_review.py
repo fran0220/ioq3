@@ -42,7 +42,9 @@ def review(package, output):
     for pos,energy in [((3,-4,5),500),((-3,2,4),300)]:
         bpy.ops.object.light_add(type='AREA',location=pos);light=bpy.context.object;light.data.energy=energy;light.data.size=4
         light.rotation_euler=(target-light.location).to_track_quat('-Z','Y').to_euler()
-    mesh=bpy.data.meshes.new('decoded_iqm');mesh.from_pydata([v for v in model['arrays'][0]],[],model['triangles']);mesh.update()
+    # Convert the Q3 wire format's clockwise faces back to Blender CCW.
+    faces=[(a,c,b) for a,b,c in model['triangles']]
+    mesh=bpy.data.meshes.new('decoded_iqm');mesh.from_pydata([v for v in model['arrays'][0]],[],faces);mesh.update()
     obj=bpy.data.objects.new('TEST_ONLY_IQM',mesh);bpy.context.collection.objects.link(obj)
     for mat in materials: mesh.materials.append(mat)
     uv=mesh.uv_layers.new(name='runtime_uv')

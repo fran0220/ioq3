@@ -159,7 +159,9 @@ def write_iqm(document):
                 if i not in lookup:
                     lookup[i] = len(local); local.append(converted[i])
                 indices.append(lookup[i])
-            faces.append(indices)
+            # Blender inputs are CCW; Q3 front-sided surfaces use clockwise
+            # winding (GL_Cull(CT_FRONT_SIDED) culls GL_FRONT).
+            faces.append((indices[0], indices[2], indices[1]))
         flush()
     if not meshes:
         raise ValueError('At least one nonempty skinned mesh required')
