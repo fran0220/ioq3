@@ -106,6 +106,7 @@ otherwise old skins override the new IQM surface names.
 
 ```sh
 blender --background --factory-startup --threads 2 --python-exit-code 1 --python assets/remaster/characters/segment_rig.py -- "$W"
+blender --background --factory-startup --threads 2 --python-exit-code 1 --python assets/remaster/characters/bake_material.py -- "$W"
 uv run --with pillow==11.3.0 python assets/remaster/characters/package_segmented.py "$W"
 blender --background --factory-startup --threads 2 --python-exit-code 1 --python assets/remaster/characters/test_segment_rig.py
 ```
@@ -117,3 +118,11 @@ bars); front and side were inspected, rear needs a less obstructed camera.
 It is still **not accepted**: review placeholders remain for backward jump/turn,
 final material maps and complete combat/timing tests. See
 `character-runtime-checks.json`; do not promote render checks to rules coverage.
+
+`bake_material.py` bakes the original paid rig's high-resolution geometry to
+the reduced UV mesh in bind pose (1024² tangent +Y, explicit cage/ray distances).
+The material uses an authored coated-dielectric response F0=.04/roughness=.72,
+not guessed ORM channels or a bare-metal claim. It has no emissive component.
+Both native GL2 and browser rendered the normal/F0 version without visible
+normal inversion; final close-up/light/skin reviews remain open. Preserve
+`prepared/material-bake.json` alongside the source and generated normal map.
