@@ -77,8 +77,11 @@ the read-only observer is not present in default/production builds.
 
 ## What the checks mean
 
-- `baseline`: starts at the original q3dm1 spawn; mouse yaw changes from −45°
-  toward −90°; W moves south to real armor shards; armor must increase and
+- `baseline`: starts at the original q3dm1 spawn; records the post-capture
+  angles, then uses real mouse input to establish −45° yaw / zero pitch before
+  measuring the turn toward −90° (the >30° assertion remains unchanged).
+  Pointer capture/recentring can itself rotate the view in some browser runs;
+  that setup movement is not the measured turn. W moves south to real armor shards; armor must increase and
   position must move over 100 units. Space must produce positive vertical
   velocity, a higher position and `ENTITYNUM_NONE` ground state, followed by
   landing. Mouse attack must reduce actual machinegun ammunition.

@@ -83,7 +83,14 @@ try {
         await sleep(300);
         await ready();
         await capture();
+        await evidence('after-pointer-capture');
+        // Capturing/recentring the CDP mouse can itself rotate the view.
+        // Establish the documented start angle through real mouse input,
+        // rather than assuming capture preserved the spawn's -45 degree yaw.
+        assert.ok(await aim(-45));
         const start = await evidence('spawn');
+        assert.ok(Math.abs(wrap(start.snap.ps.viewangles[1] + 45)) < 2 &&
+            Math.abs(start.snap.ps.viewangles[0]) < 2, 'Mouse-turn start must be -45 yaw, zero pitch');
         assert.ok(Math.hypot(start.snap.ps.origin[0] - 212, start.snap.ps.origin[1] - 2360) < 10,
             'Fixture requires the unmodified q3dm1 initial spawn');
         await aim(-90);
