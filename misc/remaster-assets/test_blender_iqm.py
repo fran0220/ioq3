@@ -1,4 +1,6 @@
 """Actual Blender skinning versus independently decoded exported IQM."""
+import contextlib
+import io
 import json
 import math
 import os
@@ -7,7 +9,9 @@ import shlex
 import subprocess
 import tempfile
 import unittest
+import zipfile
 
+from iqm_fixture_package import package
 from iqm_validate import matrices, read_iqm, skin_positions
 
 HERE=Path(__file__).resolve().parent
@@ -32,6 +36,9 @@ class BlenderIQMTests(unittest.TestCase):
             self.assertEqual([m['material'] for m in decoded['meshes']],['models/remaster/iqm_test_cyan','models/remaster/iqm_test_orange'])
             self.assertEqual(contract['attachments'],['tag_weapon'])
             self.assertEqual(contract['clip_bindings'][0]['events'],[{'frame':1,'name':'test_event'}])
+            self.assertEqual(contract['runtime_events'],[
+                {'clip':'swing','name':'test_event','clip_frame':1,'runtime_frame':1,'seconds':.05},
+                {'clip':'idle','name':'idle_event','clip_frame':1,'runtime_frame':4,'seconds':1/12}])
             self.assertTrue(contract['cgame_binding_required']); self.assertFalse(contract['runtime_accepted'])
             original_indices=[v['source_vertex'] for m in source['meshes'] for v in m['vertices']]
             self.assertEqual(len(original_indices),len(decoded['arrays'][0]))
@@ -63,6 +70,30 @@ class BlenderIQMTests(unittest.TestCase):
             # a 1.5m child socket: different from reversed 75% interpolation.
             for actual,expected in zip(engine[-1]['tag'],[6,60*math.cos(math.pi/12),40+60*math.sin(math.pi/12)]):
                 self.assertAlmostEqual(actual,expected,delta=.003)
+            with contextlib.redirect_stdout(io.StringIO()):
+                pkg=package(root); first=pkg.read_bytes(); package(root)
+                self.assertEqual(pkg.read_bytes(),first)
+                with zipfile.ZipFile(pkg) as z:
+                    self.assertIsNone(z.testzip()); self.assertEqual(len(z.namelist()),5)
+                    self.assertEqual(z.read('models/remaster/iqm_fixture.iqm'),(root/'out/model.iqm').read_bytes())
+                    # Independent TGA byte checks: top-left white, bottom-right dark.
+                    image=z.read('models/remaster/iqm_test_cyan.tga')
+                    self.assertEqual(image[18:21],bytes([255,255,255]))
+                    self.assertEqual(image[-3:],bytes([20,20,20]))
+                contract['classification']='production-character'
+                (root/'out/animation-contract.json').write_text(json.dumps(contract))
+                with self.assertRaisesRegex(ValueError,'TEST ONLY'): package(root)
+                self.assertEqual(pkg.read_bytes(),first)
+            bad_config=json.loads((root/'config.json').read_text())
+            bad_config['clips'][0]['events'][0]['frame']=3  # clip has frames 0..2
+            (root/'bad-config.json').write_text(json.dumps(bad_config))
+            prior_contract=(root/'out/animation-contract.json').read_bytes()
+            failed=subprocess.run(['blender','--background','--factory-startup','--disable-autoexec','--threads','2',
+                                   '--python-exit-code','1','--python',str(HERE/'blender_iqm.py'),'--',str(root/'fixture.blend'),
+                                   str(root/'bad-config.json'),str(root/'out')],capture_output=True,text=True)
+            self.assertNotEqual(failed.returncode,0)
+            self.assertIn('Events require',failed.stdout+failed.stderr)
+            self.assertEqual((root/'out/animation-contract.json').read_bytes(),prior_contract)
 
 
 if __name__ == '__main__':

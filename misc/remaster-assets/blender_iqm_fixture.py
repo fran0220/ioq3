@@ -60,7 +60,7 @@ def create(output):
               'units_per_meter':40, 'armature':rig.name, 'meshes':[obj.name], 'attachments':['tag_weapon'],
               'materials':{'fixture_cyan':'models/remaster/iqm_test_cyan','fixture_orange':'models/remaster/iqm_test_orange'},
               'clips':[{'name':'swing','action':'test_swing','start':1,'end':3,'fps':20,'loop':False,'semantic':'TEST_SWING', 'events':[{'frame':1,'name':'test_event'}]},
-                       {'name':'idle','action':'test_idle','start':7,'end':8,'fps':12,'loop':True,'semantic':'TEST_IDLE', 'events':[]}]}
+                       {'name':'idle','action':'test_idle','start':7,'end':8,'fps':12,'loop':True,'semantic':'TEST_IDLE', 'events':[{'frame':1,'name':'idle_event'}]}]}
     reference=[]
     for clip in config['clips']:
         rig.animation_data.action=None

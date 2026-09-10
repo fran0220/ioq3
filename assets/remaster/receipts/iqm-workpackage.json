@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-10",
+  "classification": "TEST ONLY synthetic rig; not a generated/remastered production character",
+  "implementation": {
+    "blender_export": "misc/remaster-assets/blender_iqm.py",
+    "binary_writer": "misc/remaster-assets/iqm_export.py",
+    "independent_validator": "misc/remaster-assets/iqm_validate.py",
+    "fixture": "misc/remaster-assets/blender_iqm_fixture.py",
+    "production_pose_probe": "misc/remaster-assets/iqm_pose_probe.c",
+    "fixture_packager": "misc/remaster-assets/iqm_fixture_package.py",
+    "decoded_preview": "misc/remaster-assets/blender_iqm_review.py",
+    "new_paid_submissions": 0
+  },
+  "engine_contract": {
+    "sources": ["code/renderercommon/iqm.h", "code/renderergl2/tr_model_iqm.c", "code/renderergl2/tr_model.c", "code/cgame/cg_players.c", "code/cgame/cg_weapons.c", "code/cgame/cg_ents.c"],
+    "format": "IQM2",
+    "max_bytes": 16777216,
+    "max_joints": 128,
+    "max_mesh_vertices": 999,
+    "max_mesh_triangles": 1999,
+    "vertex_arrays": "FLOAT position3/normal3/texcoord2/tangent4; UBYTE blendindices4/weights4, sum255, positive prefix, valid zero-slot indices",
+    "joint_order": "Parent before child; attachment bones retained with exact case-sensitive names",
+    "animation_channels": "TX TY TZ QX QY QZ QW SX SY SZ; float32 offset/scale + uint16 frame-major pose-major channels",
+    "export_profile": "Unit-scale rigid joints; applied object transforms; linear vertex-group skinning; no shape keys, B-bones, envelopes, DQ, shear or masked modifiers",
+    "coordinate_system": "Q3 X-forward Y-left Z-up, explicit units; UV V and tangent sign flipped",
+    "bounds": "Conservative rigid-joint sphere including arbitrary frame-pair interpolation; production culling efficiency remains a review gate"
+  },
+  "fixture_output": {
+    "directory": "assets/remaster/work/iqm-fixture",
+    "source_blend_sha256": "e6c40d4c436680ef953f386c7e928de5d36f3d969b15c68e6120291fe0d73fcd",
+    "pk3": "assets/remaster/work/iqm-fixture/iqm-fixture-test-only.pk3",
+    "pk3_bytes": 1613,
+    "pk3_sha256": "bb818d64be0bb2db9eb7242f4255879427d50f83cf689b0e4bba798b4f89ede7",
+    "model_path": "models/remaster/iqm_fixture.iqm",
+    "model_bytes": 2556,
+    "model_sha256": "66ecc85dc64371d0c22f106427753c25b2c2da6611db140933212b06086b584c",
+    "joints": ["root", "arm", "tag_weapon"],
+    "frames": 5,
+    "surfaces": [{"vertices": 12, "triangles": 4}, {"vertices": 12, "triangles": 4}],
+    "clips": [{"name": "swing", "first_frame": 0, "num_frames": 3, "fps": 20, "loop": false}, {"name": "idle", "first_frame": 3, "num_frames": 2, "fps": 12, "loop": true}],
+    "sidecar": "assets/remaster/work/iqm-fixture/out/animation-contract.json",
+    "events": "Zero-based clip-relative event frames validated and mapped to absolute IQM frame plus seconds; retained for cgame, not auto-executed",
+    "source_payloads_committed": false
+  },
+  "verification": {
+    "command": "RUN_BLENDER_TESTS=1 uv run --with pillow==11.3.0 python -m unittest discover -s misc/remaster-assets -v",
+    "tests_passed": 43,
+    "blender_version": "3.4.1",
+    "comparison": "Independent IQM decoding and actual compiled ComputePoseMats/R_IQMLerpTag compared with Blender evaluated armature positions/socket transforms across all five frames",
+    "max_observed_production_c_vertex_error_q3": 0.000406237,
+    "max_observed_production_c_tag_position_error_q3": 0.000307037,
+    "allowed_position_error_q3": 0.003,
+    "quarter_interpolation_expected_tag_q3": [6, 57.9555495773441, 55.52914270615125],
+    "quarter_interpolation_observed_tag_q3": [6.00000048, 57.9555473, 55.5291443],
+    "boundaries": "999/1000 vertices, 5997/6000 indices, 128/129 joints, >4 influences, corrupt section/count/weight/parent/clip data, event upper-bound rejection",
+    "deterministic": "Source JSON regenerates byte-identical IQM; repeated fixture PK3 is byte-identical and CRC-valid",
+    "visual_review": "Decoded IQM+packaged TGA frames0/2/3/4 inspected: visible swing change, idle pose reset, material continuity, no obvious missing faces/clipping. Inspection-only socket marker is not in exported geometry.",
+    "review_image": ".amp/in/artifacts/iqm-fixture-poses.jpg",
+    "full_loader_or_gl_draw_test": false,
+    "runtime_accepted": false
+  },
+  "cgame_handoff": {
+    "required": true,
+    "clip_metadata": "Renderer does not consume IQM anim names/FPS/loop records; bind sidecar semantics/events to frame/oldframe/backlerp explicitly",
+    "player_gap": "Stock lower/upper/head and animation.cfg plus leg-frame offsets still apply; choose verified segmented IQMs or implement whole-body client interface",
+    "weapon_gap": "Torso-to-hand frame mapping and tag_weapon/tag_barrel/tag_flash attachment conventions require explicit client binding",
+    "tag_gap": "R_IQMLerpTag exact joint lookup has no frame clamp; caller must pass valid numeric frames and interpolation",
+    "remaining_artwork": "Full original source set remains absent; rig creation, retargeting, production materials, gameplay/collision and browser performance are not completed by this test fixture"
+  },
+  "private_recovery_transfer": {
+    "path": "assets/remaster/work/source-recovery-private.tar.gz",
+    "checksum_file": "assets/remaster/work/source-recovery-private.sha256",
+    "bytes": 17631834,
+    "sha256": "9e1c2acd5c160539e0d75e41a45d684aaf673eae9a482c7d361fbdf073bde93e",
+    "contains": "source-archive/ blobs and three snapshots: paid v2 16 files, two rejected v1 variants 2 files each; includes PRIVATE requests/responses/state",
+    "local_unpack_and_all_snapshot_hash_verification": true,
+    "cross_thread_receipt_acknowledged": false,
+    "external_durable_backup": false,
+    "do_not_publish_or_commit_payload": true
+  }
+}

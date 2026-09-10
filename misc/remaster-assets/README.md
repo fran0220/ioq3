@@ -17,6 +17,8 @@ F=assets/remaster/work/iqm-fixture
 blender --background --factory-startup --disable-autoexec --threads 2 --python-exit-code 1 --python misc/remaster-assets/blender_iqm_fixture.py -- "$F"
 blender --background --factory-startup --disable-autoexec --threads 2 --python-exit-code 1 --python misc/remaster-assets/blender_iqm.py -- "$F/fixture.blend" "$F/config.json" "$F/out"
 python misc/remaster-assets/iqm_validate.py "$F/out/model.iqm" --output "$F/validation.json"
+python misc/remaster-assets/iqm_fixture_package.py "$F"
+blender --background --factory-startup --disable-autoexec --threads 2 --python-exit-code 1 --python misc/remaster-assets/blender_iqm_review.py -- "$F/iqm-fixture-test-only.pk3" "$F/review"
 RUN_BLENDER_TESTS=1 uv run --with pillow==11.3.0 python -m unittest discover -s misc/remaster-assets -v
 ```
 
@@ -59,7 +61,9 @@ Config fields: `classification`, `coordinate_system`, `units_per_meter`,
 `armature`, `meshes`, `materials` (Blender material→Q3 shader), `attachments`
 (exact joint names), `clips` with `name`, `action`, inclusive integer `start/end`,
 `fps`, `loop`, optional `semantic/events`. Events are preserved in the sidecar;
-they are not IQM engine callbacks. See generated fixture config as runnable input.
+each event has `name` and zero-based clip-relative `frame`, validated in range.
+The sidecar also gives `runtime_frame` and seconds for cgame binding; these are
+not IQM engine callbacks. See generated fixture config as runnable input.
 Bounds deliberately use a conservative rigid-joint sphere, covering rotations
 between frames rather than endpoint AABBs alone; production bounds/performance
 need per-character review before tightening.
@@ -76,6 +80,17 @@ valid attachment frames (the tag path does not clamp), and handle `tag_torso`,
 `tag_head`, `tag_weapon`, `tag_barrel`/`tag_flash` conventions as appropriate. The
 fixture preserves `tag_weapon`; it does not claim to implement these player/weapon
 semantics. Keep `runtime_accepted=false` until actual engine/cgame/visual gates.
+
+The **fixture-only** packager emits `iqm-fixture-test-only.pk3` with model path
+`models/remaster/iqm_fixture.iqm`, two asymmetric-corner TGA test textures and a
+shader. It refuses production classification and never substitutes synthetic
+materials for real art. The review command decodes that package's positions,
+weights, UVs and textures, renders frames0/2/3/4, and adds an inspection-only
+socket marker that is not in the model. Its geometry-derived normals/material
+lighting are a Blender preview, not the GL2 normal/tangent/rendering path. Use
+the PK3 for actual loader/frame/material/attachment tests in the main engine
+workstream; do not include it in a release. Detailed local reports and source
+files stay under ignored `assets/remaster/work/iqm-fixture/`.
 
 ## Authorized source inventory and production work packages (offline)
 

@@ -132,6 +132,14 @@ def export(source, config, output):
     for frame, bound in enumerate(decoded['bounds']):
         if any(not bound[i] <= pos[i] <= bound[i+3] for pos in skin_positions(decoded, frame) for i in range(3)):
             raise ValueError('Exported animation outside conservative bounds')
+    runtime_events = []
+    for spec, clip in zip(config['clips'], decoded['clips']):
+        for event in spec.get('events', []):
+            frame = event['frame']
+            if type(frame) is not int or not 0 <= frame < clip['num_frames'] or not event.get('name'):
+                raise ValueError('Events require a name and zero-based clip-relative frame in range')
+            runtime_events.append({'clip': clip['name'], 'name': event['name'], 'clip_frame': frame,
+                                   'runtime_frame': clip['first_frame'] + frame, 'seconds': frame / clip['fps']})
     output.mkdir(parents=True, exist_ok=True)
     (output / 'model.iqm').write_bytes(data)
     (output / 'source.json').write_text(json.dumps(document, indent=2)+'\n')
@@ -140,6 +148,7 @@ def export(source, config, output):
                'coordinate_system': document['coordinate_system'], 'materials': config['materials'], 'source_meshes': sources,
                'joints': [{'name': j['name'], 'parent': j['parent']} for j in decoded['joints']],
                'attachments': document['attachments'], 'clips': decoded['clips'], 'clip_bindings': config['clips'],
+               'runtime_events': runtime_events,
                'bounds_policy': 'conservative rigid-joint sphere covers arbitrary frame-pair interpolation; tighten only with verified culling tests',
                'vertex_weights': 'linear UBYTE4 sum255; quantized, never silently prune >4 influences',
                'cgame_binding_required': True, 'runtime_accepted': False, 'blender_version': bpy.app.version_string}
