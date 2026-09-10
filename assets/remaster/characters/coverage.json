@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "scope": "complete base Quake III Arena, not Team Arena",
+  "reference_scope": "demo-only verified subset; full roster remains open",
+  "reference_archive_sha256": "e77abad2466f45a0a7ea018445528f9b95a0fe7789fa1abc1a7718bbf0754b08",
+  "verified_model_skin_sets": {
+    "grunt": ["default", "blue", "red", "stripe"],
+    "major": ["default", "blue", "red", "daemia"],
+    "sarge": ["default", "blue", "red", "krusade"],
+    "visor": ["default", "blue", "red"]
+  },
+  "verification": "Each listed skin has lower/upper/head .skin in the hashed private archive; no Demo data included in this manifest",
+  "vertical_slice": {
+    "map": "q3dm1",
+    "character": "sarge",
+    "candidate": "character-sarge-v2",
+    "prototype_reviewed": true,
+    "generated_mesh_reviewed": false,
+    "rig_reviewed": false,
+    "clips_reviewed": false,
+    "team_skins_reviewed": false,
+    "runtime_package": null,
+    "native_accepted": false,
+    "browser_accepted": false
+  },
+  "full_base_game_complete": false,
+  "missing_inputs": [
+    "Full authorized base-Q3 archive files, version and low-to-high VFS priority for complete original model/skin inventory",
+    "Generated character mesh from the recorded in-progress production task; a prototype is not a riggable mesh"
+  ],
+  "remaining_production_not_external_inputs": [
+    "Generated mesh front/back/side material and topology review",
+    "Blender waist/neck segment interfaces, rig, weights and complete event-aligned animation library",
+    "Default/red/blue/krusade skins with shape-based team identification",
+    "Native and browser real combat pose/tag/skin acceptance and inspected captures",
+    "Full verified reference roster expansion after first playable vertical slice",
+    "Durable off-orb source/master backup with verified hashes"
+  ]
+}

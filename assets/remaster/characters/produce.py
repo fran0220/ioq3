@@ -27,6 +27,9 @@ def main():
         if args.command == "import-painter":
             path = work / "prototype.png"
             data = path.read_bytes()
+            expected = manifest["prototype"].get("sha256")
+            if expected and digest(data) != expected:
+                raise ValueError("Painter image differs from reviewed manifest hash")
             if production.state["stages"].get("image"):
                 production.require_artifact("image")
                 return

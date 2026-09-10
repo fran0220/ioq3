@@ -1739,6 +1739,14 @@ int R_IQMLerpTag( orientation_t *tag, iqmData_t *data,
 		return qfalse;
 	}
 
+	// Tags are queried by cgame before R_AddIQMSurfaces validates the
+	// entity frames. Model changes can leave an old frame from a longer
+	// animation; use the same frame-zero fallback as the surface path.
+	if ( startFrame < 0 || startFrame >= data->num_frames ||
+	     endFrame < 0 || endFrame >= data->num_frames ) {
+		startFrame = endFrame = 0;
+	}
+
 	ComputeJointMats( data, startFrame, endFrame, frac, jointMats );
 
 	tag->axis[0][0] = jointMats[12 * joint + 0];

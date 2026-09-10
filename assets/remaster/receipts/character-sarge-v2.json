@@ -1,0 +1,65 @@
+{
+  "asset_id": "character-sarge-v2",
+  "classification": "authorized-character-remake-candidate",
+  "manifest_sha256": "5fd15389d7febb9b6617cfbe1ae571f8decd3b27a2f99112674576aa071788a2",
+  "prototype_review": {
+    "at": 1789016805,
+    "note": "Inspected full body: recognizable silver flat-top veteran, clean waist/collar seams, separated limbs, coherent ivory/olive armor; rear geometry remains unverified",
+    "reviewer": "character-thread",
+    "sha256": "01e2269ea4e47bf84769a370c9a018596458b221f6157b1e672c4bcb89c58b02"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": null,
+      "task_id": null,
+      "request_id": null,
+      "request_sha256": null,
+      "response_sha256": null,
+      "generator_identity": null,
+      "model": "amp-painter",
+      "status": "downloaded",
+      "submissions": null,
+      "artifact": {
+        "bytes": 2186164,
+        "path": "prototype.png",
+        "sha256": "01e2269ea4e47bf84769a370c9a018596458b221f6157b1e672c4bcb89c58b02"
+      },
+      "image": {
+        "height": 1536,
+        "mime": "image/png",
+        "width": 1024
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "not-exposed-by-tool"
+      }
+    },
+    "shape": {
+      "operation_id": "091e487d-c5ca-4cc4-b2e4-2e69942297ed",
+      "task_id": "task_4Yklp9dnD3eQcKosUVthynuw71MEi0rK",
+      "request_id": "202609100506462304253588268d9d6uIbyCmTF",
+      "request_sha256": "d58795321297d5812ebee9675d71f95767528c2b1263044194274c7b82e6c03c",
+      "response_sha256": "67a80c5a27509f3ace9ee2c02c6fcc4d4df7ee2c6b589b38d1ffd187ba80b8d7",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "in_progress",
+      "submissions": 1,
+      "artifact": null,
+      "image": null,
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "unreconciled"
+      }
+    }
+  },
+  "processing": null,
+  "package": null
+}
