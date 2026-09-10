@@ -75,7 +75,15 @@
     "sha256": "9e1c2acd5c160539e0d75e41a45d684aaf673eae9a482c7d361fbdf073bde93e",
     "contains": "source-archive/ blobs and three snapshots: paid v2 16 files, two rejected v1 variants 2 files each; includes PRIVATE requests/responses/state",
     "local_unpack_and_all_snapshot_hash_verification": true,
-    "cross_thread_receipt_acknowledged": false,
+    "cross_thread_receipt_acknowledged": true,
+    "receiver_confirmation": {
+      "thread": "https://ampcode.com/threads/T-01a08650-c386-7680-a9f9-744898e9a239",
+      "date": "2026-09-10",
+      "reported_checks": "Main orb confirmed exact tar bytes/SHA256, safe extraction, all three snapshot manifest hashes and archive.py verify (16+2+2 files)",
+      "storage": "Ignored directory mode700/files600; payload not published or committed",
+      "iqm_handoff": "Main orb also confirmed IQM PK3/model hashes and ZIP CRC, and read current event mappings: swing clip1 to runtime1/0.05s, idle clip1 to runtime4/(1/12)s",
+      "runtime_status": "R_LoadIQM/GL/cgame acceptance still pending; mathematical/file verification is not runtime acceptance"
+    },
     "external_durable_backup": false,
     "do_not_publish_or_commit_payload": true
   }
