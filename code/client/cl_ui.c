@@ -28,6 +28,12 @@ extern	botlib_export_t	*botlib_export;
 
 vm_t *uivm;
 
+static int uiWebGeneration;
+static qboolean uiWebSupported;
+int CL_UIWebGeneration(void) {
+	return uivm && uiWebSupported ? uiWebGeneration : 0;
+}
+
 /*
 ====================
 GetClientState
@@ -1086,6 +1092,7 @@ CL_ShutdownUI
 ====================
 */
 void CL_ShutdownUI( void ) {
+	uiWebSupported = qfalse;
 	Key_SetCatcher( Key_GetCatcher( ) & ~KEYCATCH_UI );
 	cls.uiStarted = qfalse;
 	if ( !uivm ) {
@@ -1107,6 +1114,8 @@ void CL_InitUI( void ) {
 	int		v;
 	vmInterpret_t		interpret;
 
+	uiWebSupported = qfalse;
+	uiWebGeneration = uiWebGeneration == 0x7fffffff ? 1 : uiWebGeneration + 1;
 	// load the dll or bytecode
 	interpret = Cvar_VariableValue("vm_ui");
 	if(cl_connectedToPureServer)
@@ -1126,7 +1135,8 @@ void CL_InitUI( void ) {
 	if (v == UI_OLD_API_VERSION) {
 //		Com_Printf(S_COLOR_YELLOW "WARNING: loading old Quake III Arena User Interface version %d\n", v );
 		// init for this gamestate
-		VM_Call( uivm, UI_INIT, (clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE));
+		uiWebSupported = VM_Call( uivm, UI_INIT,
+			(clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE)) == UI_WEB_CAPABILITY;
 	}
 	else if (v != UI_API_VERSION) {
 		// Free uivm now, so UI_SHUTDOWN doesn't get called later.
@@ -1138,7 +1148,8 @@ void CL_InitUI( void ) {
 	}
 	else {
 		// init for this gamestate
-		VM_Call( uivm, UI_INIT, (clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE) );
+		uiWebSupported = VM_Call( uivm, UI_INIT,
+			(clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE)) == UI_WEB_CAPABILITY;
 	}
 }
 

@@ -47,7 +47,14 @@ Q_EXPORT intptr_t vmMain( int command, int arg0, int arg1, int arg2, int arg3, i
 
 	case UI_INIT:
 		UI_Init();
-		return 0;
+		return UI_WEB_CAPABILITY;
+
+	case UI_WEB_CATALOG:
+		return (intptr_t)UI_WebCatalog(arg0, arg1, arg2, arg3);
+	case UI_WEB_EDIT:
+		return UI_WebEdit(arg0, arg1, arg2);
+	case UI_WEB_LAUNCH:
+		return UI_WebLaunch(arg0, arg1, arg2);
 
 	case UI_SHUTDOWN:
 		UI_Shutdown();

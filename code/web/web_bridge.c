@@ -137,6 +137,119 @@ EMSCRIPTEN_KEEPALIVE int OG_WebMatchAction(int action, int arg)
 
 int OG_WebMenuOpen(void) { return webMenuOpen || webInputBlocked; }
 
+static int webCatalogGeneration, webCatalogVM;
+static ui_web_record_t webCatalog;
+
+static int WebCatalogLive(void)
+{
+    int state = OG_WebUIState();
+    return (state == 1 || state == 2) && webCatalogVM && webCatalogVM == CL_UIWebGeneration();
+}
+
+EMSCRIPTEN_KEEPALIVE int OG_WebCatalogRefresh(void)
+{
+    int state = OG_WebUIState();
+    webCatalogVM = 0;
+    memset(&webCatalog, 0, sizeof(webCatalog));
+    if ((state != 1 && state != 2) || !CL_UIWebGeneration()) return 0;
+    if (VM_Call(uivm, UI_WEB_EDIT, UI_WEB_RESET, 0, 0) != 1) return 0;
+    webCatalogVM = CL_UIWebGeneration();
+    webCatalogGeneration = webCatalogGeneration == 0x7fffffff ? 1 : webCatalogGeneration + 1;
+    return webCatalogGeneration;
+}
+
+static int WebCatalogRead(int kind, int id)
+{
+    intptr_t address;
+    if (!WebCatalogLive() || kind < 0 || kind > UI_WEB_MODEL || id < -1) return 0;
+    if (webCatalog.version && webCatalog.kind == kind && webCatalog.id == id) return 1;
+    memset(&webCatalog, 0, sizeof(webCatalog));
+    address = VM_Call(uivm, UI_WEB_CATALOG, kind, id, UI_WEB_VERSION, sizeof(webCatalog));
+    if (!VM_CopyFromVM(uivm, &webCatalog, address, sizeof(webCatalog)) ||
+        webCatalog.version != UI_WEB_VERSION || webCatalog.size != sizeof(webCatalog) ||
+        webCatalog.kind != kind || webCatalog.id != id || webCatalog.count < 0 || webCatalog.count > 4096) {
+        memset(&webCatalog, 0, sizeof(webCatalog));
+        return 0;
+    }
+    webCatalog.name[UI_WEB_TEXT - 1] = webCatalog.displayName[UI_WEB_TEXT - 1] = 0;
+    return 1;
+}
+
+EMSCRIPTEN_KEEPALIVE int OG_WebCatalogCount(int kind)
+{
+    return WebCatalogRead(kind, -1) ? webCatalog.count : -1;
+}
+
+EMSCRIPTEN_KEEPALIVE double OG_WebCatalogValue(int kind, int id, int field)
+{
+    if (id < 0 || !WebCatalogRead(kind, id)) return NAN;
+    switch (field) {
+    case 0: return webCatalog.id;
+    case 1: return webCatalog.modes;
+    case 2: return webCatalog.available;
+    default: return NAN;
+    }
+}
+
+EMSCRIPTEN_KEEPALIVE int OG_WebCatalogText(int kind, int id, int field, int index)
+{
+    if (id < 0 || index < 0 || index >= UI_WEB_TEXT || !WebCatalogRead(kind, id)) return -1;
+    if (field == 0) return (unsigned char)webCatalog.name[index];
+    if (field == 1) return (unsigned char)webCatalog.displayName[index];
+    return -1;
+}
+
+static int WebCatalogCheck(int generation)
+{
+    if (!WebCatalogLive()) return 0;
+    return generation == webCatalogGeneration ? 1 : -1;
+}
+
+static int WebInteger(double value, int min, int max)
+{
+    return isfinite(value) && value == floor(value) && value >= min && value <= max;
+}
+
+EMSCRIPTEN_KEEPALIVE int OG_WebPlayBot(int generation, double slot, double botId)
+{
+    int status = WebCatalogCheck(generation);
+    if (status != 1) return status;
+    if (!WebInteger(slot, 0, 7) || !WebInteger(botId, -1, 4095)) return -2;
+    return VM_Call(uivm, UI_WEB_EDIT, UI_WEB_BOT_SLOT, (int)slot, (int)botId);
+}
+
+EMSCRIPTEN_KEEPALIVE int OG_WebPlayLimits(int generation, double limit, double time)
+{
+    int status = WebCatalogCheck(generation);
+    if (status != 1) return status;
+    if (!WebInteger(limit, 0, 999) || !WebInteger(time, 0, 999)) return -2;
+    return VM_Call(uivm, UI_WEB_EDIT, UI_WEB_LIMITS, (int)limit, (int)time);
+}
+
+EMSCRIPTEN_KEEPALIVE int OG_WebSelectModel(int generation, double id)
+{
+    int status = WebCatalogCheck(generation);
+    if (status != 1) return status;
+    if (!WebInteger(id, 0, 4095)) return -2;
+    return VM_Call(uivm, UI_WEB_EDIT, UI_WEB_SELECT_MODEL, (int)id, 0);
+}
+
+EMSCRIPTEN_KEEPALIVE int OG_WebPlay(int generation, double mapId, double mode, double skill)
+{
+    int result, status = WebCatalogCheck(generation);
+    if (status != 1) return status;
+    if (!WebInteger(mapId, 0, 4095) || !WebInteger(mode, 0, 4) || !WebInteger(skill, 1, 5)) return -2;
+    // A room-bound engine cannot turn into a local server mid-session.
+    if (Cvar_VariableIntegerValue("net_enabled") || (clc.state == CA_ACTIVE && !com_sv_running->integer)) return 0;
+    result = VM_Call(uivm, UI_WEB_LAUNCH, (int)mapId, (int)mode, (int)skill);
+    if (result == 1) {
+        webMenuOpen = 0;
+        webCatalogVM = 0; // reject a second click until a new explicit catalogue refresh
+        Key_ClearStates();
+    }
+    return result;
+}
+
 EMSCRIPTEN_KEEPALIVE int OG_WebUIState(void)
 {
     if (webInputBlocked || !com_cl_running || !com_cl_running->integer || !uivm) return 0;

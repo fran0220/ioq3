@@ -23,6 +23,19 @@ int OG_WebHUDEnabled(int enabled);
  * Release respawn on pointerup/keyup/cancel/blur; never enable it while alive. */
 int OG_WebMatchAction(int action, int arg);
 
+/* Explicit catalogue refresh returns a generation and clears staged launch
+ * options. kind=0 map/1 bot/2 modelskin. Value fields=id/mode bits/available;
+ * text fields=internal name/display name. Fixed numeric ids only, no command
+ * text. Mutations: 1 accepted, 0 unavailable, -1 stale, -2 input, -3 missing. */
+int OG_WebCatalogRefresh(void);
+int OG_WebCatalogCount(int kind);
+double OG_WebCatalogValue(int kind, int id, int field);
+int OG_WebCatalogText(int kind, int id, int field, int index);
+int OG_WebPlayBot(int generation, double slot, double botId);
+int OG_WebPlayLimits(int generation, double limit, double time);
+int OG_WebPlay(int generation, double mapId, double mode, double skill);
+int OG_WebSelectModel(int generation, double id);
+
 /* Main-thread UI only. State: 0 unavailable, 1 menu, 2 active, 3 connecting.
  * Numeric settings: volume, music, sensitivity, pitch, FOV. NaN = unavailable.
  * Set/Menu return 0 on rejection. Never invoke from an uninitialized runtime. */

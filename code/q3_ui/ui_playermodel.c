@@ -449,6 +449,18 @@ static void PlayerModel_BuildList( void )
 		s_playermodel.numpages++;
 }
 
+/* Reuse the original menu's VFS icon catalogue rather than inventing a second
+ * list with different skin discovery rules. Called only on explicit refresh. */
+int UI_WebPlayerModels(void) {
+	PlayerModel_BuildList();
+	return s_playermodel.nummodels;
+}
+
+const char *UI_WebPlayerModelName(int id) {
+	if (id < 0 || id >= s_playermodel.nummodels) return NULL;
+	return s_playermodel.modelnames[id];
+}
+
 /*
 =================
 PlayerModel_SetMenuItems
@@ -732,5 +744,4 @@ void UI_PlayerModelMenu(void)
 
 	Menu_SetCursorToItem( &s_playermodel.menu, &s_playermodel.pics[s_playermodel.selectedmodel % MAX_MODELSPERPAGE] );
 }
-
 

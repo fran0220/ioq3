@@ -74,6 +74,7 @@ set(GAME_QVM_SOURCES ${SOURCE_DIR}/game/g_syscalls.asm)
 
 set(UI_SOURCES
     ${SOURCE_DIR}/q3_ui/ui_main.c
+    ${SOURCE_DIR}/q3_ui/ui_web.c
     ${SOURCE_DIR}/game/bg_misc.c
     ${SOURCE_DIR}/game/bg_lib.c
     ${SOURCE_DIR}/q3_ui/ui_addbots.c

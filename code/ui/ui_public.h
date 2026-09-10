@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef __UI_PUBLIC_H__
 #define __UI_PUBLIC_H__
 
+#include "ui_web_public.h"
+
 #define UI_API_VERSION	6
 
 typedef struct {
@@ -182,10 +184,14 @@ typedef enum {
 
 	UI_DRAW_CONNECT_SCREEN,
 //	void	UI_DrawConnectScreen( qboolean overlay );
-	UI_HASUNIQUECDKEY
+	UI_HASUNIQUECDKEY,
 // if !overlay, the background will be drawn, otherwise it will be
 // overlayed over whatever the cgame has drawn.
 // a GetClientState syscall will be made to get the current strings
+	UI_WEB_CATALOG,
+	UI_WEB_EDIT,
+	UI_WEB_LAUNCH
+// Optional exports, only after UI_INIT returns UI_WEB_CAPABILITY.
 } uiExport_t;
 
 #endif
