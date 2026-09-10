@@ -28,10 +28,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 typedef enum
 {
-	IMGTYPE_COLORALPHA, // for color, lightmap, diffuse, and specular
+	IMGTYPE_COLORALPHA, // for color, lightmap, and diffuse
 	IMGTYPE_NORMAL,
 	IMGTYPE_NORMALHEIGHT,
 	IMGTYPE_DELUXE, // normals are swizzled, deluxe are not
+	IMGTYPE_SPECULAR, // linear reflectance / gloss / metallic data
 } imgType_t;
 
 typedef enum
