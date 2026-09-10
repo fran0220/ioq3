@@ -1855,6 +1855,35 @@ void R_RenderDlightCubemaps(const refdef_t *fd)
 }
 
 
+// Projected shadows run before R_AddIQMSurfaces validates entity frames.
+// IQM permits omitted animation bounds; such a model cannot supply a reliable
+// shadow projection volume and must skip this pass rather than dereference NULL.
+static float R_IQMShadowRadius(const iqmData_t *data, const refEntity_t *ent)
+{
+	vec3_t extent = { 0, 0, 0 };
+	int pose, axis;
+
+	if (!data->bounds)
+		return 0.0f;
+
+	for (pose = 0; pose < 2; pose++)
+	{
+		int frame = pose ? ent->oldframe : ent->frame;
+		const float *bounds;
+		if ((ent->renderfx & RF_WRAP_FRAMES) && data->num_frames > 0)
+			frame %= data->num_frames;
+		if (frame < 0 || frame >= data->num_frames)
+			frame = 0;
+		bounds = data->bounds + 6 * frame;
+		for (axis = 0; axis < 3; axis++)
+			extent[axis] = MAX(extent[axis], MAX(fabsf(bounds[axis]), fabsf(bounds[axis + 3])));
+	}
+
+	// The projection is centered on entity origin, not the bounds midpoint.
+	// Enclose both poses so off-center and interpolated limbs are not clipped.
+	return VectorLength(extent);
+}
+
 void R_RenderPshadowMaps(const refdef_t *fd)
 {
 	viewParms_t		shadowParms;
@@ -1910,14 +1939,8 @@ void R_RenderPshadowMaps(const refdef_t *fd)
 				break;
 				case MOD_IQM:
 				{
-					// FIXME: never actually tested this
 					iqmData_t *data = model->modelData;
-					vec3_t diag;
-					float *framebounds;
-
-					framebounds = data->bounds + 6*ent->e.frame;
-					VectorSubtract( framebounds+3, framebounds, diag );
-					radius = 0.5f * VectorLength( diag );
+					radius = R_IQMShadowRadius(data, &ent->e) * scale;
 				}
 				break;
 

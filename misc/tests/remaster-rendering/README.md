@@ -34,8 +34,11 @@ Do not change global PBR per asset: it reinterprets every existing specular map.
   lightmaps or intentional scene lights. Do not bake bright emission into
   diffuse as well, which doubles its contribution.
 
-Example for a model (declare `stage` **before** `map`, so normal texture loading
-uses the right image type). Paths are schematic, not installed fixture assets:
+Example for a model (declare `stage` **before** `map`, so normal/specular loading
+uses the right image type). Explicit and automatic specular maps now share the
+linear-data image type: no gamma/intensity correction, linear CPU picmip and mip
+averaging. Color and normal processing are unchanged. Do not reuse one filename
+for both color and data: image caching is by name. Paths below are schematic:
 
 ```text
 models/remaster/example
@@ -82,6 +85,12 @@ order-independent transparency. Avoid interpenetrating transparent meshes.
 
 ```sh
 python3 misc/tests/remaster-rendering/material-math.py
+for test in material-parser specular-mips iqm-shadow; do
+  cc -O1 -ffunction-sections -fdata-sections $(sdl2-config --cflags) \
+    misc/tests/remaster-rendering/$test.c code/qcommon/q_shared.c \
+    code/qcommon/q_math.c code/renderergl2/tr_extramath.c \
+    -Wl,--gc-sections -lm -o /tmp/$test && /tmp/$test || exit 1
+done
 cmake --build build-orb --parallel 4
 # With Emscripten 3.1.58 active:
 cmake --build build-web --parallel 4
@@ -94,8 +103,33 @@ It does not replace GLSL compilation/execution. Minimum specular roughness 0.045
 regularizes the zero-width lobe, retaining continuous highlights without 0/0;
 stable denominator arithmetic avoids cancellation at normal incidence.
 
+Parser tests execute the real parser and capture image flags/types for map,
+clampmap and animMap, including unchanged diffuse/normal controls. Mip tests
+exercise real picmip scaling with asymmetric RGBA values, explicitly rejecting
+the sRGB average, and check 1D mip tails. IQM tests exercise the real shadow
+radius: missing optional bounds, static models, invalid/wrapped frames and
+off-center bounds enclosing both interpolated poses. IQM without bounds skips
+projected shadow generation; production exports must provide per-frame bounds.
+
 Use the existing private gameplay fixture preparation and CDP driver in
 `../gameplay/README.md`; no demo data or observer build may be published.
+The renderer wrapper accepts additional local PK3s and hashes every input:
+
+```sh
+node misc/tests/remaster-rendering/prepare.mjs build-web/Release /path/to/demo \
+  /tmp/new-render-fixture assets/remaster/runtime/energy-pillar-v2.pk3
+# Additional environment/weapon/private BSP packs can follow the pillar pack.
+# Serve privately with the supervised service workflow in ../gameplay/README.md.
+node misc/tests/remaster-rendering/run.mjs "$CDP" /tmp/new-render-evidence
+```
+
+The current browser driver checks actual production specular GLSL finite output
+on five roughness boundaries in a separate WebGL2 context, then captures the
+real WASM pillar, HDR/LDR/exposure/near-far, firing, and forced sun/projected
+shadow settings. It records 120 RAF deltas plus imagelist in its JSONL journal.
+These captures require inspection; the driver does not assert that a visible
+decal, shadow or production normal/specular/emission material passed review.
+
 Integrated acceptance requires both HDR=0 and HDR=1, matched exposure/camera,
 bright/dark views, close/far and motion, normals/specular on/off comparisons,
 additive emission with no opaque rectangle, alpha particles/decals crossing

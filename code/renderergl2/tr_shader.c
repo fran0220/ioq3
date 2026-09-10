@@ -682,6 +682,12 @@ static qboolean ParseStage( shaderStage_t *stage, char **text )
 					if (stage->type == ST_NORMALPARALLAXMAP)
 						type = IMGTYPE_NORMALHEIGHT;
 				}
+				else if (stage->type == ST_SPECULARMAP)
+				{
+					// Reflectance / gloss / metallic are data, not display color.
+					type = IMGTYPE_SPECULAR;
+					flags |= IMGFLAG_NOLIGHTSCALE;
+				}
 				else
 				{
 					if (r_genNormalMaps->integer)
@@ -726,6 +732,11 @@ static qboolean ParseStage( shaderStage_t *stage, char **text )
 				if (stage->type == ST_NORMALPARALLAXMAP)
 					type = IMGTYPE_NORMALHEIGHT;
 			}
+			else if (stage->type == ST_SPECULARMAP)
+			{
+				type = IMGTYPE_SPECULAR;
+				flags |= IMGFLAG_NOLIGHTSCALE;
+			}
 			else
 			{
 				if (r_genNormalMaps->integer)
@@ -766,6 +777,7 @@ static qboolean ParseStage( shaderStage_t *stage, char **text )
 				num = stage->bundle[0].numImageAnimations;
 				if ( num < MAX_IMAGE_ANIMATIONS ) {
 					imgFlags_t flags = IMGFLAG_NONE;
+					imgType_t type = IMGTYPE_COLORALPHA;
 
 					if (!shader.noMipMaps)
 						flags |= IMGFLAG_MIPMAP;
@@ -773,7 +785,13 @@ static qboolean ParseStage( shaderStage_t *stage, char **text )
 					if (!shader.noPicMip)
 						flags |= IMGFLAG_PICMIP;
 
-					stage->bundle[0].image[num] = R_FindImageFile( token, IMGTYPE_COLORALPHA, flags );
+					if (stage->type == ST_SPECULARMAP)
+					{
+						type = IMGTYPE_SPECULAR;
+						flags |= IMGFLAG_NOLIGHTSCALE;
+					}
+
+					stage->bundle[0].image[num] = R_FindImageFile( token, type, flags );
 					if ( !stage->bundle[0].image[num] )
 					{
 						ri.Printf( PRINT_WARNING, "WARNING: R_FindImageFile could not find '%s' in shader '%s'\n", token, shader.name );
@@ -2313,7 +2331,7 @@ static void CollapseStagesToLightall(shaderStage_t *diffuse,
 			COM_StripExtension(diffuseImg->imgName, specularName, MAX_QPATH);
 			Q_strcat(specularName, MAX_QPATH, "_s");
 
-			specularImg = R_FindImageFile(specularName, IMGTYPE_COLORALPHA, specularFlags);
+			specularImg = R_FindImageFile(specularName, IMGTYPE_SPECULAR, specularFlags);
 
 			if (specularImg)
 			{

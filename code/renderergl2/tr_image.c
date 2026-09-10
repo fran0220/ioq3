@@ -1361,6 +1361,26 @@ static void R_MipMapsRGB( byte *in, int inWidth, int inHeight)
 }
 
 
+// Data maps must average encoded linear values, never apply an sRGB curve.
+// Also handles the 1xN / Nx1 tail of a mip chain, in place.
+static void R_MipMapLinear(byte *data, int width, int height)
+{
+	int x, y, c;
+	int outWidth = MAX(1, width >> 1), outHeight = MAX(1, height >> 1);
+	byte *out = data;
+	for (y = 0; y < outHeight; y++)
+	{
+		int y0 = y * 2, y1 = MIN(y0 + 1, height - 1);
+		for (x = 0; x < outWidth; x++)
+		{
+			int x0 = x * 2, x1 = MIN(x0 + 1, width - 1);
+			for (c = 0; c < 4; c++)
+				*out++ = (data[(y0 * width + x0) * 4 + c] + data[(y0 * width + x1) * 4 + c]
+					+ data[(y1 * width + x0) * 4 + c] + data[(y1 * width + x1) * 4 + c]) >> 2;
+		}
+	}
+}
+
 static void R_MipMapNormalHeight (const byte *in, byte *out, int width, int height, qboolean swizzle)
 {
 	int		i, j;
@@ -1713,6 +1733,8 @@ static qboolean RawImage_ScaleToPower2( byte **data, int *inout_width, int *inou
 		{
 			if (type == IMGTYPE_NORMAL || type == IMGTYPE_NORMALHEIGHT)
 				R_MipMapNormalHeight(*data, *data, width, height, qfalse);
+			else if (type == IMGTYPE_SPECULAR)
+				R_MipMapLinear(*data, width, height);
 			else
 				R_MipMapsRGB(*data, width, height);
 
@@ -2081,6 +2103,8 @@ static void RawImage_UploadTexture(GLuint texture, byte *data, int x, int y, int
 			{
 				if (type == IMGTYPE_NORMAL || type == IMGTYPE_NORMALHEIGHT)
 					R_MipMapNormalHeight(data, data, width, height, glRefConfig.swizzleNormalmap);
+				else if (type == IMGTYPE_SPECULAR)
+					R_MipMapLinear(data, width, height);
 				else
 					R_MipMapsRGB(data, width, height);
 			}
@@ -3381,4 +3405,3 @@ void	R_SkinList_f( void ) {
 	}
 	ri.Printf (PRINT_ALL, "------------------\n");
 }
-
