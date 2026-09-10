@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "asset_id": "environment-wall-crest-v1",
+  "classification": "original-generated-environment-wall-relief-for-q3dm1",
+  "authorization": "2026-09-09 human authorized remake/publication and unlimited generation; 2026-09-10 approved continuation through imported Painter prototype",
+  "style": "industrial-arena-v1",
+  "image_model": "amp-painter",
+  "shape_model": "hunyuan3d-2",
+  "prototype_source": "https://ampcode.com/user-content/attachments/b427fb131b65244a21f1070275842c1f396fc57f2ba3d60993ce4cd85c6d9013-file.png",
+  "prototype_sha256": "3be476cb7f8285b5b9f9cd5446bdcfb613cbd61c189b8ec81d0c97d1b59a80d0",
+  "prompt": "Original closed low-relief wall crest: broad graphite mounting plate, warm ivory shield, restrained cyan inset strips and small orange fasteners. Target q3dm1 surface2050 envelope 74.65625 by 28.03125 by 47.203125 game units. No original texture or mesh supplied to generation. Imported existing Painter concept; do not regenerate the image.",
+  "processing": {
+    "height_meters": 1.180078125,
+    "units_per_meter": 40,
+    "target_triangles": 1800,
+    "texture_edge": 1024,
+    "rotation_z_degrees": 0,
+    "shader": "models/remaster/environment_wall_crest"
+  }
+}

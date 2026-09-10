@@ -1,6 +1,6 @@
 {
   "asset_id": "environment-wall-crest-v1",
-  "status": "Painter-prototype-reviewed-awaiting-supported-image-import-and-runtime-placement-interface",
+  "status": "prototype-imported-and-approved-image-to-3d-task-submitted",
   "prototype": "environment-wall-crest-prototype.png",
   "prototype_sha256": "3be476cb7f8285b5b9f9cd5446bdcfb613cbd61c189b8ec81d0c97d1b59a80d0",
   "source_attachment": "https://ampcode.com/user-content/attachments/b427fb131b65244a21f1070275842c1f396fc57f2ba3d60993ce4cd85c6d9013-file.png",
@@ -9,7 +9,10 @@
     "task_id": null,
     "actual_cost_usd": null,
     "billing_status": "Tool supplied attachment but no provider task/cost; do not assert zero",
-    "paid_3d_submission_count": 0
+    "paid_3d_submission_count": 1,
+    "shape_model": "hunyuan3d-2",
+    "shape_task_id": "task_mT0CycGrpLL6pz3unD4D0FegW2DrBTaq",
+    "immutable_manifest": "assets/remaster/manifests/environment-wall-crest-v1.json"
   },
   "review": "Complete broad closed graphite mounting plate, ivory central shield, thin cyan accents, orange side fasteners. Readable original industrial style. Single front view does not establish hidden-back quality or measured dimensions; enforce actual envelope in Blender after generation.",
   "target": {
@@ -24,8 +27,7 @@
     "visibility_requirement": "Hide only the identified original visual surface and associate replacement with the same original leaf/PVS visibility. Preserve collision and all gameplay BSP data. Origin/axes/scale must be confirmed against generated export bounds, not guessed from concept perspective."
   },
   "next_required_stages": [
-    "Supported immutable Painter image import into shared pipeline; do not hand-forge task state",
-    "Image-to-3D generation with retained task/request and cost records",
+    "Poll retained image-to-3D task and reconcile cost without duplicate submission",
     "Blender cleanup, closed-back review, UV/material bake, scale and MD3 limits",
     "Measured runtime placement and multi-view occlusion review"
   ],
