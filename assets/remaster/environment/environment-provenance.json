@@ -1,0 +1,26 @@
+{
+  "asset_id": "environment-materials-v1",
+  "classification": "original-2d-environment-material-candidate",
+  "authorization": "2026-09-09 human authorized remake/publication and unlimited generation; 2026-09-10 delegated full environment production",
+  "generator": "Amp Painter",
+  "generation_attachment": "https://ampcode.com/user-content/attachments/84b3b2e6258f5bbbef7cf1f7a3cd36cec26c32e5dbe771f0d0446ac61d5b0dff-file.png",
+  "provider_task_id": null,
+  "actual_cost_usd": null,
+  "billing_status": "Painter tool returned attachment only; cost and provider task ID unavailable, not asserted zero",
+  "generation_count": 1,
+  "reference_inputs": "Original text-only industrial arena material brief; no extracted commercial images sent to generation",
+  "source_file": "material-atlas-v1.png",
+  "derivatives": "4x4 equal-grid crops resized to 512px TGA; sky inset 6 percent and mirrored for continuous borders",
+  "hashes": "environment-coverage.json pins atlas, package and every runtime entry",
+  "prototype_review": "Atlas inspected in Painter response; broad graphite/ivory shapes approved as material candidates. Runtime found sky border seam and required derived sky repair.",
+  "geometry_generation": "None. These are 2D materials, not image-generated 3D geometry.",
+  "runtime_accepted": false,
+  "full_game_complete": false,
+  "private_reference": {
+    "scope": "official Demo 1.11 technical inspection only",
+    "url": "https://ftp.gwdg.de/pub/misc/ftp.idsoftware.com/idstuff/quake3/linux/linuxq3ademo-1.11-6.x86.gz.sh",
+    "pak0_sha256": "e77abad2466f45a0a7ea018445528f9b95a0fe7789fa1abc1a7718bbf0754b08",
+    "retained_eula": "assets/remaster/work/environment-private/Help/Q3A_EULA.txt",
+    "redistributed_in_runtime": false
+  }
+}

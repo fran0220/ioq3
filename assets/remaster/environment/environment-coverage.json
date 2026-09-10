@@ -1,0 +1,2716 @@
+{
+  "source_scope": "private-demo-reference-not-release",
+  "full_game_complete": false,
+  "source_archive_sha256": "e77abad2466f45a0a7ea018445528f9b95a0fe7789fa1abc1a7718bbf0754b08",
+  "atlas_sha256": "e7bd6fb8bc39b792fbfdb223d0af5424f07cf809f2fb54f16ad309df704c291e",
+  "package_sha256": "14f0d9ac239d72756a7a2474d6d09623bfa2d291d785884958a6926f83ec9262",
+  "entries": {
+    "textures/remaster_environment/panel.tga": "ff29e4713578f0dc753b4886dd9d9ed80ef151d930301b6c1f16529c7278838b",
+    "textures/remaster_environment/ceramic.tga": "2cf59c0d9d4489a6c1eeb3ee67592a715914aa6feed0ed64fa8ab2a2b923f863",
+    "textures/remaster_environment/steel.tga": "f3155aac7bf676463bce0b8e09c9ef4eb7abfde5718336e7887a61e1f2df0531",
+    "textures/remaster_environment/plaster.tga": "7826e1c586484a47112b7834bce0c8db25a925d7558fa078de5de6d4218fbcc9",
+    "textures/remaster_environment/floor.tga": "c7798a146403c9b33dc6c336bc0696fad621e414b590349966cb9e82f3fa4950",
+    "textures/remaster_environment/stone.tga": "591bf0a9ed1ea179a203eb09b0040a336836fc0747dfb2cf1eb433355f582504",
+    "textures/remaster_environment/tread.tga": "52e28bfc85adc1a7ae8aab0b1f08260ee84e7c7fd8edafcc9b6c4e8be0374749",
+    "textures/remaster_environment/ceiling.tga": "ed32000c11c38e293ab0d4a7b239285863968a4a5e78fb18292f6d54e23969e5",
+    "textures/remaster_environment/vent.tga": "380818fa291e8d3f2b3dc9aaac21cbb6bfedcc8abc73f00f29523b3c1325cf22",
+    "textures/remaster_environment/arch.tga": "e162c443d3d8576249deed8422ab73a9b32967b6746cb8310392a017d3a92c80",
+    "textures/remaster_environment/cyan.tga": "994dcef1dfe3a82833a9d77f159f61e1d684cdd5f6c51d67ea649b2d14bc3229",
+    "textures/remaster_environment/orange.tga": "078a82a9f39178be5de531ff9d6cd0ead9203921930cb74ae4dcffae69483d3c",
+    "textures/remaster_environment/lava.tga": "d05ad1a5e3b68dc9972b3cf21929eddbca8cf046884a7f92c5e9e77e594f63c4",
+    "textures/remaster_environment/rock.tga": "381d731594f320dec7abb96da0933d36aae8f28a6c663c43a2689eb867c38915",
+    "textures/remaster_environment/sky.tga": "7d15ae40d80140a33f0f03944037c11edc5bdb4baaab9b68c0ce73e286870b02",
+    "textures/remaster_environment/light.tga": "0a3403536194216a5ac00587bdd46b8511b9229834fb10487f418f449f5b2c79",
+    "scripts/environment_materials_v1.shader": "59a4711aa023222085369fcb40a71346bcac2dea4c07dd6af39bbeab6a69c556"
+  },
+  "maps": {
+    "q3dm1": {
+      "source_bsp_sha256": "3d2dad8e6ba05914fc90619a6517ecdee7e5eb50f86013a14a84bb3c61cd702e",
+      "bsp_modified": false,
+      "slots": [
+        {
+          "slot": "textures/gothic_block/killblock",
+          "surfaces": 33,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks15",
+          "surfaces": 64,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/killblock_i",
+          "surfaces": 4,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/pitted_rust3",
+          "surfaces": 966,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "noshader",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/pitted_rust2",
+          "surfaces": 123,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/slateroofc",
+          "surfaces": 4,
+          "material": "ceiling",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09_o3",
+          "surfaces": 2,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/pitted_rust2_trans",
+          "surfaces": 8,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/blocks17floor2",
+          "surfaces": 70,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09_e",
+          "surfaces": 5,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_ceiling/woodceiling1b_dark",
+          "surfaces": 20,
+          "material": "ceiling",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/caulk",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09_c3",
+          "surfaces": 4,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/km_arena1archfinald_bot",
+          "surfaces": 8,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/km_arena1archfinalc_mid",
+          "surfaces": 0,
+          "material": "arch",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/km_arena1archfinald_mid",
+          "surfaces": 6,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/km_arena1archfinalc_top",
+          "surfaces": 2,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/skullsvertgray02b",
+          "surfaces": 23,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/skull_door_b",
+          "surfaces": 24,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/skull_door_f",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/skull_door_d",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/skull_door_e",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/skull_door_c",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/skull_door_a",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/largerblock3b",
+          "surfaces": 23,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/metaldemonkillblock",
+          "surfaces": 1,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skies/tim_hell",
+          "surfaces": 16,
+          "material": "sky",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/clip",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/flame1_hell",
+          "surfaces": 1,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/metalbridge06",
+          "surfaces": 73,
+          "material": "tread",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/metalbridge06broke",
+          "surfaces": 1,
+          "material": "tread",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/metalsupport4b",
+          "surfaces": 12,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/xian_tourneyarch_inside2",
+          "surfaces": 17,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/skullarch_c",
+          "surfaces": 16,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/skullarch_b",
+          "surfaces": 12,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/skullarch_a",
+          "surfaces": 4,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/supportborder_blue_c",
+          "surfaces": 9,
+          "material": "cyan",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/supportborder_blue_b",
+          "surfaces": 23,
+          "material": "cyan",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/metalsupsolid",
+          "surfaces": 67,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks18b",
+          "surfaces": 8,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstepborder3",
+          "surfaces": 54,
+          "material": "orange",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstairtop4",
+          "surfaces": 48,
+          "material": "tread",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/iron01_e",
+          "surfaces": 12,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/iron01_ntech3",
+          "surfaces": 12,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks18c_3",
+          "surfaces": 49,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/organics/dirt2",
+          "surfaces": 1,
+          "material": "rock",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/liquids/lavahell_750",
+          "surfaces": 8,
+          "material": "lava",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skin/skin6",
+          "surfaces": 4,
+          "material": "rock",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/weapclip",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/km_arena1tower4",
+          "surfaces": 2,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/km_arena1tower4_a",
+          "surfaces": 5,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/skull4",
+          "surfaces": 6,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09_e2",
+          "surfaces": 16,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/killblock_i4",
+          "surfaces": 8,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard04",
+          "surfaces": 8,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/pitted_rust",
+          "surfaces": 28,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_light/pentagram_light1_1K",
+          "surfaces": 4,
+          "material": "light",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/demon_block15fx",
+          "surfaces": 2,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09_l2",
+          "surfaces": 8,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_ceiling/woodceiling1a",
+          "surfaces": 9,
+          "material": "ceiling",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skin/chapthroat",
+          "surfaces": 2,
+          "material": "rock",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks11b",
+          "surfaces": 10,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/hint",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/donotenter",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/computer_blocks17",
+          "surfaces": 1,
+          "material": "cyan",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks17",
+          "surfaces": 12,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstepborder3brn",
+          "surfaces": 12,
+          "material": "orange",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstairtop4bbrn",
+          "surfaces": 12,
+          "material": "tread",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks18c",
+          "surfaces": 14,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/largerblock3b_ow",
+          "surfaces": 1,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/killblockgeomtrn",
+          "surfaces": 3,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/center2trn",
+          "surfaces": 1,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/nodraw",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/protobanner",
+          "surfaces": 6,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/liquids/lavahellflat_400",
+          "surfaces": 8,
+          "material": "lava",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/largerblock3blood",
+          "surfaces": 1,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skin/tongue_trans",
+          "surfaces": 2,
+          "material": "rock",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/km_arena1columna2R",
+          "surfaces": 4,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skin/surface8_trans",
+          "surfaces": 8,
+          "material": "rock",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skin/chapthroatooz",
+          "surfaces": 1,
+          "material": "rock",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skin/chapthroat2",
+          "surfaces": 3,
+          "material": "rock",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/km_arena1tower_short",
+          "surfaces": 1,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/visor_st",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/major_st",
+          "surfaces": 6,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/major_h_st",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/flame2",
+          "surfaces": 6,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/gratelamp/gratetorch2",
+          "surfaces": 6,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/gratelamp/gratetorch2b",
+          "surfaces": 6,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/wallhead/wallhead02",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/storch/storch_tall",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/flame1side",
+          "surfaces": 4,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/wallhead/lion",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/wallhead/lion_m",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        }
+      ],
+      "runtime_accepted": false
+    },
+    "q3dm7": {
+      "source_bsp_sha256": "ba5d14e590f6fb38085f3b6f8d5be81050f240a21a5de5ca0d8253501baba52d",
+      "bsp_modified": false,
+      "slots": [
+        {
+          "slot": "textures/gothic_trim/pitted_rust3",
+          "surfaces": 3039,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/streetbricks10",
+          "surfaces": 289,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09",
+          "surfaces": 58,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "noshader",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/caulk",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/q1metal7_99",
+          "surfaces": 131,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/q1metal7_99stair2",
+          "surfaces": 143,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/goopq1metal7_98e",
+          "surfaces": 15,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/iron01_e",
+          "surfaces": 186,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/q1metal7_99stair",
+          "surfaces": 109,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/iron01_m",
+          "surfaces": 42,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_ceiling/stucco7top",
+          "surfaces": 49,
+          "material": "ceiling",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skies/toxicskytim_dm8",
+          "surfaces": 80,
+          "material": "sky",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/purptileb",
+          "surfaces": 23,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/iron01_p2",
+          "surfaces": 1,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/crack5c",
+          "surfaces": 20,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/streetbricks11",
+          "surfaces": 31,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/window_a_base",
+          "surfaces": 19,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/window_a_bottom1",
+          "surfaces": 23,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/q1metal7_11",
+          "surfaces": 0,
+          "material": "steel",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/window_a2",
+          "surfaces": 26,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/window_a_bottom2",
+          "surfaces": 22,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/q1metal7",
+          "surfaces": 78,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks18c",
+          "surfaces": 40,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09_l2",
+          "surfaces": 8,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09_l",
+          "surfaces": 4,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09_c3",
+          "surfaces": 10,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/metalbase8a_brick",
+          "surfaces": 11,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/killblock",
+          "surfaces": 54,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/largeblockfloor3",
+          "surfaces": 18,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks10",
+          "surfaces": 13,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_ceiling/ceilingtech02_a",
+          "surfaces": 8,
+          "material": "ceiling",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/iron01_ndark",
+          "surfaces": 17,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard08_d",
+          "surfaces": 55,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/archpart10",
+          "surfaces": 34,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/blocks17floor2",
+          "surfaces": 42,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09_g3",
+          "surfaces": 38,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/iron01_b",
+          "surfaces": 30,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/border12",
+          "surfaces": 3,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/hint",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks17g",
+          "surfaces": 27,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/organics/dirt2",
+          "surfaces": 78,
+          "material": "rock",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/clip",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/demoniron01_e",
+          "surfaces": 0,
+          "material": "steel",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/q1metal7_99stair3",
+          "surfaces": 92,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09_g",
+          "surfaces": 5,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard10_d",
+          "surfaces": 24,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks17e",
+          "surfaces": 29,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks20b",
+          "surfaces": 25,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_light/ironcrosslt2_2000",
+          "surfaces": 1,
+          "material": "light",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_ceiling/ceilingtech01_f",
+          "surfaces": 5,
+          "material": "ceiling",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_light/light1_1500",
+          "surfaces": 19,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks15",
+          "surfaces": 376,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/supportborder",
+          "surfaces": 4,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/supportborderside",
+          "surfaces": 6,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/liquids/lavahelldark",
+          "surfaces": 30,
+          "material": "lava",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/bouncepad01block18b",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/metaltech12darkfinal",
+          "surfaces": 31,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks17",
+          "surfaces": 31,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_light/ironcrosslt2_10000",
+          "surfaces": 2,
+          "material": "light",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/archpart1",
+          "surfaces": 28,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/archpart2",
+          "surfaces": 26,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/archpart6",
+          "surfaces": 24,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/archpart7",
+          "surfaces": 24,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/door02_j3",
+          "surfaces": 0,
+          "material": "panel",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_ceiling/ceilingtech02_b",
+          "surfaces": 1,
+          "material": "ceiling",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/window_a1",
+          "surfaces": 4,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skin/skin7_teeth",
+          "surfaces": 25,
+          "material": "rock",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/metalsupport4b",
+          "surfaces": 31,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/metaltech13final",
+          "surfaces": 16,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09_c",
+          "surfaces": 0,
+          "material": "arch",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/columnsupportbottoms",
+          "surfaces": 37,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/columnsupportops",
+          "surfaces": 16,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks18cblood",
+          "surfaces": 2,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard09_o",
+          "surfaces": 0,
+          "material": "arch",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_light/pentagram_light1_5K",
+          "surfaces": 4,
+          "material": "light",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstairtop4bbrn",
+          "surfaces": 8,
+          "material": "tread",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstepborder3brn",
+          "surfaces": 8,
+          "material": "orange",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/hellfogdense",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skin/skin6",
+          "surfaces": 0,
+          "material": "rock",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_ceiling/ceilingtech02_d",
+          "surfaces": 3,
+          "material": "ceiling",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_ceiling/ceilingtech02_c2",
+          "surfaces": 2,
+          "material": "ceiling",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_ceiling/ceilingtechplain",
+          "surfaces": 3,
+          "material": "ceiling",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_ceiling/ceilingtech03_afinal",
+          "surfaces": 3,
+          "material": "ceiling",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_light/pentagram_light1_1K",
+          "surfaces": 23,
+          "material": "light",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/nodraw",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/flame1",
+          "surfaces": 18,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/organics/dirt",
+          "surfaces": 1,
+          "material": "rock",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_light/pentagram_light1_2K",
+          "surfaces": 12,
+          "material": "light",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/fog_intel",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks17_ow",
+          "surfaces": 6,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/tower_side2b",
+          "surfaces": 14,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/tower_side2",
+          "surfaces": 2,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/flame1dark",
+          "surfaces": 1,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/tower_front",
+          "surfaces": 25,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_light/pentagram_light1",
+          "surfaces": 1,
+          "material": "light",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/pitted_rust2",
+          "surfaces": 16,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/computerpurptileb",
+          "surfaces": 1,
+          "material": "cyan",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/window_evil11astreetbrick10d",
+          "surfaces": 0,
+          "material": "plaster",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/window_evil6a",
+          "surfaces": 1,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/liquids/lavahell_1000",
+          "surfaces": 5,
+          "material": "lava",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/newskull",
+          "surfaces": 0,
+          "material": "steel",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/pentdirt2_@256",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/pentfloorq1metal7_99",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/q1metal7_99_broke",
+          "surfaces": 4,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/bouncepad1q1metal7_99",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/flame1side",
+          "surfaces": 24,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/baseboard07",
+          "surfaces": 8,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/weapclip",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/clusterportal",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/tower_top",
+          "surfaces": 3,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/column2c_trans",
+          "surfaces": 10,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/archpart9",
+          "surfaces": 7,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/organics/dirt_trans",
+          "surfaces": 1,
+          "material": "rock",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skin/skin6_trans",
+          "surfaces": 2,
+          "material": "rock",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/Skull/skull",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/skel/skel",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/timlamp/timlamp",
+          "surfaces": 3,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/baph/baphomet_gold",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/corpse/corpse",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/storch/storch",
+          "surfaces": 18,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/wallhead/wallhead02",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/wall_lamp3",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/lamplight_y",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/gargoyle",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/portal_2/portal_3",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/portal_sfx",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/portal_sfx_ring",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/portal_2/portal_3_edge",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "flareShader",
+          "surfaces": 37,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/trigger",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_button/timbuttonside",
+          "surfaces": 5,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_button/timbutton",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        }
+      ],
+      "runtime_accepted": false
+    },
+    "q3dm17": {
+      "source_bsp_sha256": "ee1394417b06d92f705088150d7609d6b9f55f5796a9a7626bfe7982e8fc94e8",
+      "bsp_modified": false,
+      "slots": [
+        {
+          "slot": "textures/base_trim/pewter_shiney",
+          "surfaces": 280,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "noshader",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_light/baslt4_1_4k",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/c_met5_2",
+          "surfaces": 449,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/metalblack03",
+          "surfaces": 50,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/iron01_e_flicker",
+          "surfaces": 0,
+          "material": "plaster",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/launchpad_diamond",
+          "surfaces": 3,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_light/lt2_8000",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/caulk",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/diamond2cjumppad",
+          "surfaces": 18,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_trim/border11b",
+          "surfaces": 43,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_floor/diamond2c",
+          "surfaces": 120,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/metaltech13final",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/metaltech12final",
+          "surfaces": 65,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks17",
+          "surfaces": 0,
+          "material": "ceramic",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/nodrop",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/atech1_a",
+          "surfaces": 11,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_trim/basemetalsupport",
+          "surfaces": 24,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/steed1gf",
+          "surfaces": 14,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/atech1_d",
+          "surfaces": 0,
+          "material": "panel",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/metaltech05final",
+          "surfaces": 0,
+          "material": "panel",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/iron01_c2",
+          "surfaces": 0,
+          "material": "plaster",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/metalfloor_wall_15",
+          "surfaces": 73,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_support/aluminum",
+          "surfaces": 0,
+          "material": "panel",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/c_met7_2",
+          "surfaces": 14,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/metalsupport4b",
+          "surfaces": 0,
+          "material": "steel",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_trim/border11light",
+          "surfaces": 16,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/nodraw",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_trim/spiderbit4",
+          "surfaces": 8,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/metalfloor_wall_10",
+          "surfaces": 25,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/metfloor_block_3",
+          "surfaces": 20,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_light/lt2_2000",
+          "surfaces": 9,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/steed1ge",
+          "surfaces": 36,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/atech1_e",
+          "surfaces": 16,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/clip",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/metaltech06final",
+          "surfaces": 24,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/weapclip",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/pentfloor_diamond2c",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skies/blacksky",
+          "surfaces": 6,
+          "material": "sky",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/metalfloor_wall_15ow",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_floor/diamond2c_ow",
+          "surfaces": 8,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_light/light5_5k",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/main_q3abanner",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/nodrawnonsolid",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/beam",
+          "surfaces": 16,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/spawn_floord2c",
+          "surfaces": 0,
+          "material": "panel",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_support/cable",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/teleporter/energy",
+          "surfaces": 3,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/teleporter/teleporter",
+          "surfaces": 3,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/teleporter/teleporter_edge",
+          "surfaces": 3,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/teleporter/pad",
+          "surfaces": 3,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/teleporter/transparency",
+          "surfaces": 3,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/teleporter/widget",
+          "surfaces": 3,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/kmlamp1",
+          "surfaces": 12,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/kmlamp_white",
+          "surfaces": 12,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/lamps/flare03",
+          "surfaces": 6,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/lamps/bot_lamp",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/lamps/bot_lamp2",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/lamps/bot_flare2",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/lamps/bot_flare",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/lamps/bot_wing",
+          "surfaces": 1,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/spotlamp/spotlamp",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/spotlamp/spotlamp_l",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/spotlamp/beam",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "flareShader",
+          "surfaces": 13,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/trigger",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        }
+      ],
+      "runtime_accepted": false
+    },
+    "q3tourney2": {
+      "source_bsp_sha256": "fe07a539bf0b76823160d8ffe96a62c182003877d9678aa27c5b2bea8ca0f4c8",
+      "bsp_modified": false,
+      "slots": [
+        {
+          "slot": "textures/gothic_floor/xstairtop7",
+          "surfaces": 59,
+          "material": "tread",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/pitted_rust",
+          "surfaces": 385,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstepborder7",
+          "surfaces": 64,
+          "material": "orange",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstairtop8",
+          "surfaces": 57,
+          "material": "tread",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstepborder8",
+          "surfaces": 58,
+          "material": "orange",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "noshader",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/weapclip",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/gkc15b",
+          "surfaces": 20,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/gkc15c",
+          "surfaces": 24,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks11b",
+          "surfaces": 253,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/largeblockfloor4",
+          "surfaces": 42,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/caulk",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstepborder3",
+          "surfaces": 7,
+          "material": "orange",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/metalbridge06b",
+          "surfaces": 4,
+          "material": "tread",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstairtop6",
+          "surfaces": 0,
+          "material": "tread",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks11bbroke3",
+          "surfaces": 35,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/largerblock3b4",
+          "surfaces": 68,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/pitted_rust3",
+          "surfaces": 551,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/xian_tourneyarch_med1b",
+          "surfaces": 52,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/patch10_beatup4",
+          "surfaces": 5,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/q1metal7_99",
+          "surfaces": 0,
+          "material": "floor",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/metalbridge06",
+          "surfaces": 32,
+          "material": "tread",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/kc_hellfog_1k",
+          "surfaces": 14,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstepborder10",
+          "surfaces": 17,
+          "material": "orange",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/skies/xtoxicsky_tourney",
+          "surfaces": 28,
+          "material": "sky",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_light/gothic_light3_7K",
+          "surfaces": 9,
+          "material": "light",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_support/metal14_1",
+          "surfaces": 134,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_light/gothic_light3_4K",
+          "surfaces": 0,
+          "material": "light",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/nodrop",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/hint",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks18c_3",
+          "surfaces": 120,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/nodrawnonsolid",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/flame1side",
+          "surfaces": 12,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/clip",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/largerblock3b3",
+          "surfaces": 31,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/blocks15_e",
+          "surfaces": 0,
+          "material": "ceramic",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/xian_tourneyarch_tall2b",
+          "surfaces": 58,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/blocks17floor3",
+          "surfaces": 230,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/xian_tourneyarch_inside2",
+          "surfaces": 76,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/xian_tourneyarch_tall1c",
+          "surfaces": 68,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/bluemetal2",
+          "surfaces": 87,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/nodraw",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_floor/pjgrate2",
+          "surfaces": 9,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_trim/pewter_shiney",
+          "surfaces": 424,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/x_conduit",
+          "surfaces": 12,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/x_noblight",
+          "surfaces": 2,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_light/ceil1_37",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/supportborderside",
+          "surfaces": 0,
+          "material": "steel",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/xian_tourney_trim",
+          "surfaces": 22,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/supportborderside_shiney",
+          "surfaces": 12,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/liquids/flatlavahell_1500",
+          "surfaces": 1,
+          "material": "lava",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/patch10_beatup2",
+          "surfaces": 6,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_light/gothic_light3_15K",
+          "surfaces": 8,
+          "material": "light",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/gkc19a",
+          "surfaces": 2,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/gkc19b",
+          "surfaces": 3,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/gkc20a",
+          "surfaces": 2,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_light/ceil1_38_30k",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_light/ceil1_38_10k",
+          "surfaces": 8,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/evil_e3bwindow",
+          "surfaces": 4,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/largeblockfloor4broke",
+          "surfaces": 1,
+          "material": "floor",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/metalbridge06_bounce",
+          "surfaces": 3,
+          "material": "tread",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/xiantourneycolumn_b4",
+          "surfaces": 10,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/xiantourneywall_R1",
+          "surfaces": 2,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_wall/xiantourneywall_C1",
+          "surfaces": 1,
+          "material": "plaster",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_light/xceil1_39_20k",
+          "surfaces": 8,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_block/gkc20b",
+          "surfaces": 2,
+          "material": "ceramic",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/tourneyarch_bottom2b",
+          "surfaces": 0,
+          "material": "arch",
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_door/xian_tourneyarch_bottom2",
+          "surfaces": 4,
+          "material": "arch",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstepborder9",
+          "surfaces": 15,
+          "material": "orange",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstepborder12",
+          "surfaces": 16,
+          "material": "orange",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_floor/xstepborder13",
+          "surfaces": 14,
+          "material": "orange",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/sfx/beam_dusty2",
+          "surfaces": 44,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_wall/atech1_alpha",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/gothic_trim/metalsupport4b",
+          "surfaces": 4,
+          "material": "steel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/base_support/cable_trans",
+          "surfaces": 16,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/eagleban",
+          "surfaces": 9,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/chain/chain",
+          "surfaces": 4,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/flag/banner_strgg",
+          "surfaces": 9,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/teleporter/energy",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/teleporter/teleporter",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/teleporter/teleporter_edge",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/teleporter/pad",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/teleporter/transparency",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/teleporter/widget",
+          "surfaces": 2,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "models/mapobjects/storch/storch",
+          "surfaces": 6,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "flareShader",
+          "surfaces": 53,
+          "material": "panel",
+          "status": "material-candidate",
+          "geometry_remade": false
+        },
+        {
+          "slot": "textures/common/trigger",
+          "surfaces": 0,
+          "material": null,
+          "status": "not-environment-or-not-drawn",
+          "geometry_remade": false
+        }
+      ],
+      "runtime_accepted": false
+    }
+  }
+}
