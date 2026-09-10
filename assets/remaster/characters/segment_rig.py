@@ -10,6 +10,7 @@ from pathlib import Path
 import sys
 
 from mathutils import Matrix, Quaternion, Vector
+from mathutils.geometry import intersect_ray_tri
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT/'misc/remaster-assets'))
@@ -201,6 +202,19 @@ def main():
                 start = len(plate['vertices'])
                 for x,z,uv in [(-2,-2,[0,1]),(2,-2,[1,1]),(2,2,[1,0]),(-2,2,[0,0])]:
                     position = Vector(center)+Vector(right)*x+Vector((0,0,z))
+                    # Project ID plate corners onto the paid armor rather than
+                    # guessing an X/Y depth that can bury the rear insignia.
+                    direction = Vector(normal)
+                    hits = []
+                    for source_mesh in source['meshes']:
+                        for triangle in source_mesh['triangles']:
+                            points = [Vector(source_mesh['vertices'][i]['position']) for i in triangle]
+                            hit = intersect_ray_tri(*points,-direction,position+direction*100,True)
+                            if hit is not None:
+                                hits.append(hit)
+                    if not hits:
+                        raise ValueError('Insignia corner misses generated armor')
+                    position = max(hits,key=lambda p:p.dot(direction))+direction*.12
                     plate['vertices'].append({'position':list(inverse @ position),'normal':list(normal),
                                               'uv':uv,'tangent':[*right,-1],
                                               'influences':[[names[bone],1]]})

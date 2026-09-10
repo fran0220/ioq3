@@ -114,7 +114,8 @@ blender --background --factory-startup --threads 2 --python-exit-code 1 --python
 This candidate has been rendered as an actual CG_Player in native GL2 and
 browser WebGL, including head/waist assembly, original gun attachment, and team
 red. A subsequent candidate adds authored armor ID plates (chevron versus two
-bars); front and side were inspected, rear needs a less obstructed camera.
+bars); front and side were inspected. Rear projection was corrected against
+the actual armor and its readable chevron inspected in native GL2.
 It is still **not accepted**: review placeholders remain for backward jump/turn,
 final material maps and complete combat/timing tests. See
 `character-runtime-checks.json`; do not promote render checks to rules coverage.
@@ -126,3 +127,11 @@ not guessed ORM channels or a bare-metal claim. It has no emissive component.
 Both native GL2 and browser rendered the normal/F0 version without visible
 normal inversion; final close-up/light/skin reviews remain open. Preserve
 `prepared/material-bake.json` alongside the source and generated normal map.
+
+Current-main real-WASM `run.mjs ... bot` with the segmented package passed all
+four checks: falling death/click respawn, damage to bot, 3-frag score screen,
+and match restart (`character-gameplay-bot/bot-result.json` in private work).
+The separate baseline is **not passing**: mouse capture shifts initial yaw to
+-72.828°, so its turn to -90° correctly travels only 17.16°, below the test's
+hardcoded >30° assertion. Reproduced in a fresh browser and reported to the
+integration owner; neither the assertion nor the game was changed to hide it.

@@ -8,6 +8,11 @@
     "Native GL2: actual segmented CG_Player front stance; head/upper/lower texture, attachment, waist/neck assembly and grounding inspected",
     "Browser WASM/WebGL2: actual segmented CG_Player front and side render; visible gun/hand fit",
     "Browser actual team switch to red: red-tinted player inspected, original five-second team-switch rule remained enforced",
+    "Current-main real WASM observer bot regression: death-and-click-respawn, shooting-damages-bot, bot-fraglimit-score-screen, match-restart all PASS",
+    "Native attack screenshot shows original gun muzzle flash at held attachment, no visible hand/gun detachment",
+    "Actual browser keyboard jump and mouse respawn inspected; kill-command visual was gibbed and does not count as full skeletal death review",
+    "Native and browser inspected high-to-low baked tangent normal plus authored dielectric F0 material without visible normal inversion",
+    "Native rear insignia projection corrected and inspected: readable cream chevron seated on back armor",
     "Cross-orb private source recovery: both 64MiB-or-smaller parts and merged SHA256 confirmed by integration thread"
   ],
   "issues_found_and_resolved": [
@@ -18,10 +23,10 @@
     "Team mode uses team_model/team_headmodel, not model/headmodel; tested with correct cvars"
   ],
   "pending_acceptance": [
-    "Full original physics/gameplay regression with current observer build",
+    "Original baseline regression fails mouse-turn >30 assertion: capture already changes spawn yaw to -72.828; aim(-90) yields correct -89.989 but delta17.16. Observed twice including new browser; not waived or called passing",
     "Run/walk/jump while aiming and firing, hit/pain, three deaths, respawn in both native and browser",
     "Final material normal/F0/emission review",
-    "Blue readability and red/blue shape symbols in all four cardinal views",
+    "Blue readability and both team shape symbols during combat, beyond default front/side/rear checks",
     "Back-jump, turn and idle authoring rather than temporary retimed review motions",
     "Final weapon-thread gun origin and offhand alignment",
     "External durable source backup, beyond two orb copies",
