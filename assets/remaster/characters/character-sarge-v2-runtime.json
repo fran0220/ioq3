@@ -23,6 +23,9 @@
     "path": "assets/remaster/work/character-sarge-v2-grounded-source.tar.gz",
     "sha256": "035429da68a6a5b3c94e8532e379deafe51f393eea8dad96c1bf6de24573ed6e",
     "scope": "Current grounded segmented IQM/pose JSON and PK3; combine with parented-source archive f989f107b0a1b28ae5d5b78e5a14ad49506f3148a249c7b975e24b22043ca322 for prepared input JSON/textures/portrait, earlier b52f5894 paid-source archive, and current tracked recipe",
+    "cross_orb_copy_confirmed": true,
+    "confirmed_by": "https://ampcode.com/threads/T-01a08650-c386-7680-a9f9-744898e9a239",
+    "confirmation_scope": "Integration owner reports all three archive hashes match in the main orb; grounded archive PK3 is byte-identical to the Git candidate. This is a second private orb copy, not external durable storage.",
     "external_durable_backup_confirmed": false
   }
 }

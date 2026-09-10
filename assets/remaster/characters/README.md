@@ -154,10 +154,20 @@ normal inversion; final close-up/light/skin reviews remain open. Preserve
 Current-main real-WASM `run.mjs ... bot` with the segmented package passed all
 four checks: falling death/click respawn, damage to bot, 3-frag score screen,
 and match restart (`character-gameplay-bot/bot-result.json` in private work).
-The separate baseline is **not passing**: mouse capture shifts initial yaw to
+The earlier separate baseline was **not passing**: mouse capture shifted initial yaw to
 -72.828°, so its turn to -90° correctly travels only 17.16°, below the test's
 hardcoded >30° assertion. Reproduced in a fresh browser and reported to the
 integration owner; neither the assertion nor the game was changed to hide it.
+
+The subsequent runner `8cf23370` restores the documented start through real
+mouse input (-45 yaw / zero pitch), retaining the >30-degree assertion. A fresh
+run with the grounded `e6ee819a…` character package passed all four baseline
+checks: yaw -45 → -89.989, movement/armor 0 → 5, jump/land, ammo 100 → 98.
+Exact runner/WASM/QVM hashes and evidence paths are in
+`character-runtime-checks.json`. Earlier failure records/logs remain intact.
+The integration owner also confirmed the original, parented and grounded
+source archives in the main orb, including byte-identical candidate PK3;
+this is cross-orb recovery, not completed external durable backup.
 
 ## Actual death and damage checks
 
