@@ -37,3 +37,19 @@ prove keyboard input, moving visibility, shadow silhouette or final combined
 environment/character/weapon/HUD acceptance. CDP keyboard stopped reaching SDL
 also on the preceding unmodified fixture; that unresolved automation issue is
 not classified as a renderer regression or claimed passing.
+
+## Matched private lightgrid/vertex-neutralization comparison
+
+Repeated all six cases with private environment lighting v2 SHA-256
+`bb08ca72689dcb5319ea55e1100ccf1419c6f4e34a537141a8829c7d74f6239f`:
+all passed registration/fallback, GL error 0 and no context loss. Only the
+private map PK3 changed; the same WASM, model, camera and exposure settings
+were retained. Captures are in `render-placement/v2`; inspected comparison
+is `.amp/in/artifacts/render-placement/lighting-comparison.jpg` (v1 top,
+v2 bottom; HDR left, LDR right). The neutralized crest becomes gray instead
+of brown, with unchanged silhouette and placement. It remains underlit
+relative to the arch and its engraving lacks contrast, especially in LDR.
+This supports a lightgrid color contribution, not finished art acceptance.
+Defaults used are cameraExposure=1, autoExposure=1, toneMap=1,
+forceAutoExposure=0, forceToneMap=0. Rebased combined native and Web builds
+also succeeded; three material-math tests passed.
