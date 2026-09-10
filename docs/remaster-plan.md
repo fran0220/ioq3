@@ -21,10 +21,15 @@
 
 当前接口方向：角色采用 lower/upper/head 分段骨骼 IQM，保留 legs/torso 独立时钟与 animation.cfg 重映射；X 前/Y 左/Z 上、40 Q3 units/m、精确小写 tag_weapon、单位缩放。材质先用已可消费的 diffuse/normal/specular 与 additive emission，r_pbr=0/glossType=1，不把旧图全局重解释为 PBR。生产 HUD 使用版本化有界 VM 快照和显式 DOM 启用/超时回退，不使用测试 observer。每项仍需实际 loader、材质、附件动画和整局验证，接口约定不等于通过。
 
+本轮主线程整合记录：
+
+- HUD v1 有界 VM 拷贝、能力握手、初始化前保护及 `cg_webHUD` 超时回退已接线；Play 使用真实 q3_ui VFS catalogue、generation、8-slot Bot roster、限额和模型校验。真实 observer OFF 浏览器中 FFA q3dm1→Tournament q3tourney2 曾出现旧 serverinfo 地图名残留，单删 wait 无效；[新比赛先断开旧连接](https://github.com/fran0220/ioq3/commit/82eab124) 后相同输入得到正确地图、mode 1、fraglimit 3/time 7。native/Web 构建及生产 Play/HUD C probe 通过；UI 线程的 SP 起始路径未复现，不能把它当作同一负控。
+- 墙徽、角色 Sarge v2、rocket/machinegun/hands/muzzle 六份恢复归档已在主 orb 保存第二份私有副本并逐一核对 SHA-256；角色因工具 100 MiB 限制分片传输后合并核验。付费状态保留，不重提交；外部持久备份仍未完成。角色 whole-rig walk/jump、墙徽离线六视图和火箭旧候选不是正式整合验收；IQM CW 绕序修复后的武器候选须重新导出与实测。
+
 - **外部内容输入仍缺失。** 主线程检查 `assets`、`build-demo-web` 与 `.amp`，仅发现官方 Demo、测试 QVM 和立柱样件 PK3。需要完整版基础 Q3A 数据的私有路径/下载入口与版本、覆盖顺序；地图源若存在一并提供。授权已确认，缺的是数据本体。Demo 不可代替全量参考或发布包。
 - **UI 属于未完成工程，不是外部阻塞。** [首轮交付](https://github.com/fran0220/ioq3/commit/6749b70c7463d03f6effb960be0c18939b426801) 已验证 DOM 导航、数值设置持久化、全屏、局内恢复和故障输入阻断。继续实现显示/键位/profile，以及结构化 Play、HUD、计分板、大厅；范围与接口见 `code/web/UI-PLAN.md`。
 - **本地比赛基线已通过，完整平台比赛仍待测。** [玩法记录](../misc/tests/gameplay/RESULTS.md) 包含移动/拾取/跳跃/射击、HDR/LDR 重启、三地图切换、死亡重生及两轮 Bot fraglimit 结算/重开。由玩法线程执行，不能写成主线程独立复跑；未覆盖玩家获胜、全部模式、正式 UI/iframe、音频、真实多人和物理 GPU。测试数据适配与 observer ON 构建不发布。
-- **RTC/TURN 已上线，不再列为待实现。** 平台[交付记录](https://github.com/fran0220/origingame/commit/21f8bd5b) 报告实际生产 session、客户端 EM_JS、直连/TURN UDP/TURN TLS、同 token 重连 UDP 身份、弱网及清理验收通过。静态 musl 服务构建消除宿主 glibc 依赖。仍需可信游戏 admission、容量/入场产品流程、正式资产 slot 和完整多人对局；目前无长期可玩房间。继续平台工程，不把 operator 手工操作作为玩家入口。
+- **RTC/TURN 与可信 admission 已上线，不重复平台工程。** 平台[admission 实现](https://github.com/fran0220/origingame/commit/3e5909de)、[Portal/SDK 修复](https://github.com/fran0220/origingame/commit/99e3c1b1) 和[验收记录](https://github.com/fran0220/origingame/commit/2da3f567) 覆盖 OG.native 容量/权限及实际 RTC status/challenge。剩余为本游戏正式 gameId/release/资产/config/容量绑定、宿主大厅与 boot-only engine 生命周期、完整多人对局；临时 fixture/room/session 已清理，没有正式可玩房间。活动 session 不可替换，短断网保持原 token；完整销毁旧 transport 后才可 fresh session，不能以 leave 或假 join 代替 teardown。
 - **制作与发布门禁未关闭。** 动画 IQM/cgame 绑定、地图编译、武器动画、音频生产和全资产引擎内验收仍需完成；源文件外部持久备份、实际 PC/多浏览器性能与最终许可证/来源包也未完成。继续可独立制作工具，缺参考时不盲目批量付费或伪造全量完成。
 
 ### 2026-09-09 授权更新（优先于配套工作包的历史阻塞记录）
