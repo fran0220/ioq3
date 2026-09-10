@@ -1528,10 +1528,16 @@ void CG_DrawWeaponSelect( void ) {
 	if ( !color ) {
 		return;
 	}
-	trap_R_SetColor( color );
 
 	// showing weapon select clears pickup item display, but not the blend blob
 	cg.itemPickupTime = 0;
+
+	// The host renews this ROM cvar only after rendering a valid DOM HUD.
+	// Its lease expires on failure; native and unattached hosts keep zero.
+	if ( cg_webHUD.integer ) {
+		return;
+	}
+	trap_R_SetColor( color );
 
 	// count the number of weapons owned
 	bits = cg.snap->ps.stats[ STAT_WEAPONS ];

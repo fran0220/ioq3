@@ -32,6 +32,57 @@ class WeaponTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'explicit Amp Painter'):
             import_image({'image_model': 'other'}, Path('/unused'), Path('/unused'), '')
 
+    def test_dom_hud_gate_preserves_state_and_native_pixels(self):
+        root = Path(__file__).resolve().parents[3]
+        source = (root / 'code/cgame/cg_weapons.c').read_text()
+        start = source.index('void CG_DrawWeaponSelect( void )')
+        end = source.index('\n}\n', start) + 3
+        program = '''
+#include <assert.h>
+#include <stddef.h>
+#define STAT_HEALTH 0
+#define STAT_WEAPONS 1
+#define WEAPON_SELECT_TIME 1400
+#define MAX_WEAPONS 16
+#define BIGCHAR_WIDTH 16
+#define SCREEN_WIDTH 640
+typedef struct { int stats[2], ammo[16]; } ps_t;
+struct { ps_t ps; } snapshot;
+struct { ps_t predictedPlayerState; int weaponSelectTime, itemPickupTime, weaponSelect;
+         __typeof__(snapshot) *snap; } cg;
+struct { int integer; } cg_webHUD;
+struct { struct { int selectShader, noammoShader; } media; } cgs;
+struct item { char *pickup_name; };
+struct { int weaponIcon; struct item *item; } cg_weapons[16];
+static int pixels, colors, fades, registers, expired;
+float *CG_FadeColor(int time, int duration) { static float color[4];
+    assert(time==123); assert(duration==1400); fades++; return expired ? NULL : color; }
+void trap_R_SetColor(float *color) { colors++; }
+void CG_RegisterWeapon(int i) { registers++; }
+void CG_DrawPic(int x,int y,int w,int h,int shader) { pixels++; }
+int CG_DrawStrlen(char *s) { return 1; }
+void CG_DrawBigStringColor(int x,int y,char *s,float *color) { pixels++; }
+''' + source[start:end] + '''
+int main(void) {
+    cg.snap=&snapshot; cg.predictedPlayerState.stats[STAT_HEALTH]=100;
+    cg.weaponSelectTime=123; cg.weaponSelect=2; cg.itemPickupTime=456;
+    snapshot.ps.stats[STAT_WEAPONS]=(1<<2)|(1<<5); snapshot.ps.ammo[2]=7;
+    cg_webHUD.integer=1; CG_DrawWeaponSelect();
+    assert(cg.itemPickupTime==0 && cg.weaponSelectTime==123 && cg.weaponSelect==2);
+    assert(pixels==0 && colors==0 && fades==1);
+    cg_webHUD.integer=0; cg.itemPickupTime=789; CG_DrawWeaponSelect();
+    assert(cg.itemPickupTime==0 && pixels==4 && colors==2 && registers==2);
+    expired=1; cg.itemPickupTime=222; CG_DrawWeaponSelect();
+    assert(cg.itemPickupTime==222 && pixels==4 && colors==2);
+    return 0;
+}
+'''
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            (path / 'hud.c').write_text(program)
+            subprocess.run(['cc', '-Wall', '-Werror', str(path / 'hud.c'), '-o', str(path / 'hud')], check=True)
+            subprocess.run([str(path / 'hud')], check=True)
+
     def test_production_mapper_boundaries_and_priority(self):
         root = Path(__file__).resolve().parents[3]
         source = (root / 'code/cgame/cg_weapons.c').read_text()
