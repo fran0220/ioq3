@@ -103,6 +103,7 @@ EMSCRIPTEN_KEEPALIVE int OG_WebHUDText(int kind, int row, int index)
 EMSCRIPTEN_KEEPALIVE int OG_WebMatchAction(int action, int arg)
 {
     static const char *teams[] = { "team free", "team red", "team blue", "team spectator" };
+    if (!com_cl_running) return 0;
     if (action == 1 && arg == 0) {
         Cmd_ExecuteString("-attack -10042");
         return 1;
@@ -262,7 +263,7 @@ EMSCRIPTEN_KEEPALIVE int OG_WebMenu(int open)
     if (open == 3) {
         webMenuOpen = 0;
         webInputBlocked = 1;
-        Cmd_ExecuteString("-attack -10042");
+        if (com_cl_running) Cmd_ExecuteString("-attack -10042");
         CL_CGameUIHUD(qfalse);
         memset(&webHUD, 0, sizeof(webHUD));
         return 1;
@@ -283,6 +284,7 @@ EM_JS(void, OG_WebFrame, (int playable, int configChanged), {
 
 EMSCRIPTEN_KEEPALIVE void OG_WebLoseFocus(void)
 {
+    if (!com_cl_running) return;
     Cmd_ExecuteString("-attack -10042");
     Key_ClearStates();
     S_ClearSoundBuffer();

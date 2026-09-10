@@ -34,7 +34,7 @@ typedef struct { int entryPoint; int dataMask; unsigned char *dataBase; } vm_t;
 static unsigned char memory[16384];
 static vm_t machine = {0, 16383, memory}, *cgvm = &machine;
 static struct { int state, serverMessageSequence, demoplaying; } clc;
-static struct { int integer; } running, *com_sv_running = &running;
+static struct { int integer; } running, *com_sv_running = &running, *com_cl_running;
 static char command[128];
 static int catcher;
 static int Key_GetCatcher(void) { return catcher; }
@@ -45,6 +45,7 @@ static intptr_t returned = 32;
 static int calls, now, hudCvar, webInputBlocked;
 static int Sys_Milliseconds(void) { return now; }
 static void Cvar_Set(const char *name, const char *value) {
+    assert(com_cl_running); /* Never call cvar APIs before engine initialization. */
     assert(!strcmp(name, "cg_webHUD")); hudCvar = value[0] - '0';
 }
 static intptr_t VM_Call(vm_t *vm, int call, int version, size_t size) {
@@ -54,6 +55,11 @@ static intptr_t VM_Call(vm_t *vm, int call, int version, size_t size) {
 '''
         checks = r'''
 int main(void) {
+    assert(!OG_WebHUDRefresh());
+    assert(!OG_WebHUDEnabled(1));
+    assert(OG_WebHUDEnabled(0));
+    assert(!OG_WebMatchAction(1, 0));
+    com_cl_running = &running;
     unsigned char result[8] = {0};
     memory[16380] = 73; memory[16383] = 91;
     assert(VM_CopyFromVM(&machine, result, 16380, 4));

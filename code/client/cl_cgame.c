@@ -58,6 +58,8 @@ qboolean CL_CGameUISnapshot( cg_ui_snapshot_t *out ) {
 }
 
 void CL_CGameUIHUD( qboolean enabled ) {
+	// Emscripten exports exist before callMain initializes the cvar table.
+	if ( !com_cl_running ) return;
 	enabled = enabled && cgUISupported && cgvm && clc.state == CA_ACTIVE;
 	if ( enabled ) cgUIHUDHeartbeat = (unsigned int)Sys_Milliseconds();
 	else if ( cgUIHUDEnabled ) Cmd_ExecuteString( "-attack -10042" );
@@ -1114,4 +1116,3 @@ void CL_SetCGameTime( void ) {
 	}
 
 }
-

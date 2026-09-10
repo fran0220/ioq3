@@ -50,7 +50,7 @@ function(deploy_shell_files)
     endif()
     configure_file(${SOURCE_DIR}/web/client.html.in
         ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/index.html @ONLY)
-    foreach(file host.mjs app.mjs menu.mjs shell.css)
+    foreach(file host.mjs app.mjs menu.mjs hud.mjs lobby.mjs shell.css)
         configure_file(${SOURCE_DIR}/web/${file}
             ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${file} COPYONLY)
     endforeach()
