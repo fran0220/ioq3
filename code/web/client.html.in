@@ -14,6 +14,19 @@
 <body data-engine="./@CLIENT_BINARY@.js" data-state="loading">
   <!-- SDL2's Emscripten backend requires the literal #canvas selector. -->
   <canvas id="canvas" tabindex="0" aria-label="ioq3 game canvas"></canvas>
+  <section id="hud" aria-label="Live match" hidden>
+    <div class="match-strip"><div><span data-hud="mode"></span><small data-hud="map"></small></div><strong data-hud="clock"></strong><div><span data-hud="team"></span><small>SCORE <b data-hud="score"></b></small></div></div>
+    <div class="team-scores" data-hud="teams" hidden><span>▲ RED <b data-hud="red"></b></span><span>■ BLUE <b data-hud="blue"></b></span></div>
+    <div class="phase-panel" data-hud="phasePanel" hidden><h2 data-hud="phase"></h2><p data-hud="phaseNote"></p></div>
+    <section class="scoreboard" data-hud="scoreboard" aria-label="Match standings" hidden>
+      <h3 data-hud="boardTitle"></h3>
+      <table><thead><tr><th scope="col">Player</th><th scope="col">Team</th><th scope="col">Score</th><th scope="col">Ping</th><th scope="col">Min</th></tr></thead><tbody data-hud="rows"></tbody></table>
+      <p data-hud="empty">Waiting for the server's score report…</p>
+    </section>
+    <div class="vitals" data-hud="vitals"><div class="health"><span>+ HEALTH</span><strong data-hud="health"></strong></div><div><span>◇ ARMOR</span><strong data-hud="armor"></strong></div><div class="ammo"><span data-hud="weapon"></span><strong data-hud="ammo"></strong></div></div>
+    <div class="weapon-inventory" data-hud="inventory" aria-label="Available weapons"></div>
+    <p class="hud-help">F10 / MENU · HOLD SCORES KEY / STANDINGS</p>
+  </section>
   <main id="status-panel" aria-labelledby="title">
     <p class="eyebrow">PC BROWSER · WASM / WEBGL2</p>
     <h1 id="title">BUILT FOR<br>THE ARENA.</h1>
@@ -28,6 +41,9 @@
       <nav class="menu-nav" aria-label="Main navigation">
         <p class="eyebrow">OPERATIONS</p>
         <button data-screen="home" aria-current="page">01 / Overview</button>
+        <button data-screen="play">Play / Local match</button>
+        <button data-screen="match">Match / Team</button>
+        <button data-screen="lobby">Multiplayer / Lobby</button>
         <button data-screen="settings">02 / Settings</button>
         <button data-screen="display">03 / Display</button>
         <button data-screen="bindings">04 / Key bindings</button>
@@ -43,6 +59,34 @@
           <button class="primary" id="play">Open engine Play menu →</button>
           <p class="note" id="play-note">Map, bot and match selection currently use the original engine menu.</p>
           <div class="availability"><span>Multiplayer</span><p>Room entry requires a platform-issued session. No public lobby is configured in this build.</p></div>
+        </section>
+        <section data-page="play" class="config-page" hidden>
+          <p class="eyebrow">LOCAL / ENGINE CONTENT</p><h2 tabindex="-1">ENTER THE ARENA.</h2>
+          <p class="note">Choose installed content. Launch validation belongs to the engine; this menu never runs console text.</p>
+          <form id="match-setup">
+            <label class="setting-row">Arena<select id="arena-map" required></select></label>
+            <label class="setting-row">Mode<select id="arena-mode" required></select></label>
+            <label class="setting-row">Opponent<select id="arena-bot"></select></label>
+            <label class="setting-row">Bot difficulty<select id="arena-skill"><option value="1">I can win</option><option value="2">Bring it on</option><option value="3" selected>Hurt me plenty</option><option value="4">Hardcore</option><option value="5">Nightmare</option></select></label>
+            <label class="setting-row">Frag / capture limit<input id="arena-limit" type="number" min="0" max="100" value="10" required></label>
+            <label class="setting-row">Time limit (minutes)<input id="arena-time" type="number" min="0" max="120" value="10" required></label>
+            <button class="primary" id="launch-match" type="submit" disabled>Launch match →</button>
+          </form>
+          <p id="play-status" class="edit-status" role="status"></p>
+        </section>
+        <section data-page="match" class="config-page" hidden>
+          <p class="eyebrow">LIVE / MATCH CONTROL</p><h2 tabindex="-1">BACK IN THE FIGHT.</h2>
+          <p class="note" id="match-summary">No active match.</p>
+          <div class="match-actions"><button id="match-respawn">Hold to respawn</button><button id="match-scores">Hold for standings</button><button id="match-restart">Restart local match</button><button id="match-disconnect">Leave match</button></div>
+          <label class="setting-row">Team<select id="match-team"><option value="0">Free for all</option><option value="1">▲ Red team</option><option value="2">■ Blue team</option><option value="3">Spectator</option></select></label><button id="match-join-team">Request team</button>
+          <p class="note">Respawn, team balance, tournament queue and next-round timing remain server controlled. Restart is available only for a local server.</p>
+          <p id="match-status" class="edit-status" role="status"></p>
+        </section>
+        <section data-page="lobby" class="config-page" hidden>
+          <p class="eyebrow">ONLINE / NATIVE ARENAS</p><h2 tabindex="-1">FIND YOUR MATCH.</h2>
+          <p id="lobby-status" role="status">Multiplayer unavailable: this build has no trusted platform release/session integration. Local play is available.</p>
+          <div id="lobby-controls" hidden><button id="lobby-refresh">Refresh rooms</button><label class="setting-row">List room publicly<input id="lobby-listed" type="checkbox" checked></label><button id="lobby-create">Create room</button><form id="lobby-join"><label class="setting-row">Room code<input id="lobby-code" pattern="[0-9A-F]{8}" maxlength="8" required autocomplete="off" placeholder="8 uppercase HEX"></label><button type="submit">Join room</button></form><div id="lobby-rooms"></div><button id="lobby-leave">Leave reservation</button></div>
+          <p class="note">Rooms require a published release and platform-issued admission. No operator credentials, room token or server address are entered here.</p>
         </section>
         <section data-page="settings" hidden>
           <p class="eyebrow">TUNE YOUR RESPONSE</p><h2 tabindex="-1">SETTINGS</h2>

@@ -44,7 +44,7 @@ export function playerText(value) {
 
 export function createHUD(root) {
     const nodes = Object.fromEntries([...root.querySelectorAll('[data-hud]')].map(node => [node.dataset.hud, node]));
-    let lastRows = '';
+    let lastRows = '', lastWeapons = '';
     const set = (key, value) => {
         const text = String(value);
         if (nodes[key].textContent !== text) nodes[key].textContent = text;
@@ -75,8 +75,22 @@ export function createHUD(root) {
                     : s.health <= 0 ? 'Press Fire to respawn when the server allows it. F10 opens match actions.' : '');
             nodes.phasePanel.hidden = !s.intermission && s.team !== 3 && s.health > 0;
             nodes.vitals.hidden = !!s.intermission || s.team === 3 || s.health <= 0;
-            nodes.scoreboard.hidden = !s.scoresShowing && !s.intermission && s.health > 0;
+            nodes.inventory.hidden = nodes.vitals.hidden;
+            nodes.scoreboard.hidden = !s.scoresShowing && !s.intermission;
             set('boardTitle', s.intermission ? 'FINAL STANDINGS' : 'SCOREBOARD');
+            const weapons = `${s.weapons}/${s.weapon}`;
+            if (weapons !== lastWeapons) {
+                lastWeapons = weapons;
+                nodes.inventory.replaceChildren();
+                weaponNames.forEach((name, id) => {
+                    if (!id || !(s.weapons & (1 << id))) return;
+                    const slot = document.createElement('span');
+                    slot.textContent = name;
+                    slot.dataset.selected = String(id === s.weapon);
+                    slot.setAttribute('aria-label', `${name}${id === s.weapon ? ', equipped' : ', available'}`);
+                    nodes.inventory.append(slot);
+                });
+            }
             // Do not recreate rows every frame: text updates must not churn the accessibility tree.
             const rows = JSON.stringify([s.localClient, s.rows]);
             if (rows !== lastRows) {

@@ -1,11 +1,63 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // DOM navigation never signals game readiness and never accepts console text.
+import { createHUD, readHUD, matchClock, teamNames } from './hud.mjs';
+import { createLobby } from './lobby.mjs';
+
 export function createMenu(canvas) {
     const root = document.querySelector('#menu');
+    const hud = createHUD(document.querySelector('#hud'));
+    const lobby = createLobby(window.OG);
     const tell = text => { for (const node of root.querySelectorAll('.edit-status')) node.textContent = text; };
     const saving = () => { document.querySelector('#save-status').textContent = 'Applied — waiting for engine save…'; };
-    let module, ready = false, failed = false;
+    let module, ready = false, failed = false, snapshot, heldAction = null;
     const state = () => ready && !failed ? module?._OG_WebUIState?.() ?? 0 : 0;
+    function frame() {
+        if (failed) return;
+        snapshot = ready && !document.hidden ? readHUD(module) : null;
+        hud.render(snapshot, !root.hidden);
+        // Renew only after a successful render. Runtime/DOM failures naturally
+        // stop this loop and the engine's one-second lease restores native HUD.
+        if (ready) module?._OG_WebHUDEnabled?.(snapshot && root.hidden ? 1 : 0);
+        if (!root.hidden && !root.querySelector('[data-page="match"]').hidden) refreshMatch();
+        requestAnimationFrame(frame);
+    }
+    function releaseAction() {
+        if (heldAction === null) return;
+        module?._OG_WebMatchAction?.(heldAction, 0);
+        heldAction = null;
+    }
+    function holdAction(id) {
+        if (state() !== 2) return;
+        close();
+        if (!root.hidden) return;
+        if (module._OG_WebMatchAction?.(id, 1) === 1) heldAction = id;
+    }
+    function refreshMatch() {
+        const active = state() === 2 && typeof module?._OG_WebMatchAction === 'function';
+        for (const button of root.querySelectorAll('[data-page="match"] button')) button.disabled = !active;
+        document.querySelector('#match-respawn').disabled = !active || !snapshot || (snapshot.health > 0 && !snapshot.intermission);
+        document.querySelector('#match-summary').textContent = snapshot
+            ? `${snapshot.map} · ${teamNames[snapshot.team]} · Score ${snapshot.score} · ${matchClock(snapshot.elapsed)}` : 'No active match.';
+    }
+    for (const [name, id] of [['match-respawn', 1], ['match-scores', 0]]) {
+        document.getElementById(name).addEventListener('pointerdown', event => {
+            if (event.button !== 0) return;
+            event.preventDefault(); holdAction(id);
+        });
+    }
+    for (const event of ['pointerup', 'pointercancel', 'blur']) window.addEventListener(event, releaseAction, true);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) releaseAction(); });
+    for (const [name, id] of [['match-restart', 3], ['match-disconnect', 2], ['match-join-team', 4]]) {
+        document.getElementById(name).addEventListener('click', () => {
+            const arg = id === 4 ? Number(document.querySelector('#match-team').value) : 0;
+            if (module?._OG_WebMatchAction?.(id, arg) !== 1) {
+                document.querySelector('#match-status').textContent = 'Action rejected. Restart requires a local server; team changes require an active match.';
+                return;
+            }
+            document.querySelector('#match-status').textContent = 'Request sent to the engine. Waiting for authoritative state.';
+            if (id !== 2) close();
+        });
+    }
     const fields = [
         ['Master volume', 0, 0, 1, 0.05], ['Music volume', 1, 0, 1, 0.05],
         ['Mouse sensitivity', 2, 0.1, 30, 0.1], ['Mouse pitch', 3, -0.1, 0.1, 0.001],
@@ -159,11 +211,14 @@ export function createMenu(canvas) {
         if (name === 'display') filter.value = String(module._OG_WebTextureFilter(-1));
         if (name === 'profile') document.querySelector('#player-name').value = readName();
         if (name === 'bindings') refreshBindings();
+        if (name === 'match') refreshMatch();
+        lobby.show(name === 'lobby');
         root.querySelector(`[data-page="${name}"] h2`).focus();
     }
     function open() {
         const current = state();
         if (![1, 2].includes(current) || !module._OG_WebMenu(1)) return;
+        releaseAction();
         if (document.pointerLockElement) document.exitPointerLock();
         root.hidden = false;
         canvas.inert = true;
@@ -179,6 +234,7 @@ export function createMenu(canvas) {
         const current = state();
         if (![1, 2].includes(current) || !module._OG_WebMenu(current === 1 ? 2 : 0)) return;
         root.hidden = true;
+        lobby.show(false);
         canvas.inert = false;
         canvas.focus();
     }
@@ -190,15 +246,21 @@ export function createMenu(canvas) {
     // Capture before SDL's document handlers, so DOM typing/navigation cannot
     // activate hidden engine menu items or move/fire in the match.
     for (const type of ['keydown', 'keyup', 'keypress']) window.addEventListener(type, event => {
-        if (event.key === 'F10' || (!root.hidden && event.key === 'Escape')) {
+        const hold = { 'match-respawn': 1, 'match-scores': 0 }[event.target.id];
+        if ((event.key === 'Enter' || event.key === ' ') && (hold !== undefined || heldAction !== null)) {
+            event.preventDefault(); event.stopImmediatePropagation();
+            if (type === 'keydown' && !event.repeat && hold !== undefined) holdAction(hold);
+            if (type === 'keyup') releaseAction();
+        } else if (event.key === 'F10' || (!root.hidden && event.key === 'Escape')) {
             event.preventDefault(); event.stopImmediatePropagation();
             if (type === 'keydown' && !event.repeat) root.hidden ? open() : close();
         } else if (!root.hidden) event.stopImmediatePropagation();
     }, true);
     return {
-        attach(value) { module = value; },
+        attach(value) { module = value; requestAnimationFrame(frame); },
         report(update) {
             if (update.state === 'failed') {
+                releaseAction(); hud.hide(); lobby.stop();
                 failed = true; root.hidden = true;
                 canvas.inert = true;
                 // An aborted runtime may reject calls; it cannot process input

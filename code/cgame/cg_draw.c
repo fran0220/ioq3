@@ -990,7 +990,7 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame)
 	if (cg_drawFPS.integer && (stereoFrame == STEREO_CENTER || stereoFrame == STEREO_RIGHT)) {
 		y = CG_DrawFPS( y );
 	}
-	if ( cg_drawTimer.integer ) {
+	if ( cg_drawTimer.integer && !cg_webHUD.integer ) {
 		y = CG_DrawTimer( y );
 	}
 	if ( cg_drawAttacker.integer ) {
@@ -1284,7 +1284,9 @@ static void CG_DrawLowerRight( void ) {
 		y = CG_DrawTeamOverlay( y, qtrue, qfalse );
 	} 
 
-	y = CG_DrawScores( y );
+	if ( !cg_webHUD.integer ) {
+		y = CG_DrawScores( y );
+	}
 	CG_DrawPowerups( y );
 }
 #endif // MISSIONPACK
@@ -2546,7 +2548,9 @@ static void CG_Draw2D(stereoFrame_t stereoFrame)
 	}
 */
 	if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR ) {
-		CG_DrawSpectator();
+		if ( !cg_webHUD.integer ) {
+			CG_DrawSpectator();
+		}
 
 		if(stereoFrame == STEREO_CENTER)
 			CG_DrawCrosshair();
@@ -2562,7 +2566,9 @@ static void CG_Draw2D(stereoFrame_t stereoFrame)
 				CG_DrawTimedMenus();
 			}
 #else
-			CG_DrawStatusBar();
+			if ( !cg_webHUD.integer ) {
+				CG_DrawStatusBar();
+			}
 #endif
       
 			CG_DrawAmmoWarning();
@@ -2653,6 +2659,5 @@ void CG_DrawActive( stereoFrame_t stereoView ) {
 	// draw status bar and other floating elements
  	CG_Draw2D(stereoView);
 }
-
 
 

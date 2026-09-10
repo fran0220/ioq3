@@ -67,3 +67,48 @@ body[data-captured="true"] #controls { display: none; }
 body[data-state="failed"] #status { color: #efac7b; }
 @media (max-height: 700px) { .menu-layout { margin-top: 22px; } h2 { font-size: 42px; margin: 15px 0; } #menu footer { margin-top: 20px; } }
 @media (max-width: 950px) { .menu-layout { grid-template-columns: 180px minmax(0, 1fr); gap: 30px; } }
+
+/* Live telemetry uses DOM text, not baked artwork. Keep the center clear for
+ * the engine crosshair and world effects; team labels also carry shape/name. */
+#hud { position: fixed; inset: 0; pointer-events: none; font-variant-numeric: tabular-nums; text-shadow: 0 2px 3px #000; }
+.match-strip { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 26px; background: #10191de8; border-top: 2px solid #9be4dc; padding: 10px 20px; min-width: 370px; justify-content: space-between; }
+.match-strip > div { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+.match-strip small { display: block; margin-top: 5px; color: #b5c7c7; font-size: 10px; }
+.match-strip > strong { font-size: 30px; font-weight: 500; }
+.team-scores { position: absolute; top: 92px; left: 50%; transform: translateX(-50%); display: flex; gap: 3px; font-size: 12px; }
+.team-scores span { padding: 7px 15px; background: #4b2028ed; }
+.team-scores span + span { background: #193b5bed; }
+.team-scores b { margin-left: 12px; }
+.vitals { position: absolute; bottom: 64px; left: 4vw; right: 4vw; display: flex; align-items: end; gap: 6px; }
+.vitals > div { min-width: 112px; padding: 12px 20px 10px; background: #10191deb; border-top: 2px solid #a9c4c5; }
+.vitals span { display: block; color: #c0d2d0; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
+.vitals strong { font-size: 48px; line-height: 1.1; font-weight: 600; }
+.vitals .health { border-color: #9be4dc; color: #e6f6f0; }
+.vitals .ammo { margin-left: auto; min-width: 200px; text-align: right; border-color: #e6a579; }
+#hud[data-low-health="true"] .health { border-color: #ee976e; background: #4d2425eb; color: #ffd5bb; }
+.hud-help { position: absolute; bottom: 23px; left: 4vw; margin: 0; font-size: 9px; letter-spacing: .12em; color: #d1dddd; }
+.phase-panel { position: absolute; top: 16%; left: 50%; transform: translateX(-50%); width: min(720px, 80vw); text-align: center; }
+.phase-panel h2 { font-size: 30px; letter-spacing: .08em; margin: 12px 0; }
+.phase-panel p { background: #10191de8; padding: 9px; font-size: 12px; color: #d0dfdc; }
+.scoreboard { position: absolute; top: 31%; left: 50%; transform: translateX(-50%); width: min(800px, 84vw); max-height: 54%; overflow: auto; background: #10191df2; border: 1px solid #647b7c; padding: 18px 24px; }
+.scoreboard h3 { margin: 0 0 16px; font-size: 12px; letter-spacing: .18em; color: #c3d7d4; }
+.scoreboard table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: right; }
+.scoreboard th { color: #a4bcbb; font-size: 10px; font-weight: normal; text-transform: uppercase; padding: 0 10px 10px; }
+.scoreboard td { border-top: 1px solid #35484b; padding: 11px 10px; }
+.scoreboard th:first-child, .scoreboard td:first-child { text-align: left; overflow-wrap: anywhere; max-width: 300px; }
+.scoreboard tr[data-local="true"] { color: #b6f5e9; background: #294241; }
+.scoreboard tr[data-team="1"] td:nth-child(2) { color: #ffad9c; }
+.scoreboard tr[data-team="2"] td:nth-child(2) { color: #9bccff; }
+.menu-nav { gap: 3px; }
+.menu-nav button { padding-block: 10px; }
+.menu-nav .eyebrow { margin-bottom: 10px; }
+#return-engine { margin-top: 12px; }
+#match-setup .primary { margin-top: 16px; }
+.match-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0; }
+#lobby-status { max-width: 580px; font-size: 14px; line-height: 1.6; color: #e8ba97; }
+#lobby-rooms { max-height: 150px; overflow: auto; margin-top: 14px; }
+#lobby-controls button { margin: 5px 8px 5px 0; }
+@media (max-height: 750px) { .menu-layout { margin-top: 22px; } #menu footer { margin-top: 20px; } }
+.weapon-inventory { position: absolute; bottom: 26px; right: 4vw; display: flex; justify-content: end; flex-wrap: wrap; gap: 3px; max-width: 65vw; }
+.weapon-inventory span { padding: 5px 8px; background: #11191ddd; border-bottom: 2px solid #53696a; color: #adc4c3; font-size: 9px; text-transform: uppercase; }
+.weapon-inventory span[data-selected="true"] { border-color: #e7ad81; color: #fff0d9; background: #48382bf2; }

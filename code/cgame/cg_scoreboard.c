@@ -304,6 +304,14 @@ qboolean CG_DrawOldScoreboard( void ) {
 		fade = *fadeColor;
 	}
 
+	/* Keep the original visibility/fade/deferred-loading semantics even when
+	 * the browser owns the pixels. Its lease expires back to this renderer. */
+	if ( cg_webHUD.integer ) {
+		if ( ++cg.deferredPlayerLoading > 10 ) {
+			CG_LoadDeferredPlayers();
+		}
+		return qtrue;
+	}
 
 	// fragged by ... line
 	if ( cg.killerName[0] ) {
@@ -531,4 +539,3 @@ void CG_DrawTourneyScoreboard( void ) {
 
 
 }
-
