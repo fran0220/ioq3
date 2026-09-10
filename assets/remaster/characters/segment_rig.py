@@ -101,23 +101,27 @@ def main():
             pose[index] = Matrix.Translation(origin) @ rotation.to_matrix().to_4x4()
         pose[h] = Matrix.Translation(target) @ Vector((1,0,0)).to_track_quat('Y','Z').to_matrix().to_4x4()
 
+    firearm = 'machinegun'
     def holding(recoil=0, lowered=0, jab=0, wave=0):
         pose = [m.copy() for m in rest]
-        ik(pose,'Right',(10-recoil+12*jab,-6-4*lowered,25-14*lowered+recoil))
-        ik(pose,'Left',(18-recoil,3+6*wave,25-14*lowered+18*wave))
+        grip, support = ((7,-4,27),(7.6,0,0)) if firearm == 'machinegun' else ((4,-3,28),(15.2,0,-.8))
+        ik(pose,'Right',(grip[0]-recoil+12*jab,grip[1]-4*lowered,grip[2]-14*lowered+recoil))
+        ik(pose,'Left',(grip[0]+support[0]-recoil,grip[1]+support[1]+6*wave,grip[2]+support[2]-14*lowered+18*wave))
         return pose
 
     def sample(name,count):
         frames = source_clips[name]
         return [copy.deepcopy(frames[round(i*(len(frames)-1)/max(1,count-1))]) for i in range(count)]
 
-    upper = sample('death1',30)+sample('death2',30)+sample('death3',30)
-    upper += [holding(wave=math.sin(math.pi*i/39)**2) for i in range(40)]
-    upper += [holding(recoil=v) for v in (0,1.4,2,.9,.3,0)]
-    upper += [holding(jab=v) for v in (0,.35,1,.65,.15,0)]
-    upper += [holding(lowered=i/4) for i in range(5)]
-    upper += [holding(lowered=1-i/3) for i in range(4)]
-    upper += [holding(),holding(jab=.1)]
+    upper = []
+    for firearm in ('machinegun','rocket'):
+        upper += sample('death1',30)+sample('death2',30)+sample('death3',30)
+        upper += [holding(wave=math.sin(math.pi*i/39)**2) for i in range(40)]
+        upper += [holding(recoil=v) for v in (0,1.4,2,.9,.3,0)]
+        upper += [holding(jab=v) for v in (0,.35,1,.65,.15,0)]
+        upper += [holding(lowered=i/4) for i in range(5)]
+        upper += [holding(lowered=1-i/3) for i in range(4)]
+        upper += [holding(),holding(jab=.1)]
     lower = sample('death1',30)+sample('death2',30)+sample('death3',30)
     lower += sample('crouch',8)+sample('walk',12)+sample('run',11)
     lower += list(reversed(sample('walk',10)))
@@ -137,12 +141,15 @@ def main():
     lower += [[m.copy() for m in rest] for _ in range(10)]
     lower += [copy.deepcopy(source_clips['crouch'][0]) for _ in range(8)]
     lower += sample('walk',7)
-    assert len(upper) == 153 and len(lower) == 191
+    assert len(upper) == 306 and len(lower) == 191
     out = work/'segmented'
     out.mkdir(parents=True,exist_ok=True)
     report = {'classification':'generated-segmented-combat-test-candidate','runtime_accepted':False,
               'source':'prepared/iqm/source.json','authoring':'Paid rig; paid source locomotion/deaths/jump/crouch; explicit hand-authored two-bone IK upper gesture/recoil/jab/drop/raise/stance and lower flutter kick/idle. Back jump currently retimed forward jump: must review and replace before final acceptance.',
-              'waist':list(waist.translation),'neck':list(neck.translation),'parts':{}}
+              'waist':list(waist.translation),'neck':list(neck.translation),'parts':{},
+              'weapon_frame_offsets':{'2':0,'5':153},
+              'grip_targets':{'machinegun':{'right':[7,-4,27],'left':[14.6,-4,27]},
+                              'rocket':{'right':[4,-3,28],'left':[19.2,-3,27.2]}}}
     for part,poses,origin in (('lower',lower,Matrix.Identity(4)),('upper',upper,waist),('head',[rest],neck)):
         inverse = origin.inverted()
         bind = [inverse @ p for p in rest]

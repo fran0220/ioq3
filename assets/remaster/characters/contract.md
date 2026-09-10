@@ -58,6 +58,27 @@ Pain uses the original timed torso twitch, not a new animation lock. Fire,
 muzzleFlashTime, footsteps, hit, death, respawn, haste and movement remain
 game/cgame events. Clips never delay shots, add reloads or drive player origin.
 
+## Weapon-specific upper poses
+
+Optional `models/players/<model>/weapon_frames.cfg` contains integer weapon ID
+and upper-frame offset pairs. Current candidate: `2 0` (machinegun), `5 153`
+(rocket). Upper contains two complete 153-frame cfg blocks; lower remains 191
+rebased frames and head remains frame0. This metadata lives in
+`clientInfo_t.torsoWeaponFrameOffset`, is cleared on every registration attempt
+and copied during model reuse/deferred loading. Missing metadata stays zero.
+
+Only the submitted torso entity's frame and oldframe are remapped, each
+independently: frames below TORSO_GESTURE.firstFrame (the BOTH death domain)
+remain unchanged, including a death oldframe during respawn. Invalid indices,
+integer overflow and malformed/duplicate metadata are rejected. The original
+`pe.torso` clock and `CG_MapTorsoToWeaponFrame` input are never rewritten.
+
+Initial actual-generated-gun fitting targets, in standing player coordinates:
+machinegun right=(7,-4,27), left=(14.6,-4,27); rocket right=(4,-3,28),
+left=(19.2,-3,27.2). These preserve the weapon author's local forward support
+distances 7.6 and 15.2 units while bringing the grips within the real arm reach.
+They are fitting candidates, not a claim of final finger/grip acceptance.
+
 ## Materials and acceptance
 
 Initial material contract: r_pbr=0, r_glossType=1; lightingDiffuse base stage,

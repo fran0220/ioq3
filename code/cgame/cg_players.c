@@ -533,11 +533,71 @@ static qhandle_t CG_RegisterPlayerModel( const char *filename ) {
 	return trap_R_RegisterModel( filename );
 }
 
+// Optional model metadata; never alter the original animation clocks or events.
+static qboolean CG_ParseWeaponFrames( const char *filename, clientInfo_t *ci ) {
+	char text[1024], *cursor, *token;
+	fileHandle_t file;
+	int length, values[2], i, j, digit, maxFrame = 0;
+	int offsets[WP_NUM_WEAPONS] = { 0 };
+	qboolean seen[WP_NUM_WEAPONS] = { qfalse };
+	length = trap_FS_FOpenFile( filename, &file, FS_READ );
+	if ( !file ) {
+		return qtrue;
+	}
+	if ( length < 0 || length >= sizeof(text) ) {
+		trap_FS_FCloseFile( file );
+		return qfalse;
+	}
+	trap_FS_Read( text, length, file );
+	trap_FS_FCloseFile( file );
+	text[length] = 0;
+	for ( i = TORSO_GESTURE; i <= TORSO_STAND2; i++ ) {
+		if ( ci->animations[i].firstFrame > INT_MAX - ci->animations[i].numFrames ) {
+			return qfalse;
+		}
+		maxFrame = MAX( maxFrame, ci->animations[i].firstFrame + ci->animations[i].numFrames );
+	}
+	cursor = text;
+	while ( 1 ) {
+		for ( i = 0; i < 2; i++ ) {
+			token = COM_Parse( &cursor );
+			if ( !token[0] ) {
+				if ( i ) return qfalse;
+				memcpy( ci->torsoWeaponFrameOffset, offsets, sizeof(offsets) );
+				return qtrue;
+			}
+			values[i] = 0;
+			for ( j = 0; token[j]; j++ ) {
+				digit = token[j] - '0';
+				if ( digit < 0 || digit > 9 || values[i] > (INT_MAX - digit) / 10 ) return qfalse;
+				values[i] = values[i] * 10 + digit;
+			}
+		}
+		if ( values[0] <= WP_NONE || values[0] >= WP_NUM_WEAPONS ||
+			seen[values[0]] || values[1] > INT_MAX - maxFrame ) return qfalse;
+		seen[values[0]] = qtrue;
+		offsets[values[0]] = values[1];
+	}
+	return qfalse;
+}
+
+static int CG_WeaponTorsoFrame( const clientInfo_t *ci, int weapon, int frame ) {
+	int offset;
+	// Test each endpoint independently: oldframe may still be a death pose
+	// when the current endpoint has already returned to a living stance.
+	if ( weapon <= WP_NONE || weapon >= WP_NUM_WEAPONS ||
+		frame < ci->animations[TORSO_GESTURE].firstFrame ) return frame;
+	offset = ci->torsoWeaponFrameOffset[weapon];
+	if ( offset < 0 || frame > INT_MAX - offset ) return frame;
+	return frame + offset;
+}
+
 static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelName, const char *skinName, const char *headModelName, const char *headSkinName, const char *teamName ) {
 	char	filename[MAX_QPATH];
 	const char		*headName;
 	char newTeamName[MAX_QPATH];
 
+	memset( ci->torsoWeaponFrameOffset, 0, sizeof(ci->torsoWeaponFrameOffset) );
 	if ( headModelName[0] == '\0' ) {
 		headName = modelName;
 	}
@@ -611,6 +671,14 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 			Com_Printf( "Failed to load animation file %s\n", filename );
 			return qfalse;
 		}
+	}
+
+	// Use the same folder that supplied animation.cfg, including characters/.
+	Q_strncpyz( strrchr(filename, '/') + 1, "weapon_frames.cfg",
+		sizeof(filename) - (strrchr(filename, '/') + 1 - filename) );
+	if ( !CG_ParseWeaponFrames( filename, ci ) ) {
+		Com_Printf( "Invalid weapon frame file %s\n", filename );
+		return qfalse;
 	}
 
 	if ( CG_FindClientHeadFile( filename, sizeof(filename), ci, teamName, headName, headSkinName, "icon", "skin" ) ) {
@@ -768,6 +836,7 @@ static void CG_CopyClientInfoModel( clientInfo_t *from, clientInfo_t *to ) {
 	to->newAnims = from->newAnims;
 
 	memcpy( to->animations, from->animations, sizeof( to->animations ) );
+	memcpy( to->torsoWeaponFrameOffset, from->torsoWeaponFrameOffset, sizeof( to->torsoWeaponFrameOffset ) );
 	memcpy( to->sounds, from->sounds, sizeof( to->sounds ) );
 }
 
@@ -2308,6 +2377,8 @@ void CG_Player( centity_t *cent ) {
 	// get the animation state (after rotation, to allow feet shuffle)
 	CG_PlayerAnimation( cent, &legs.oldframe, &legs.frame, &legs.backlerp,
 		 &torso.oldframe, &torso.frame, &torso.backlerp );
+	torso.frame = CG_WeaponTorsoFrame( ci, cent->currentState.weapon, torso.frame );
+	torso.oldframe = CG_WeaponTorsoFrame( ci, cent->currentState.weapon, torso.oldframe );
 
 	// add the talk baloon or disconnect icon
 	CG_PlayerSprites( cent );

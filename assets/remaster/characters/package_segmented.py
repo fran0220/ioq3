@@ -26,6 +26,7 @@ def main():
             (184,10,10,20),(194,10,10,15),(204,10,0,18),(214,6,0,20),(220,8,0,15),
             (228,1,0,15),(229,10,10,15),(239,8,8,15),(247,7,7,15)]
     files['models/players/sarge/animation.cfg'] = ('sex m\nfootsteps boot\n'+''.join(' '.join(map(str,r))+'\n' for r in rows)).encode()
+    files['models/players/sarge/weapon_frames.cfg'] = ''.join(f'{weapon} {offset}\n' for weapon,offset in report['weapon_frame_offsets'].items()).encode()
     shaders = []
     image = Image.open(work/'prepared/body.tga').convert('RGB')
     normal = 'models/remaster/characters/sarge_normal'
