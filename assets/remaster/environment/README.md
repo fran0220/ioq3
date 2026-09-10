@@ -20,9 +20,12 @@ insufficient: ioq3 reverses shader-script concatenation and the original explici
 sky shader won in an actual browser test. No renderer change is required.
 
 For private technical verification only, `prepare_map.py` rewrites the 64-byte
-name field in each BSP shader record and converts RGB lightmaps to max-channel
-neutral gray. Surface/content flag bytes, all other 15 lumps, BSP header/offsets,
-geometry, entities, spawn/trigger timing and PVS are unchanged. The original AAS
+name field in each BSP shader record and converts RGB lightmaps, vertex colors,
+and lightgrid ambient/directed colors to max-channel neutral gray. Thirteen whole
+lumps remain identical. Within the other four lumps, surface/content flags,
+vertex positions/UVs/normals/alpha and lightgrid direction bytes remain identical
+and receive separate protected-field hashes. BSP header/offsets, geometry,
+entities, spawn/trigger timing and PVS are unchanged. The original AAS
 is preserved in the reference PK3. The private derived AAS updates only encoded
 checksum bytes 8–11, with all navigation payload and lump tables byte-identical.
 This adaptation was explicitly approved after BotLib correctly rejected the
@@ -30,9 +33,13 @@ first visual BSP's changed whole-file checksum. The tool uses production
 `code/qcommon/md4.c` and AAS v4/v5 header encoding; no engine check is disabled.
 It records hashes for every BSP lump and AAS payload. Max-channel grayscale is a deliberate art
 adjustment after luminance grayscale left red-lit halls excessively dark; it is
-not radiometric preservation. Lightgrid and vertex colors remain original, so
-models and some surfaces retain warm/red illumination. This discrepancy remains
-an integration task, not a passed lighting gate.
+not radiometric preservation. The first candidate preserved lightgrid/vertex
+colors and produced a severely dark brown wall crest in the renderer owner's
+actual placement test. Lighting v2 applies the same neutral transform across
+all three representations without brightness multipliers or direction changes.
+The old private package is preserved for matched-camera comparison. Neutral
+color does not guarantee adequate illumination; runtime art acceptance remains
+separate from the byte-invariant checks.
 
 **Do not publish the derived Demo BSP or the fixture directory.** Only original
 material assets live here. The complete authorized source data and editable map

@@ -54,10 +54,24 @@ def adapt(data):
         r, g, b = data[start:start + 3]
         value = max(r, g, b)
         out[start:start + 3] = bytes((value, value, value))
+    # Apply the same palette transform to vertex-lit BSP surfaces and model
+    # lightgrid samples. Keep alpha, spatial data, and encoded directions exact.
+    offset, length = lumps[10]
+    for start in range(offset, offset + length, 44):
+        value = max(data[start + 40:start + 43])
+        out[start + 40:start + 43] = bytes((value, value, value))
+        assert out[start:start + 40] == data[start:start + 40]
+        assert out[start + 43] == data[start + 43]
+    offset, length = lumps[15]
+    for start in range(offset, offset + length, 8):
+        for color in (start, start + 3):
+            value = max(data[color:color + 3])
+            out[color:color + 3] = bytes((value, value, value))
+        assert out[start + 6:start + 8] == data[start + 6:start + 8]
     hashes = []
     for i, (offset, length) in enumerate(lumps):
         old, new = data[offset:offset + length], out[offset:offset + length]
-        if i not in (1, 14):
+        if i not in (1, 10, 14, 15):
             assert old == new, f'Logic/geometry lump {i} changed'
         hashes.append({'lump': i, 'before': hashlib.sha256(old).hexdigest(),
                        'after': hashlib.sha256(new).hexdigest(), 'identical': old == new})
@@ -66,6 +80,16 @@ def adapt(data):
             after_flags = b''.join(new[n + 64:n + 72] for n in range(0, len(new), 72))
             hashes[-1]['physics_flags_before_sha256'] = hashlib.sha256(before_flags).hexdigest()
             hashes[-1]['physics_flags_after_sha256'] = hashlib.sha256(after_flags).hexdigest()
+        if i in (10, 15):
+            stride = 44 if i == 10 else 8
+            # Includes positions, both UV sets, normals and alpha for drawverts;
+            # includes both encoded direction bytes for lightgrid samples.
+            protected = lambda chunk, n: chunk[n:n + 40] + chunk[n + 43:n + 44] if i == 10 else chunk[n + 6:n + 8]
+            before = b''.join(protected(old, n) for n in range(0, len(old), stride))
+            after = b''.join(protected(new, n) for n in range(0, len(new), stride))
+            assert before == after
+            hashes[-1]['non_color_fields_before_sha256'] = hashlib.sha256(before).hexdigest()
+            hashes[-1]['non_color_fields_after_sha256'] = hashlib.sha256(after).hexdigest()
     return bytes(out), hashes
 
 
@@ -147,4 +171,4 @@ if __name__ == '__main__':
         'derived_package_sha256': hashlib.sha256(output_package.read_bytes()).hexdigest(),
         'checksum_source_sha256': hashlib.sha256((root / 'code/qcommon/md4.c').read_bytes()).hexdigest(),
     }, indent=2) + '\n')
-    print('Private visual maps written; 15/17 BSP lumps unchanged; AAS only checksum bytes 8–11 changed')
+    print('Private visual maps written; 13/17 BSP lumps unchanged; remaining changes only shader names and lighting RGB; AAS only checksum bytes 8–11 changed')

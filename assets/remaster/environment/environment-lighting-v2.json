@@ -1,0 +1,36 @@
+{
+  "classification": "private-reference-lighting-candidate-not-release",
+  "reason": "Actual surface2050 placement reported by renderer owner is correctly attached but dark brown; old neutral lightmap conflicts with original colored model lightgrid and vertex lighting.",
+  "evidence_scope": "Renderer-owner original screenshot downloaded and inspected locally; replacement renderer not yet pushed at time of this record. No local crest-v2 visual success claimed.",
+  "input_package": "assets/remaster/work/environment-private/zzzz-environment-private-maps.pk3",
+  "input_package_sha256": "b45486259288faacb14fed39f92c736ddb6d9a331f41ee39c8cf1ebb0e89a742",
+  "candidate_package": "assets/remaster/work/environment-lighting-v2/zzzz-environment-private-maps.pk3",
+  "candidate_package_sha256": "bb08ca72689dcb5319ea55e1100ccf1419c6f4e34a537141a8829c7d74f6239f",
+  "transform": "max(R,G,B) neutral RGB independently for each lightmap texel, drawvert RGB, lightgrid ambient RGB and directed RGB. No brightness multiplier, direction adjustment or single-model renderer workaround.",
+  "protected_data": [
+    "13 complete BSP lumps byte-identical",
+    "Shader surface/content flags byte-identical",
+    "Drawvert position, texture/lightmap UV, normal and alpha byte-identical",
+    "Lightgrid encoded direction bytes byte-identical; zero wall samples remain zero",
+    "All BSP header offsets/lengths unchanged",
+    "AAS change confined to checksum bytes8–11; lump table and navigation payload byte-identical"
+  ],
+  "near_crest_source_lightgrid_example": {
+    "ambient": [48, 31, 11],
+    "directed": [171, 108, 28],
+    "note": "One of eight neighboring samples, not the final interpolated/overbright-adjusted entity light. Supports color-cast diagnosis, not a guarantee of sufficient illumination."
+  },
+  "verification": {
+    "unit_tests": "6 PASS; new asymmetric RGB test first failed against old implementation, then passed; checks direction, alpha and zero sample preservation",
+    "walk": "PASS keyboard movement >100 units, armor pickup, airborne jump, land, five motion-linked views",
+    "bot": "PASS falling death/click respawn, shooting hit, fraglimit3 score screen, restart",
+    "reliability": "PASS HDR0/1 vid_restart, q3tourney2/q3dm17/q3dm1 switch, forced context loss/full reload",
+    "visual": "Courtyard render inspected; does not verify wall crest because this local build lacks surface replacement",
+    "build": "Same Emscripten3.1.58 observer engine recorded in environment-verification.json; Chromium SwiftShader, not physical GPU",
+    "private_logs": "assets/remaster/work/environment-lighting-v2/{walk,bot,reliability}/",
+    "invariants": "assets/remaster/work/environment-lighting-v2/{logic-invariants,aas-invariants,package-hashes}.json"
+  },
+  "remaining_gate": "Matched camera v1/v2 crest comparison in both HDR/LDR after surface replacement integration; correct dark illumination at its actual cause rather than assume neutralization is sufficient.",
+  "runtime_art_accepted": false,
+  "release_accepted": false
+}
