@@ -201,9 +201,14 @@ vec3 EnvironmentBRDF(float roughness, float NE, vec3 specular)
 vec3 CalcSpecular(vec3 specular, float NH, float EH, float roughness)
 {
 	// from http://community.arm.com/servlet/JiveServlet/download/96891546-19496/siggraph2015-mmg-renaldas-slides.pdf
+	// A zero-width lobe is a delta distribution, not a finite raster highlight.
+	// Keep smoothness=1 textures finite, including at NH=1 on ES highp floats.
+	roughness = clamp(roughness, 0.045, 1.0);
 	float rr = roughness*roughness;
 	float rrrr = rr*rr;
-	float d = (NH * NH) * (rrrr - 1.0) + 1.0;
+	// Avoid cancellation of the small roughness term near the lobe center.
+	float nh2 = NH * NH;
+	float d = (1.0 - nh2) + nh2 * rrrr;
 	float v = (EH * EH) * (roughness + 0.5) + EPSILON;
 	return specular * (rrrr / (4.0 * d * d * v));
 }

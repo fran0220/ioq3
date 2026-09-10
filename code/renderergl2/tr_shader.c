@@ -1113,8 +1113,8 @@ static qboolean ParseStage( shaderStage_t *stage, char **text )
 				{
 					// two values, metallic then smoothness
 					float smoothness = stage->specularScale[1];
-					stage->specularScale[1] = (stage->specularScale[0] < 0.5f) ? 0.0f : 1.0f;
-					stage->specularScale[0] = smoothness;
+					stage->specularScale[1] = CLAMP(stage->specularScale[0], 0.0f, 1.0f);
+					stage->specularScale[0] = CLAMP(smoothness, 0.0f, 1.0f);
 				}
 				else
 				{
