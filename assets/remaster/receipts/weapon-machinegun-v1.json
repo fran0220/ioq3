@@ -134,5 +134,36 @@
     },
     "source_sha256": "4cc40944782cb6c96abfbe7450f987651e85c9faefb5b984c70b9a456535acd7"
   },
-  "package": null
+  "package": null,
+  "weapon_export": {
+    "runtime_accepted": false,
+    "rotating_barrel": true,
+    "hand_slots": [],
+    "material": "diffuse-only candidate; normal/specular/emission not yet baked",
+    "files": {
+      "models/remaster/weapons/machinegun/weapon.iqm": "864be74d5261bd0209ab78dd68b5b19b1e5d14fda00a912817a007dfa6fe8635",
+      "models/remaster/weapons/machinegun/body.tga": "882246a935658d8fc4694e56439e7baa09f06dbbeb56f8ae4ea1015d70c4020b",
+      "scripts/remaster_weapon_machinegun_v1.shader": "858df05fc0b9eecfa2484f5ea84ff208ad7ae6d3704d8aacec573cb2baffa370",
+      "models/remaster/weapons/machinegun/barrel.iqm": "03a0f5289de2782989769b0457e3f67947fd080f660d8f43d2a7ca0f1514e386"
+    },
+    "source_files": {
+      "split/weapon.blend": "cf29e38178ef4327e216920f1aa553a1a6fba0c9cdb0cf87f26e86dc81bd7b97",
+      "split/iqm-config.json": "83995c2275c07a9036804336549c3ef5ea47491828c360482190090698f74694",
+      "split/iqm/source.json": "4bad196395e892721f6553b61e7c7c04f77d26218d2d33e9dc403a99ab6f3ded",
+      "split/iqm/animation-contract.json": "be80ad4366aed9ed0d70e3f11f642420cf6fd4be9004bcc0e6f9b4b0a9188eb6",
+      "split/split-config.json": "1797512a85fda74810d74305f110ffe48775b030ba7306913c3cf19c88474747",
+      "split/barrel/weapon.blend": "a2995c1499f058650413ebbf7576693a5560f920b89ff3ca7b1417dba71b1ca1",
+      "split/barrel/iqm-config.json": "83995c2275c07a9036804336549c3ef5ea47491828c360482190090698f74694",
+      "split/barrel/iqm/source.json": "6d4aee8678741088f2e53419a147bdf3be12cfe1fed472aa8319513ba4861099",
+      "split/barrel/iqm/animation-contract.json": "36aca530879f7f548f76f693367a38e4743f5541327ab2883339b6cf9cab967a"
+    },
+    "export_scripts": {
+      "/home/user/workspace/repo/misc/remaster-assets/weapons/package_weapon.py": "4331c27cb0be623314792e90bc5776aec097e67c82d78cac985a5b5c4c00f0f5",
+      "/home/user/workspace/repo/misc/remaster-assets/weapons/rig_weapon.py": "5f348f0929b745fb1979c5bdea4eaa33545bd88c60f4f8d4422f576f10762b9c",
+      "/home/user/workspace/repo/misc/remaster-assets/blender_iqm.py": "4a9e62fc5e5286615e261cdecf838007251125ab27c0fc28ae2bbedc1775b963",
+      "/home/user/workspace/repo/misc/remaster-assets/iqm_export.py": "20b1ce54fff786182e23eb95318cc86d88d75b5c01accada4159c2f215a0efa8",
+      "/home/user/workspace/repo/misc/remaster-assets/weapons/rig_machinegun.py": "7b0d5b92a46c00b26ffc926fe8c8b8522c1a1c2ffa656342cb04b155c64ff2a7"
+    },
+    "package_sha256": "5133e62b002a99a763b70b6625c2b324d18be269e595d9fa476b98a4ead1e73f"
+  }
 }

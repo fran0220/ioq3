@@ -32,6 +32,8 @@ static const char *cg_remasterWeaponNames[] = {
 };
 static qboolean cg_remasterHands[WP_NUM_WEAPONS];
 static qhandle_t cg_referenceViewWeapon[WP_NUM_WEAPONS];
+static qhandle_t cg_referenceViewBarrel[WP_NUM_WEAPONS];
+static qhandle_t cg_referenceViewFlash[WP_NUM_WEAPONS];
 static qhandle_t cg_rocketMuzzleShader;
 
 static qhandle_t CG_RemasterWeaponModel( int weaponNum, const char *part ) {
@@ -716,12 +718,14 @@ void CG_RegisterWeapon( int weaponNum ) {
 	// Do not mount a new body on that incompatible first-person controller.
 	cg_referenceViewWeapon[weaponNum] = cg_remasterHands[weaponNum] ? 0 :
 		trap_R_RegisterModel( item->world_model[0] );
+	cg_referenceViewBarrel[weaponNum] = weaponInfo->barrelModel;
+	cg_referenceViewFlash[weaponNum] = weaponInfo->flashModel;
 	remaster = CG_RemasterWeaponModel( weaponNum, "flash" );
-	if ( remaster ) {
+	if ( remasterBody && remaster ) {
 		weaponInfo->flashModel = remaster;
 	}
 	remaster = CG_RemasterWeaponModel( weaponNum, "barrel" );
-	if ( remaster ) {
+	if ( remasterBody && remaster ) {
 		weaponInfo->barrelModel = remaster;
 	}
 
@@ -1335,13 +1339,15 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	CG_AddWeaponWithPowerups( &gun, cent->currentState.powerups );
 
 	// add the spinning barrel
-	if ( weapon->barrelModel ) {
+	if ( ps && cg_referenceViewWeapon[weaponNum] ?
+		cg_referenceViewBarrel[weaponNum] : weapon->barrelModel ) {
 		memset( &barrel, 0, sizeof( barrel ) );
 		VectorCopy( parent->lightingOrigin, barrel.lightingOrigin );
 		barrel.shadowPlane = parent->shadowPlane;
 		barrel.renderfx = parent->renderfx;
 
-		barrel.hModel = weapon->barrelModel;
+		barrel.hModel = ps && cg_referenceViewWeapon[weaponNum] ?
+			cg_referenceViewBarrel[weaponNum] : weapon->barrelModel;
 		angles[YAW] = 0;
 		angles[PITCH] = 0;
 		angles[ROLL] = CG_MachinegunSpinAngle( cent );
@@ -1379,7 +1385,8 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	flash.shadowPlane = parent->shadowPlane;
 	flash.renderfx = parent->renderfx;
 
-	flash.hModel = weapon->flashModel;
+	flash.hModel = ps && cg_referenceViewWeapon[weaponNum] ?
+		cg_referenceViewFlash[weaponNum] : weapon->flashModel;
 	if ( !flash.hModel && !( weaponNum == WP_ROCKET_LAUNCHER && cg_rocketMuzzleShader ) ) {
 		return;
 	}

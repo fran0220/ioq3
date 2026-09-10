@@ -137,9 +137,11 @@
   "package": null,
   "weapon_export": {
     "runtime_accepted": false,
+    "rotating_barrel": false,
+    "hand_slots": [],
     "material": "diffuse-only candidate; normal/specular/emission not yet baked",
     "files": {
-      "models/remaster/weapons/rocket/weapon.iqm": "185b1f64593e47c92cc3510d40949ab276e75c8238fb7a9068903759cc3acb49",
+      "models/remaster/weapons/rocket/weapon.iqm": "60bb67f1650e6cf4fbb544b71cf38872241c7a9cdf6369d5715cbbdfd5de5fe7",
       "models/remaster/weapons/rocket/body.tga": "b6b122267dbad6aac139fd09663bd14823d6f2e3ae5e6c6cec8035b26df7f06c",
       "scripts/remaster_weapon_rocket_v1.shader": "62182c743677c583f35945ff2f16eaa4d3a368ce33133d8cb96fd43345c010b5"
     },
@@ -147,14 +149,14 @@
       "rigged/weapon.blend": "a0926d952eb021c580f944448ba75320d8bf423eaec94805d25c1cecfc1d439e",
       "rigged/iqm-config.json": "80116e8dea575b648d63a4bea90af85a402238ee031c0c50c21867b3c16a8d15",
       "rigged/iqm/source.json": "7e035aaf0d88669e6383fcf69cd6d1b87124bbb21d86a7d44fb14840356c175a",
-      "rigged/iqm/animation-contract.json": "74c61dea5097f5799eecba9e029d8297e4e9c681134cf8fd677bd7f089e5115e"
+      "rigged/iqm/animation-contract.json": "f6e084523841ee901283262d46452b86a776746f9f192a0a5484da71957879ea"
     },
     "export_scripts": {
-      "/home/user/workspace/repo/misc/remaster-assets/weapons/package_weapon.py": "284bf7c597cd9b96b0cadb0a2a9bfca5965518387eaaec92825ef52633dcb70c",
+      "/home/user/workspace/repo/misc/remaster-assets/weapons/package_weapon.py": "4331c27cb0be623314792e90bc5776aec097e67c82d78cac985a5b5c4c00f0f5",
       "/home/user/workspace/repo/misc/remaster-assets/weapons/rig_weapon.py": "5f348f0929b745fb1979c5bdea4eaa33545bd88c60f4f8d4422f576f10762b9c",
       "/home/user/workspace/repo/misc/remaster-assets/blender_iqm.py": "4a9e62fc5e5286615e261cdecf838007251125ab27c0fc28ae2bbedc1775b963",
-      "/home/user/workspace/repo/misc/remaster-assets/iqm_export.py": "33c6d38fbaeab859ac2c8b3fc8fdea5ccd20465975ac17d0d8c46751cb65b931"
+      "/home/user/workspace/repo/misc/remaster-assets/iqm_export.py": "20b1ce54fff786182e23eb95318cc86d88d75b5c01accada4159c2f215a0efa8"
     },
-    "package_sha256": "fb7226690875fc152ce318fe8d3583a3dc4d9dfd7ba83a74a70f5816d9006b3d"
+    "package_sha256": "4a888cd1816a885b41a132b276db0073b65b10ff1ffd620851f373e019f07d4f"
   }
 }

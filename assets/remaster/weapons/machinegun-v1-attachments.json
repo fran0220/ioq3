@@ -1,0 +1,10 @@
+{
+  "shader": "models/remaster/weapons/machinegun/body",
+  "grip_meters": [-0.26, 0, 0.075],
+  "sockets_meters": {
+    "tag_flash": [0.325, 0, 0.19],
+    "tag_barrel": [0.025, 0, 0.19]
+  },
+  "barrel_cut_x_meters": 0.025,
+  "status": "candidate; full side/front inspected, runtime grip and spin acceptance pending"
+}

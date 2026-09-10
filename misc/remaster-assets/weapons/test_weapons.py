@@ -1,5 +1,6 @@
 """Offline tests of Painter recovery and the actual cgame hand frame mapper."""
 import json
+import re
 from pathlib import Path
 import subprocess
 import tempfile
@@ -11,6 +12,49 @@ from iqm_validate import read_iqm, matrices
 
 
 class WeaponTests(unittest.TestCase):
+    def test_partial_pack_keeps_reference_view_parts_together(self):
+        source = (Path(__file__).resolve().parents[3] / 'code/cgame/cg_weapons.c').read_text()
+        start = source.index('\tcg_remasterHands[weaponNum] = qfalse;')
+        end = source.index('\n\tswitch ( weaponNum )', start)
+        registration = source[start:end]
+        assignments = '\n'.join(re.search(r'\b' + part + r'\.hModel = [^;]+;', source).group()
+                                for part in ('gun', 'barrel', 'flash'))
+        program = '''
+#include <assert.h>
+#include <string.h>
+#define qfalse 0
+#define qtrue 1
+static int mask;
+int CG_RemasterWeaponModel(int n, const char *part) {
+    int bit=!strcmp(part,"hands")?2:!strcmp(part,"barrel")?4:8;
+    return mask&bit ? 100+bit : 0;
+}
+int trap_R_RegisterModel(const char *s) { return 11; }
+int main(void) {
+    int view;
+    for(mask=0;mask<16;mask++) for(view=0;view<2;view++) {
+        int cg_remasterHands[1]={0}, cg_referenceViewWeapon[1]={0};
+        int cg_referenceViewBarrel[1]={0}, cg_referenceViewFlash[1]={0};
+        int weaponNum=0, remaster, remasterBody=mask&1?100:0;
+        int *ps=view?&view:0;
+        struct { const char *world_model[1]; } itemData={{"reference"}}, *item=&itemData;
+        struct { int weaponModel, handsModel, barrelModel, flashModel; }
+            data={remasterBody?100:11,12,14,13}, *weaponInfo=&data, *weapon=&data;
+        struct { int hModel; } gun, barrel, flash;
+''' + registration + assignments + '''
+        int useNew=(mask&1) && (!view || (mask&2));
+        assert(gun.hModel == (useNew?100:11));
+        assert(barrel.hModel == (useNew && (mask&4)?104:14));
+        assert(flash.hModel == (useNew && (mask&8)?108:13));
+    }
+}
+'''
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            (path / 'parts.c').write_text(program)
+            subprocess.run(['cc', '-Wall', '-Werror', str(path / 'parts.c'), '-o', str(path / 'parts')], check=True)
+            subprocess.run([str(path / 'parts')], check=True)
+
     def test_generated_hand_clip_socket_and_boundaries(self):
         root = Path(__file__).resolve().parents[3]
         with zipfile.ZipFile(root / 'assets/remaster/runtime/weapon-hands-v1-candidate.pk3') as archive:

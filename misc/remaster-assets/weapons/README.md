@@ -55,3 +55,14 @@ Source GLBs, prototype images, rigged `.blend`, private task state and responses
 stay in ignored `assets/remaster/work/weapon-*`. Committed candidate PK3s do not
 include them, commercial Demo data, sounds, or original textures. Private source
 transfer/backup and final visual/runtime acceptance remain separate gates.
+
+For the generated machinegun, run `rig_machinegun.py` in Blender with the cleaned
+source, `assets/remaster/weapons/machinegun-v1-attachments.json`, and the work
+directory's `split` output. Package with `package_weapon.py MANIFEST
+--rotating-barrel`. Hand package `--hand-slots rocket machinegun` explicitly
+assigns the same generated grip controller to those two candidate slots. These
+are export choices recorded in receipts, not edits to an immutable paid manifest.
+`verify_machinegun.mjs CDP OUTPUT` validates the actual five loaded PK3 hashes,
+normal-time held fire/release/switch, then captures slow-time presentation poses.
+See `assets/remaster/weapons/machinegun-v1-review.md` for measured coverage and
+remaining art/gameplay gates. Never interpret a passed hash or build as approval.
