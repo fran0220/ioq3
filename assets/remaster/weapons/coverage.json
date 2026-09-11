@@ -8,7 +8,7 @@
     "shotgun": {"content": "weapon-shotgun-v1 IQM candidate HDR/LDR single/held/release/switch tested; final materials/grip/damage pending; original sound reviewed but uninstalled", "ammo": "ammo_shells", "effects": ["muzzle", "shell-ejection", "pellet-impact", "flesh-impact"]},
     "grenade": {"content": "weapon-grenade-v1 IQM candidate HDR/LDR single/held/release/switch tested; final materials/grip/damage pending", "ammo": "ammo_grenades", "effects": ["muzzle", "grenade-projectile", "smoke-trail", "bounce", "explosion", "scorch"]},
     "rocket": {"content": "weapon-rocket-v1 candidate; not runtime accepted", "ammo": "ammo_rockets", "effects": ["muzzle", "rocket-projectile", "smoke-trail", "explosion", "scorch"]},
-    "lightning": {"content": "not-produced", "ammo": "ammo_lightning", "effects": ["continuous-muzzle", "lightning-beam", "lightning-impact", "flesh-impact"]},
+    "lightning": {"content": "weapon-lightning-v1 Painter/Hunyuan/Blender complete; attachments/runtime/effects pending", "ammo": "ammo_lightning", "effects": ["continuous-muzzle", "lightning-beam", "lightning-impact", "flesh-impact"]},
     "rail": {"content": "not-produced", "ammo": "ammo_slugs", "effects": ["muzzle", "rail-core", "rail-rings", "rail-impact", "flesh-impact"]},
     "plasma": {"content": "not-produced", "ammo": "ammo_cells", "effects": ["muzzle", "plasma-projectile", "plasma-trail", "plasma-impact", "scorch"]},
     "bfg": {"content": "not-produced", "ammo": "ammo_bfg", "effects": ["muzzle", "bfg-projectile", "bfg-explosion", "scorch"]}

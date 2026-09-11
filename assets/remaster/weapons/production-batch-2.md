@@ -61,3 +61,18 @@ exact cadence, damage, knockback or final segmented-character fit acceptance.
 New source archives before fitting were copied/hash-verified by the integration
 orb; later rigged derivatives still need recovery transfer. Sound remains
 reviewed but uninstalled and no new firearm FX is claimed complete.
+
+Lightning `task_d9K2uCcnMZosQFgIdarBRLf78yFWDNmP` is downloaded and processed
+in Blender, charged once at matched $0.50; no runtime integration yet. Its
+Painter prototype has two forward conductors, not a beam baked into geometry.
+Sarge's existing generated source archive was copied into the weapon-private
+directory and matched SHA256 d38908d61475806cb720a45a8a6f20c56ac2842ec98307a6c870f1e5b10b62ed.
+It may supply consistent forearm geometry without another generation fee;
+24 source bones have no separate finger rig, and topology still needs inspection.
+
+Nine weapon-tool tests now pass. `fire_rules.c` includes actual `bg_pmove.c`
+and links production shared event/item functions, not a reimplemented weapon
+simulation. Independent normal/haste interval tables test each base weapon at
+one millisecond before/at refire, release, missing ammo, infinite-ammo melee
+contact, and 200ms drop/250ms raise boundaries. This is native shared-rule
+verification, not browser cadence/damage/knockback/rocketjump acceptance.

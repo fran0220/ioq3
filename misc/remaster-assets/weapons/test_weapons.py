@@ -12,6 +12,16 @@ from iqm_validate import read_iqm, matrices
 
 
 class WeaponTests(unittest.TestCase):
+    def test_actual_shared_weapon_rules(self):
+        root = Path(__file__).resolve().parents[3]
+        with tempfile.TemporaryDirectory() as directory:
+            executable = Path(directory) / 'fire-rules'
+            subprocess.run(['cc', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
+                            str(root / 'misc/remaster-assets/weapons/fire_rules.c'),
+                            str(root / 'code/game/bg_misc.c'), str(root / 'code/qcommon/q_shared.c'),
+                            str(root / 'code/qcommon/q_math.c'), '-lm', '-o', str(executable)], check=True)
+            subprocess.run([str(executable)], check=True)
+
     def test_shotgun_fit_scales_socket_with_mesh_and_keeps_unit_axes(self):
         root = Path(__file__).resolve().parents[3]
         with zipfile.ZipFile(root / 'assets/remaster/runtime/weapon-shotgun-v1-candidate.pk3') as archive:

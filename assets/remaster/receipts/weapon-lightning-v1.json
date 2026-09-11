@@ -1,0 +1,138 @@
+{
+  "asset_id": "weapon-lightning-v1",
+  "classification": "remaster-weapon-production-candidate",
+  "manifest_sha256": "5c9b68f04c9ef18ff7cf1605c7de26d215cc7ca08ab2647365adcdee6b2ff472",
+  "prototype_review": {
+    "at": 1789092992,
+    "note": "Inspected full two conductor prongs and fixed grips, no beam baked into shape, strong distinct energy silhouette; approved for image-to-3D not final runtime",
+    "reviewer": "Amp weapon production visual review",
+    "sha256": "47cfa4179132f62087c014405b0cda1b3adfaea147475e7fadfd035195f37988"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": null,
+      "task_id": null,
+      "request_id": null,
+      "request_sha256": null,
+      "response_sha256": null,
+      "generator_identity": null,
+      "model": "amp-painter",
+      "status": "downloaded",
+      "submissions": null,
+      "artifact": {
+        "bytes": 1570075,
+        "path": "prototype.png",
+        "sha256": "47cfa4179132f62087c014405b0cda1b3adfaea147475e7fadfd035195f37988"
+      },
+      "image": {
+        "height": 1024,
+        "mime": "image/png",
+        "width": 1536
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "not-exposed-by-amp-painter"
+      }
+    },
+    "shape": {
+      "operation_id": "81c6666d-c240-4a67-8458-4ff15b66980d",
+      "task_id": "task_d9K2uCcnMZosQFgIdarBRLf78yFWDNmP",
+      "request_id": "202609110216334846955968268d9d6SFxK2ruN",
+      "request_sha256": "b23785217caebe56f497ad2289a8a223cf5e643482fb9a418367bc03e0ee4d6b",
+      "response_sha256": "8e01a785648c63ffd6d3634cb35a418a52237444a6dc19b6b31ce5528e00e190",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 3584208,
+        "path": "generated.glb",
+        "sha256": "ccae0667022237dc6740854898d4d8ca9717a5ed5913b2a3edafeb1863b179a5"
+      },
+      "image": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 48.058672795999996,
+          "paint_load_and_generate_seconds": 71.78043627100001,
+          "shape_load_and_generate_seconds": 37.164485469999995,
+          "texture_bake_seconds": 0.4329926119999925,
+          "texture_delight_seconds": 1.7851201969999977,
+          "texture_export_verify_seconds": 0.8062220109999885,
+          "texture_inpaint_seconds": 40.167226685,
+          "texture_load_seconds": 12.816889865000007,
+          "texture_mesh_preparation_seconds": 1.86882108799999,
+          "texture_multiview_seconds": 6.144983724999989,
+          "texture_normal_render_seconds": 0.16350188299999502,
+          "texture_position_render_seconds": 0.11377837400000601,
+          "texture_uv_seconds": 9.833862128000007
+        }
+      },
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1789092994,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609110216334846955968268d9d6SFxK2ruN",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    }
+  },
+  "processing": {
+    "files": [
+      {
+        "bytes": 5827484,
+        "path": "processed/cleaned.blend",
+        "sha256": "775253168ee08a789c630f3412b7ca341b42bd0726e08bf8068dac9681170ca6"
+      },
+      {
+        "bytes": 1660561,
+        "path": "processed/diffuse.tga",
+        "sha256": "c307410e3f1b6915709de3c098db3053fc96609cbc51da6f69866f79d06b74b7"
+      },
+      {
+        "bytes": 1944,
+        "path": "processed/geometry-report.json",
+        "sha256": "8a0b5fce0800992b52b7cb28cb48d5a68668feedf6b26267308c405a8144c5fa"
+      },
+      {
+        "bytes": 284644,
+        "path": "processed/model.md3",
+        "sha256": "35a4a9dde999d5b01e0cbbdbe723fe01d03b167891796630f6f6efba8151eaaf"
+      },
+      {
+        "bytes": 141,
+        "path": "processed/remaster.shader",
+        "sha256": "b18a8c10767511a6d5503d57e8bf2511375a6c9421e25b889d4554aec121ac78"
+      },
+      {
+        "bytes": 555343,
+        "path": "processed/review-back.png",
+        "sha256": "ad6d8b39cde467bb52af05fd95e7d3f23977845340f6d82b358a3c0bbb7b0d47"
+      },
+      {
+        "bytes": 550349,
+        "path": "processed/review-front.png",
+        "sha256": "e9ab5c24473ca60bd94ebf84bb87692c31c348a5c0897bd4131106d39558aade"
+      }
+    ],
+    "scripts": {
+      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
+      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
+    },
+    "source_sha256": "ccae0667022237dc6740854898d4d8ca9717a5ed5913b2a3edafeb1863b179a5"
+  },
+  "package": null
+}
