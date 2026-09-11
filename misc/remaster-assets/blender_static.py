@@ -11,7 +11,7 @@ import bmesh
 from mathutils import Vector
 
 sys.path.insert(0, str(Path(__file__).parent))
-from md3_static import RUNTIME_MAX_INDEXES, RUNTIME_MAX_VERTS, read_md3, write_md3
+from md3_static import RUNTIME_MAX_INDEXES, RUNTIME_MAX_VERTS, clean_quantized_triangles, read_md3, write_md3
 
 
 def selected(obj):
@@ -179,6 +179,9 @@ def main(source, output, config):
     for polygon in obj.data.polygons:
         triangles.append([(tuple(c*units for c in obj.data.vertices[obj.data.loops[i].vertex_index].co),
                            (uv[i].uv.x, 1-uv[i].uv.y), tuple(obj.data.loops[i].normal)) for i in polygon.loop_indices])
+    cleaning = None
+    if config.get("drop_quantized_degenerates") is True:
+        triangles, cleaning = clean_quantized_triangles(triangles)
     md3 = write_md3(triangles, shader)
     (output / "model.md3").write_bytes(md3)
     parsed = read_md3(md3)
@@ -214,6 +217,9 @@ def main(source, output, config):
               "md3_sha256": hashlib.sha256(md3).hexdigest(), "frames": 1,
               "render_source": "decoded exported MD3 + baked runtime TGA", "runtime_accepted": False,
               "material_limitations": "Diffuse only; no PBR/emission preservation claim", "units_per_meter": units}
+    if cleaning is not None:
+        report["quantized_cleaning"] = cleaning
+        report["quantized_cleaning"]["source"] = "Pre-export triangulated cleaned.blend; indices are polygon indices"
     (output / "geometry-report.json").write_text(json.dumps(report, indent=2)+"\n")
     render(obj, output, height)
 

@@ -44,6 +44,36 @@ def encode_vertex(vertex):
     return tuple(round(v*64) for v in position), tuple(uv), normal_word(normal)
 
 
+def encode_triangle(triangle):
+    if len(triangle) != 3:
+        raise ValueError("Only triangles are supported")
+    encoded = [encode_vertex(v) for v in triangle]
+    xyz = [v[0] for v in encoded]
+    a = [xyz[1][i]-xyz[0][i] for i in range(3)]
+    b = [xyz[2][i]-xyz[0][i] for i in range(3)]
+    cross = (a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0])
+    return encoded if any(cross) else None
+
+
+def clean_quantized_triangles(triangles):
+    """Explicit offline hook: drop only zero-area faces on MD3's 1/64 lattice.
+
+    Retained corners/UV seams/normals/winding are untouched. Invalid input still
+    raises; this does not repair arbitrary meshes or change strict writer policy.
+    """
+    kept, removed = [], []
+    for index, triangle in enumerate(triangles):
+        if encode_triangle(triangle) is None:
+            removed.append(index)
+        else:
+            kept.append(triangle)
+    if not kept:
+        raise ValueError("Quantized cleaning would remove every triangle")
+    return kept, {"input_triangles": len(kept) + len(removed),
+                  "output_triangles": len(kept), "removed_triangle_indices": removed,
+                  "coordinate_step_q3": 1/64}
+
+
 def write_md3(triangles, shader, model_name="static-prop"):
     shader_bytes = name_bytes(shader)
     model_bytes = name_bytes(model_name)
@@ -57,14 +87,8 @@ def write_md3(triangles, shader, model_name="static-prop"):
             lookup.clear()
 
     for triangle in triangles:
-        if len(triangle) != 3:
-            raise ValueError("Only triangles are supported")
-        encoded = [encode_vertex(v) for v in triangle]
-        xyz = [v[0] for v in encoded]
-        a = [xyz[1][i]-xyz[0][i] for i in range(3)]
-        b = [xyz[2][i]-xyz[0][i] for i in range(3)]
-        cross = (a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0])
-        if not any(cross):
+        encoded = encode_triangle(triangle)
+        if encoded is None:
             raise ValueError("Triangle collapses after MD3 quantization")
         missing = set(encoded) - lookup.keys()
         if len(vertices) + len(missing) > RUNTIME_MAX_VERTS or (len(indices) + 1) * 3 > RUNTIME_MAX_INDEXES:

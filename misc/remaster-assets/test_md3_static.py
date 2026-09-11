@@ -2,7 +2,7 @@ import math
 import struct
 import unittest
 
-from md3_static import normal_word, read_md3, write_md3
+from md3_static import clean_quantized_triangles, normal_word, read_md3, write_md3
 
 
 def vertex(position, uv=(0.25, 0.75), normal=(0, 0, 1)):
@@ -55,6 +55,30 @@ class StaticMD3Tests(unittest.TestCase):
         surface = read_md3(write_md3([self.triangle, other], "a"))["surfaces"][0]
         self.assertEqual(len(surface["positions"]), 4)
         self.assertEqual(surface["triangles"], [(0, 1, 2), (3, 1, 2)])
+
+    def test_explicit_cleaning_uses_lattice_not_float_area_or_distance(self):
+        # Distinct, non-collinear float corners become collinear integer points.
+        collapsed = [vertex((0, 0, 0)), vertex((1, 0.007, 0)), vertex((2, 0, 0))]
+        # One 1/64 step gives nonzero area: do not delete it as "too small".
+        retained = [vertex((0, 0, 0)), vertex((1, 0.008, 0)), vertex((2, 0, 0))]
+        seam = [vertex(self.triangle[0][0], (0.9, 0.1)), *self.triangle[1:]]
+        original = [self.triangle, collapsed, retained, seam]
+        with self.assertRaisesRegex(ValueError, "collapses"):
+            write_md3(original, "a")
+        cleaned, report = clean_quantized_triangles(original)
+        self.assertEqual(report, {"input_triangles": 4, "output_triangles": 3,
+                                 "removed_triangle_indices": [1], "coordinate_step_q3": 0.015625})
+        self.assertEqual(cleaned, [self.triangle, retained, seam])
+        self.assertEqual(len(original), 4)
+        self.assertEqual(write_md3(cleaned, "a"), write_md3([self.triangle, retained, seam], "a"))
+
+    def test_cleaning_does_not_swallow_invalid_input_or_empty_mesh(self):
+        with self.assertRaisesRegex(ValueError, "every triangle"):
+            clean_quantized_triangles([[vertex((0, 0, 0))] * 3])
+        for invalid in [vertex((math.nan, 0, 0)), vertex((512, 0, 0)),
+                        vertex((0, 0, 0), normal=(0, 0, 0))]:
+            with self.assertRaises(ValueError):
+                clean_quantized_triangles([self.triangle, [invalid, *self.triangle[1:]]])
 
     def test_surface_split_preserves_all_triangles(self):
         # Each triangle has distinct UVs, forcing splits even with shared XYZ.
