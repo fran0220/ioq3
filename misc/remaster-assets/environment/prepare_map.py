@@ -24,8 +24,6 @@ def measure(data):
     result = []
     for index, start in enumerate(range(offset, offset + length, 104)):
         slot, _, kind, first, count = struct.unpack_from('<5i', data, start)
-        if not names[slot].startswith(('models/mapobjects/', 'textures/gothic_door/')):
-            continue
         points = vertices[first:first + count]
         if not points:
             continue

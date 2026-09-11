@@ -5,17 +5,34 @@
     {
       "asset_id": "environment-floor-lantern-v1",
       "model": "models/remaster/environment_floor_lantern.md3",
-      "groups": [[2063], [2065], [2067], [2069]],
-      "yaw": 0,
+      "instances": [
+        {"surfaces":[2063,2064],"fit_surfaces":[2063],"yaw":0},
+        {"surfaces":[2065,2066],"fit_surfaces":[2065],"yaw":0},
+        {"surfaces":[2067,2068],"fit_surfaces":[2067],"yaw":0},
+        {"surfaces":[2069,2070],"fit_surfaces":[2069],"yaw":0}
+      ],
+      "fit_margin": 0.98,
+      "runtime_accepted": false
+    },
+    {
+      "asset_id": "environment-wall-lantern-v1",
+      "model": "models/remaster/environment_wall_lantern.md3",
+      "instances": [
+        {"surfaces":[2044,2045,2046],"fit_surfaces":[2045,2046],"yaw":-90},
+        {"surfaces":[2047,2048,2049],"fit_surfaces":[2048,2049],"yaw":90},
+        {"surfaces":[2051,2052,2053],"fit_surfaces":[2052,2053],"yaw":90},
+        {"surfaces":[2054,2055,2056],"fit_surfaces":[2055,2056],"yaw":-90},
+        {"surfaces":[2057,2058,2059],"fit_surfaces":[2058,2059],"yaw":135},
+        {"surfaces":[2060,2061,2062],"fit_surfaces":[2061,2062],"yaw":-135}
+      ],
       "fit_margin": 0.98,
       "runtime_accepted": false
     }
   ],
   "existing_crest_placement": "assets/remaster/environment/environment-wall-crest-placement.json",
   "pending_groups": {
-    "environment-wall-lantern-v1": [[2045,2046],[2048,2049],[2052,2053],[2055,2056],[2058,2059],[2061,2062]],
     "paired-wall-reliefs": [[2071,2072],[2073,2074]],
     "statues": [[2033,2034,2035],[2036,2037,2038,2039,2040,2041,2042,2043]]
   },
-  "note": "Groups are measured source surfaces, not final visibility acceptance. Original fire effects pending effects-owner integration; do not credit retained originals as remade."
+  "note": "Groups include original flames, suppressed atomically only with successful opaque model load. Fit uses solid members only. Wall yaw inferred from bracket-to-cage direction, pending runtime front-side inspection; glow companion not yet included."
 }

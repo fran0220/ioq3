@@ -1,7 +1,9 @@
 """Package measured environmental instances; no source BSP/AAS or extracted images."""
 import argparse
 import hashlib
+import itertools
 import json
+import math
 from pathlib import Path
 import sys
 import zipfile
@@ -9,6 +11,13 @@ import zipfile
 from package import material
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from md3_static import read_md3
+
+
+def rotated_bounds(bounds, yaw):
+    c, s = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
+    points = [(c*x-s*y, s*x+c*y, z) for x, y, z in
+              itertools.product(*[(bounds[a], bounds[a+3]) for a in range(3)])]
+    return [min(p[a] for p in points) for a in range(3)] + [max(p[a] for p in points) for a in range(3)]
 
 
 def fit(bounds, target, margin):
@@ -35,8 +44,6 @@ def build(root, spec_path, measurements_path, output):
         files = {name: archive.read(name) for name in archive.namelist() if name != 'maps/q3dm1.remaster.json'}
     reports = []
     for asset in spec['assets']:
-        if asset['yaw'] != 0:
-            raise ValueError('Only measured unrotated instances are supported in this batch')
         receipt = json.loads((root / f"assets/remaster/receipts/{asset['asset_id']}.json").read_text())
         source = root / 'assets/remaster/work' / asset['asset_id'] / receipt['package']['path']
         if hashlib.sha256(source.read_bytes()).hexdigest() != receipt['package']['sha256']:
@@ -49,16 +56,23 @@ def build(root, spec_path, measurements_path, output):
             raise ValueError('Asset path collision')
         files.update(additions)
         model = read_md3(files[asset['model']])
-        for group in asset['groups']:
+        for instance in asset['instances']:
+            group = instance['surfaces']
+            fit_surfaces = instance['fit_surfaces']
+            if not fit_surfaces or not set(fit_surfaces) <= set(group):
+                raise ValueError('Fit surfaces must be nonempty group subset')
             if len(set(group)) != len(group) or used.intersection(group):
                 raise ValueError('Overlapping replacement group')
             used.update(group)
-            members = [{'surface': index, 'shader': 'textures/remaster_environment/' + material(measurements[index]['shader']),
+            members = [{'surface': index, 'shader': ('textures/remaster_environment/' + material(measurements[index]['shader']))
+                        if material(measurements[index]['shader']) else measurements[index]['shader'],
                         'bounds': [measurements[index]['minimum'], measurements[index]['maximum']]} for index in group]
-            target = [[min(m['bounds'][0][a] for m in members) for a in range(3)],
-                      [max(m['bounds'][1][a] for m in members) for a in range(3)]]
-            origin, scale, actual = fit(model['bounds'], target, asset['fit_margin'])
-            entry = {'model': asset['model'], 'origin': origin, 'angles': [0, 0, 0], 'scale': scale}
+            fitted = [m for m in members if m['surface'] in fit_surfaces]
+            target = [[min(m['bounds'][0][a] for m in fitted) for a in range(3)],
+                      [max(m['bounds'][1][a] for m in fitted) for a in range(3)]]
+            yaw = instance['yaw']
+            origin, scale, actual = fit(rotated_bounds(model['bounds'], yaw), target, asset['fit_margin'])
+            entry = {'model': asset['model'], 'origin': origin, 'angles': [0, yaw, 0], 'scale': scale}
             entry.update(members[0] if len(members) == 1 else {'surfaces': members})
             placement['replacements'].append(entry)
             reports.append({'asset_id': asset['asset_id'], 'surfaces': group, 'world_bounds': actual,
