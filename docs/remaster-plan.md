@@ -15,6 +15,14 @@
 
 平台只读复核：Meshy 仅现有 channel10，余额4，无第二可用通道；新增该上游付费提交仍暂停，可继续手工 rig/动作。退款去重修复已随 Gateway 版本上线，但未声称生产并发故障注入通过。完整授权原档入口仍未找到，源文件外部持久备份仍待落实；已核哈希的跨 orb 私有归档不是外部持久备份。
 
+#### 组合审查后的修复与下一轮门禁
+
+- **构建一致性已修，旧错误证据按原因撤回。** `b085af1c` 为 q3lcc 补齐头文件依赖，独立增量正/负控证明布局变更不再遗留旧 ASM；完整重建后原生 HUD 数字/图标恢复。renderer 的旧 rocket 不开火另由 PM_NOCLIP 在 PM_Weapon 前返回导致，不能归因混编或缺粒子。各 owner 已用当前 QVM/inv.h 和实际 WASM FS hash 重验；SG/GL/MG/RL 消耗/松键/切换与角色 baseline 通过仍不等于最终材质和全武器规则通过。
+- **显示事务已实现。** [271dca4f](https://github.com/fran0220/ioq3/commit/271dca4fbed65357d7b6c810d40680b4df13f0fe) 在 root 提供固定显示预设、新引擎预览、15 秒确认/回滚；读取真实 width/height/picmip，未确认期间所有 IDBFS 保存路径均冻结。主 orb 实际 WASM 验证 720p 确认后刷新保留、1080p 超时回原设置、context loss 回滚、1024×600 确认条不遮工具栏及生命周期测试。child `openDisplay` 只打开并聚焦 root 段，UI owner 继续跨宽高和键盘联合验收。合并后 Node 29 项通过。
+- **静态环境正面结论撤回，先修导出再重导。** 环境仅翻转 opaque triangle index 的实际对照显示旧 CCW 包呈现壳内远侧面；不能通过降低反射率或增加 glow 掩盖。共享 [be6a2aa8](https://github.com/fran0220/ioq3/commit/be6a2aa8b975da15677b59e136efe84a03242ee8) 在 Blender 边界转 MD3 CW，预览反回 CCW 并使用 decoded smooth normals，保持源/UV/法线。真实 Blender 新测试先红后绿、前后预览已检查。环境 owner 必须重导 crest/standing/wall/lion 并重新测朝向、组包 bounds、glow、HDR/LDR/PVS；旧 package 的绑定/回退记录仅保留为技术证据。
+- **角色拓扑与材质不能靠预览平滑结案。** 角色/环境审查报告旧 decimate-before-weld master 有开口，原 paid rig 焊接后闭合；角色 owner 正在从已有源执行 weld-before-decimate 对照。雕像等待新闭合 master；Sarge 手指/护臂/全速与后续 Grunt/Major/Visor 继续按角色 C1–C7 执行。此前死亡姿态/数值缝检查不覆盖该拓扑门禁。
+- **下一轮组合顺序固定。** 先取得新 CW scene 与闭合角色，合并逐枪正式握持/normal/F0，再跑正常移动状态下九枪/伤害/击退/rocketjump/拾取和全局 FX/audio。renderer 点光阴影 HDR 格式修复已有生产射击 GL0 报告，仍需受控实景遮挡与硬件/内存测试；32 个六面 512² RGBA8 cube 色缓冲理论约 192 MiB，不能因 SwiftShader 单次成功就选为上线默认。随后才冻结 release manifest、许可源码恢复包及正式 platform 双端整局。当前 portal 为私有 Demo 组合调试入口，不是正式候选或公开发布。
+
 ### 2026-09-10 剩余阻塞与继续执行
 
 最新用户指令优先完整游戏画面；平台已启动以下五个 high 线程，不再重复 RTC/admission 工程，也不再新建线程。先交付 q3dm1 完整环境、正式动画角色、全武器/拾取物/FX、HUD/menu 的可玩比赛纵向切片，再按 base Q3 清单扩展。以下所有权替代本文后面的历史启动分工：
