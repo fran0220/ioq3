@@ -16,6 +16,10 @@
     <p id="engine-status" role="status" aria-live="polite">Loading engine…</p>
     <p class="note">Local matches run on this PC. Online rooms require capacity provisioned for this release. Reopening an engine starts a fresh connection; a brief network interruption reconnects automatically.</p>
     <div class="launcher-actions"><button id="local-engine">New local engine</button><button id="retry-engine">Retry current engine</button><button id="stop-engine">Stop engine</button></div>
+    <h2 id="display-title" tabindex="-1">Display quality</h2>
+    <p id="display-current">Waiting for actual renderer settings…</p>
+    <p class="note">Preview restarts the engine and ends the current local match or reconnects the room. Keep the new settings within 15 seconds, or the previous saved settings return. Other settings changed during an unconfirmed preview are also discarded.</p>
+    <div class="launcher-actions"><label>Quality preset <select id="display-preset"></select></label><button id="display-start">Preview display</button></div>
     <h2>Native rooms</h2>
     <p id="lobby-status" role="status" aria-live="polite">Native rooms unavailable in this standalone build. Local play is available.</p>
     <div id="lobby-controls" hidden>
@@ -25,6 +29,11 @@
       <div class="launcher-actions"><button id="lobby-enter" disabled>Enter reserved room</button><button id="lobby-leave">Leave reservation</button><button id="lobby-close">Close owned room</button></div>
     </div>
   </dialog>
+  <section id="display-preview" aria-label="Display preview confirmation" hidden>
+    <p id="display-status" role="status" aria-live="polite"></p>
+    <button id="display-keep" disabled>Keep display settings</button>
+    <button id="display-revert">Revert</button>
+  </section>
   <script type="module" src="./launcher.mjs"></script>
 </body>
 </html>

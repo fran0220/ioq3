@@ -40,6 +40,8 @@ int OG_WebSelectModel(int generation, double id);
  * Numeric settings: volume, music, sensitivity, pitch, FOV. NaN = unavailable.
  * Set/Menu return 0 on rejection. Never invoke from an uninitialized runtime. */
 int OG_WebUIState(void);
+/* Read-only actual display: 0 width, 1 height, 2 picmip. NaN before renderer. */
+double OG_WebDisplay(int field);
 double OG_WebSetting(int id);
 int OG_WebSetSetting(int id, double value);
 /* Filter: -1 reads, 0..2 writes; -2 unavailable/custom. New setting IDs 5..10:

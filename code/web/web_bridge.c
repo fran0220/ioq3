@@ -258,6 +258,18 @@ EMSCRIPTEN_KEEPALIVE int OG_WebUIState(void)
     return 3;
 }
 
+/* Read-only renderer state for launch-time display preview verification. */
+EMSCRIPTEN_KEEPALIVE double OG_WebDisplay(int field)
+{
+    if (!cls.rendererStarted) return NAN;
+    switch (field) {
+    case 0: return cls.glconfig.vidWidth;
+    case 1: return cls.glconfig.vidHeight;
+    case 2: return Cvar_VariableValue("r_picmip");
+    default: return NAN;
+    }
+}
+
 EMSCRIPTEN_KEEPALIVE double OG_WebSetting(int id)
 {
     char value[64];

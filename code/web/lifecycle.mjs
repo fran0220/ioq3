@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // A room reservation outlives an engine document. Capabilities never do.
+import { displayArguments, displayPresets } from './display.mjs';
 export function createLifecycle({ native, mount, report = () => {}, sleep = ms => new Promise(r => setTimeout(r, ms)) }) {
     let current = null, generation = 0, transition = Promise.resolve(), acquisition = Promise.resolve();
     let busy = false;
@@ -13,7 +14,8 @@ export function createLifecycle({ native, mount, report = () => {}, sleep = ms =
         // remove() must destroy the document even if its graceful cleanup fails.
         await old.frame.remove();
     }
-    function replace(roomId = null) {
+    function replace(roomId = null, displayPreview = null) {
+        displayArguments(displayPreview);
         if (busy) return Promise.reject(new Error('An engine transition is already running.'));
         busy = true;
         const work = transition.then(async () => {
@@ -21,6 +23,7 @@ export function createLifecycle({ native, mount, report = () => {}, sleep = ms =
             const entry = { generation: ++generation, roomId, dead: false, requested: false, frame: null };
             current = entry;
             const boot = Object.freeze({
+                displayPreview,
                 report(update) {
                     // Only finite, public lifecycle states cross this boundary.
                     if (['loading', 'starting', 'ready', 'failed'].includes(update?.state)) {
@@ -28,6 +31,12 @@ export function createLifecycle({ native, mount, report = () => {}, sleep = ms =
                     }
                     if (['connecting', 'reconnecting', 'ready', 'failed'].includes(update?.network)) {
                         emit(entry, { network: update.network === 'ready' ? 'connected' : update.network });
+                    }
+                    const d = update?.display;
+                    if (d && (d.preset === null || Object.hasOwn(displayPresets, d.preset))) {
+                        const display = { preset: d.preset, preview: !!d.preview };
+                        for (const key of ['width', 'height', 'picmip']) if (Number.isFinite(d[key])) display[key] = d[key];
+                        emit(entry, { display });
                     }
                 },
                 async getSession() {

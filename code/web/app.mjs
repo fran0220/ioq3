@@ -61,6 +61,10 @@ const loseFocus = () => {
 };
 Object.defineProperty(window, 'IOQ3_ENGINE', { value: Object.freeze({
     pauseInput: loseFocus,
+    confirmDisplay: () => {
+        if (disposed || !host) return Promise.reject(new Error('Engine unavailable.'));
+        return host.confirmDisplay();
+    },
     async dispose() {
         if (disposed) return;
         loseFocus();
@@ -100,6 +104,7 @@ try {
         host = await startHost({ factory, canvas, og, report,
             onModule: value => { module = value; menu.attach(value); },
             isCurrent: () => !disposed,
+            displayPreview: boot?.displayPreview ?? null,
             manifestURL: new URL('./game-manifest.json', location.href),
             // Trusted integration may acquire a fresh session; never read credentials
             // from location, archived cvars, localStorage or the asset manifest.

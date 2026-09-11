@@ -83,24 +83,64 @@ test('IDBFS serializes dirty writes arriving during save; failed writes retry', 
     await store.flush();
 });
 
-async function fixture({ files = [file], restoreError = false, getSession, abort = false, isCurrent } = {}) {
+test('failed preview confirmation cannot be retried by automatic or disposal flush', async () => {
+    let calls = 0;
+    const store = persistence({ syncfs: (_populate, cb) => { calls++; cb(Error('quota')); } }, () => {}, false);
+    store.changed();
+    await assert.rejects(store.enable(), /quota/);
+    store.changed(); await store.flush();
+    await new Promise(r => setTimeout(r, 550));
+    assert.equal(calls, 1);
+});
+
+async function fixture({ files = [file], restoreError = false, getSession, abort = false, isCurrent,
+    displayPreview = null, savedPreset = null, renderer = [1280, 720, 1] } = {}) {
     const events = [], reports = [], writes = [], calls = [];
     let options;
     const module = {
         FS: { mkdirTree() {}, mount() {}, writeFile: (...a) => writes.push(a),
-            syncfs: (populate, cb) => cb(restoreError && populate ? new Error('restore denied') : null) },
+            readFile: () => JSON.stringify(savedPreset),
+            syncfs: (populate, cb) => { events.push(populate ? 'restore' : 'sync'); cb(restoreError && populate ? new Error('restore denied') : null); } },
         IDBFS: {}, callMain: args => { calls.push(args); if (abort) options.onExit(3); },
         _OG_WebLoseFocus: () => events.push('blur'), _OG_WebResumeAudio: () => events.push('audio'),
+        _OG_WebDisplay: field => renderer[field],
     };
     const host = await startHost({
         factory: async o => { options = o; return module; }, manifestURL: new URL('https://test/game-manifest.json'),
         og: { loading: { begin: () => events.push('begin'), progress() {}, fail: e => events.push(e) },
             ready: () => events.push('ready') },
-        getSession, isCurrent, report: r => reports.push(r),
+        getSession, isCurrent, displayPreview, report: r => reports.push(r),
         fetcher: async url => String(url).endsWith('.json') ? Response.json({ ...manifest, files }) : new Response('abc'),
     });
     return { host, module, options, events, reports, calls, writes };
 }
+
+test('unconfirmed display blocks automatic, focus and explicit saves; confirmation enables persistence', async () => {
+    const f = await fixture({ displayPreview: 'balanced', savedPreset: 'high' });
+    await assert.rejects(f.host.confirmDisplay(), /not ready/);
+    f.options.onEngineFrame({ playable: true, configChanged: true });
+    f.host.loseFocus(); await f.host.flush();
+    await new Promise(r => setTimeout(r, 550));
+    assert(!f.events.includes('sync'));
+    assert(!f.writes.some(([path]) => path.endsWith('display-preset.json')));
+    await f.host.confirmDisplay();
+    assert(f.events.includes('sync'));
+    assert(f.writes.some(([path, data]) => path.endsWith('display-preset.json') && data === '"balanced"'));
+    await assert.rejects(f.host.confirmDisplay(), /not ready/);
+    assert.deepEqual(f.reports.at(-1).display, { preset: 'balanced', preview: false, width: 1280, height: 720, picmip: 1 });
+});
+
+test('renderer fallback cannot confirm; no-preview restart uses only an allowlisted saved preset', async () => {
+    const f = await fixture({ displayPreview: 'high', renderer: [640, 480, 0] });
+    f.options.onEngineFrame({ playable: true, configChanged: true });
+    assert.equal(f.reports.at(-1).state, 'failed');
+    await assert.rejects(f.host.confirmDisplay(), /not ready/);
+    await f.host.flush(); assert(!f.events.includes('sync'));
+    const restored = await fixture({ savedPreset: 'high' });
+    assert.deepEqual(restored.calls[0], engineArguments('baseq3', null, 'high'));
+    const malicious = await fixture({ savedPreset: 'high;+quit' });
+    assert.deepEqual(malicious.calls[0], engineArguments('baseq3', null));
+});
 
 test('runtime and assets do not ready; only functional engine frame does, once', async () => {
     const f = await fixture({ getSession: async () => session });

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // No game assets, credentials or URL-provided console commands live in this host.
+import { displayArguments, displayPresets } from './display.mjs';
 export const HOME = '/home/players';
+const DISPLAY_FILE = `${HOME}/display-preset.json`;
 
 export function validateManifest(manifest) {
     if (manifest?.schemaVersion !== 1 || typeof manifest.basegame !== 'string' || !/^[a-z0-9_-]+$/i.test(manifest.basegame)
@@ -41,11 +43,12 @@ export function validateSession(session) {
         expiresAt: session.expiresAt, maxDatagramBytes: 16384, reconnectGraceMs: 15000 });
 }
 
-export function engineArguments(basegame, session) {
+export function engineArguments(basegame, session, preset = null) {
     return ['+set', 'fs_basepath', '/', '+set', 'fs_homepath', HOME,
         '+set', 'com_basegame', basegame, '+set', 'r_mode', '-2',
         '+set', 'r_fullscreen', '0', '+set', 's_muteWhenUnfocused', '1',
         '+set', 'net_enabled', session ? '1' : '0',
+        ...displayArguments(preset),
         ...(session ? ['+connect', 'origingame'] : [])];
 }
 
@@ -63,12 +66,13 @@ export async function fetchChecked(url, file, fetcher = fetch) {
 // One sync at a time; writes arriving during a sync schedule another sync.
 // A failed save remains dirty and can be explicitly retried. Never silently
 // overwrite existing IndexedDB contents after a failed startup restore.
-export function persistence(FS, onStatus) {
+export function persistence(FS, onStatus, enabled = true) {
     let dirty = false, pending = null, timer = null;
     const sync = populate => new Promise((resolve, reject) => FS.syncfs(populate, e => e ? reject(e) : resolve()));
     const flush = () => {
         clearTimeout(timer);
         timer = null;
+        if (!enabled) return Promise.resolve();
         if (pending) return pending;
         if (!dirty) return Promise.resolve();
         pending = (async () => {
@@ -89,9 +93,14 @@ export function persistence(FS, onStatus) {
     };
     return {
         restore: () => sync(true), flush,
+        async enable() {
+            enabled = true;
+            try { await flush(); }
+            catch (error) { enabled = false; throw error; }
+        },
         changed() {
             dirty = true;
-            if (!pending && !timer) timer = setTimeout(() => {
+            if (enabled && !pending && !timer) timer = setTimeout(() => {
                 timer = null;
                 void flush().catch(() => {});
             }, 500);
@@ -100,8 +109,9 @@ export function persistence(FS, onStatus) {
 }
 
 export async function startHost({ factory, canvas, manifestURL, og = null, getSession,
-    report = () => {}, onModule = () => {}, fetcher = fetch, isCurrent = () => true }) {
+    report = () => {}, onModule = () => {}, fetcher = fetch, isCurrent = () => true, displayPreview = null }) {
     let module, saves, failed = false, ready = false, mainStarted = false;
+    let preset = displayPreview, preview = displayPreview !== null;
     const log = [];
     const emit = (state, detail = '') => report({ state, detail, runtimeLoaded: !!module, ready });
     const fail = (code, message) => {
@@ -115,6 +125,14 @@ export async function startHost({ factory, canvas, manifestURL, og = null, getSe
         if (failed || !mainStarted || !isCurrent()) return;
         if (configChanged) saves.changed();
         if (playable && !ready) {
+            const [width, height, picmip] = [0, 1, 2].map(field => module._OG_WebDisplay?.(field));
+            const expected = displayPresets[preset];
+            if (preview && (!Number.isFinite(width) || !Number.isFinite(height) || picmip !== expected.picmip
+                || (expected.width && (width !== expected.width || height !== expected.height)))) {
+                fail('DISPLAY_PREVIEW_FAILED', 'The renderer could not apply the requested display settings.');
+                return;
+            }
+            if ([width, height, picmip].every(Number.isFinite)) report({ display: { preset, preview, width, height, picmip } });
             ready = true;
             emit('ready', 'Click the game to capture the mouse. Esc releases it.');
             og?.loading?.progress?.(1, 'Ready');
@@ -123,6 +141,7 @@ export async function startHost({ factory, canvas, manifestURL, og = null, getSe
         }
     };
     try {
+        displayArguments(displayPreview);
         emit('loading', 'Loading WASM engine');
         og?.loading?.begin?.(['Engine', 'Settings', 'Assets', 'World']);
         og?.loading?.progress?.(0.01, 'Engine');
@@ -141,9 +160,18 @@ export async function startHost({ factory, canvas, manifestURL, og = null, getSe
         og?.loading?.progress?.(0.15, 'Settings');
         module.FS.mkdirTree(HOME);
         module.FS.mount(module.IDBFS, {}, HOME);
-        saves = persistence(module.FS, status => report({ persistence: status }));
+        saves = persistence(module.FS, status => report({ persistence: status }), !preview);
         await saves.restore();
         if (!isCurrent()) return;
+        if (!preview) {
+            // Missing or obsolete preferences preserve the advanced engine config.
+            try {
+                const saved = JSON.parse(module.FS.readFile(DISPLAY_FILE, { encoding: 'utf8' }));
+                if (typeof saved === 'string' && Object.hasOwn(displayPresets, saved)) preset = saved;
+            } catch { /* No confirmed preset. */ }
+        }
+        report({ display: { preset, preview } });
+        if (canvas && preset !== null) canvas.style.objectFit = 'contain';
         const response = await fetcher(manifestURL, { cache: 'no-cache', signal: AbortSignal.timeout(30000) });
         if (!response.ok) throw new Error(`Game manifest unavailable (HTTP ${response.status}).`);
         const manifest = validateManifest(await response.json());
@@ -168,12 +196,21 @@ export async function startHost({ factory, canvas, manifestURL, og = null, getSe
         og?.loading?.progress?.(0.9, 'World');
         emit('starting', 'Starting engine; waiting for a playable frame');
         mainStarted = true;
-        module.callMain(engineArguments(manifest.basegame, session));
+        module.callMain(engineArguments(manifest.basegame, session, preset));
     } catch (error) {
         fail('BOOT_FAILED', error instanceof Error ? error.message : 'Loading failed. Reload to retry.');
     }
     return {
         flush: () => saves?.flush() ?? Promise.resolve(),
+        async confirmDisplay() {
+            if (!preview || !ready || failed || !isCurrent()) throw new Error('Display preview is not ready.');
+            module.FS.writeFile(DISPLAY_FILE, JSON.stringify(preset));
+            saves.changed();
+            await saves.enable();
+            preview = false;
+            const [width, height, picmip] = [0, 1, 2].map(field => module._OG_WebDisplay(field));
+            report({ display: { preset, preview, width, height, picmip } });
+        },
         loseFocus() {
             if (mainStarted && !failed) module._OG_WebLoseFocus();
             void saves?.flush().catch(() => {});

@@ -176,3 +176,27 @@ auth/ready, transient 1012 close/same-session reconnect, recovery and terminal
 1008 close reaching the production banner. Stop that service and delete the
 disposable certificate/key afterward. These tests do not certify multiplayer
 gameplay, production room admission or RTC; no test assets go into a release.
+
+## Display preview is a disposable engine transaction
+
+The persistent root's Display quality section offers fixed 720p/picmip 1,
+1080p/picmip 0, and desktop-resolution/picmip 0 presets. `boot.openDisplay()` only
+opens, scrolls and focuses that section; it does not start a preview or set cvars.
+Preview replaces the engine (ending a local match or reconnecting a reserved
+room). Read-only `OG_WebDisplay(0..2)` reports actual width, height and picmip;
+renderer fallback cannot be confirmed as a successful preset.
+
+The root starts the 15-second confirmation deadline after a functional frame
+and verified display settings, with a separate two-minute startup limit. A
+timeout, cancellation or failed preview destroys the child and reloads saved
+settings. All IDBFS flush paths are held during preview, including automatic,
+manual, focus and disposal saves. Only confirmation enables persistence and
+saves the allowlisted preset; other changes made during an unconfirmed preview
+are discarded too. Root reload also discards an unconfirmed preview.
+
+`node --test code/web/{host,lifecycle,display,hud,play}.test.mjs` checks timer,
+stale completion, mount/cancel, storage failure and renderer-fallback boundaries.
+`bash code/web/tests/display-browser.sh "$TEST_SERVER_URL"` runs actual WASM
+720p confirmation/reload, 1080p timed rollback and context-failure rollback,
+including the 1024×600 toolbar clearance check. This verifies local display
+transactions, not platform room admission or a preserved multiplayer match.
