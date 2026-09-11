@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "asset": "atlas-source.png",
+  "source": "Amp Painter",
+  "generatedAt": "2026-09-11",
+  "attachment": "https://ampcode.com/user-content/attachments/d976e289ca4af9100b8f4aadfd9cbff19724bdd6434f961ec9281d0fa1a9c51b-file.png",
+  "purpose": "Original engine pickup and status icon remaster; not buttons or dynamic text",
+  "brief": "4x4 industrial ivory/cyan pictograms on graphite: gauntlet, machinegun, shotgun, grenade, rocket, lightning, railgun, plasma, energy cannon, grapple, armor, health, red flag, blue flag, award star, stopwatch. No text, numbers, logos or commercial game designs.",
+  "sha256": "cb57d400623a812672b832f49e5d04b87b789665ba348af8e04c3027c1965acf",
+  "additionalSources": [
+    {
+      "asset": "powerups-source.png",
+      "attachment": "https://ampcode.com/user-content/attachments/68880b30c25308b1842345be87da231c3e09771705107302e3f27534dfdc36e1-file.png",
+      "sha256": "7b3fc90d0cb15bc0f870e8a1fd347b3b92d221059b282165a2f36232402e56f2",
+      "brief": "Distinct 4x4 powerups: amplification crystal, running boot, ghost, gas mask, regeneration, wings, medkit, teleport, empty ammunition, invulnerability shield, ammo regeneration, doubler swords, guard, scout, kamikaze and portal. No writing or logos."
+    },
+    {
+      "asset": "ammunition-source.png",
+      "attachment": "https://ampcode.com/user-content/attachments/1a299c8420129ddc5212fb1ddafa9b9a0f32d007e286eb7c6ea99f6607a57783-file.png",
+      "sha256": "749ef213a04d31ba95d5f9ca7ae33991d11180530f3b5b13f92a5b07430ff7a9",
+      "brief": "Eleven distinct ammunition types, nailgun/proximity/chaingun silhouettes and target/two-star awards. 4x4 industrial metal cells, no writing or logos."
+    },
+    {
+      "asset": "status-source.png",
+      "attachment": "https://ampcode.com/user-content/attachments/7dacd71a6e665fd46efef27d36103bfeb30e0ec7a4c61bf8fbd32c44135afcd0-file.png",
+      "sha256": "765ec50932ec3040c20b05966a822d8dc4c290649c3d4a7b839c8a1b9c5574ef",
+      "brief": "Red triangle/blue rectangle/white diamond flags each at base, hand-carried and dropped; red angular/blue round skull tokens, disconnected cable, hourglass, signal bars, cooperation/defense awards. No writing or logos."
+    }
+  ],
+  "cost": "Painter returned no provider task ID or cost; not recorded as zero",
+  "authorization": "User authorized original Painter UI asset generation and publication",
+  "processing": "package.py crops equal source cells; rembg/u2net segments alpha; Pillow resizes to 128px and colorizes health/armor variants without drawing new shapes. Existing Painter hangar reused as loading background. No game data input.",
+  "review": "Runtime acceptance pending. Similar flags in first atlas intentionally unused; dedicated status atlas has distinct team shapes and base/carried/dropped silhouettes."
+}

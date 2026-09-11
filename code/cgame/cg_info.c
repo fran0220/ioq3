@@ -158,17 +158,24 @@ void CG_DrawInformation( void ) {
 	info = CG_ConfigString( CS_SERVERINFO );
 	sysInfo = CG_ConfigString( CS_SYSTEMINFO );
 
-	s = Info_ValueForKey( info, "mapname" );
-	levelshot = trap_R_RegisterShaderNoMip( va( "levelshots/%s.tga", s ) );
-	if ( !levelshot ) {
-		levelshot = trap_R_RegisterShaderNoMip( "menu/art/unknownmap" );
+	/* The remaster's neutral loading artwork is not a screenshot of the map.
+	 * Keep the actual server map/rules and loading progress as engine text.
+	 * Stock installs without the optional art package retain their levelshots. */
+	levelshot = trap_R_RegisterShaderNoMip( "ui/remaster/loading" );
+	if ( levelshot ) {
+		trap_R_SetColor( NULL );
+		CG_DrawPic( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, levelshot );
+	} else {
+		s = Info_ValueForKey( info, "mapname" );
+		levelshot = trap_R_RegisterShaderNoMip( va( "levelshots/%s.tga", s ) );
+		if ( !levelshot ) {
+			levelshot = trap_R_RegisterShaderNoMip( "menu/art/unknownmap" );
+		}
+		trap_R_SetColor( NULL );
+		CG_DrawPic( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, levelshot );
+		detail = trap_R_RegisterShader( "levelShotDetail" );
+		trap_R_DrawStretchPic( 0, 0, cgs.glconfig.vidWidth, cgs.glconfig.vidHeight, 0, 0, 2.5, 2, detail );
 	}
-	trap_R_SetColor( NULL );
-	CG_DrawPic( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, levelshot );
-
-	// blend a detail texture over it
-	detail = trap_R_RegisterShader( "levelShotDetail" );
-	trap_R_DrawStretchPic( 0, 0, cgs.glconfig.vidWidth, cgs.glconfig.vidHeight, 0, 0, 2.5, 2, detail );
 
 	// draw the icons of things as they are loaded
 	CG_DrawLoadingIcons();
@@ -293,4 +300,3 @@ void CG_DrawInformation( void ) {
 		}
 	}
 }
-
