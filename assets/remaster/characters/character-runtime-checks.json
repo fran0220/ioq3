@@ -72,6 +72,7 @@
     "visual_review": "Native live respawn and three complete corpses inspected. Web MG/RL four-direction stances and three complete corpses inspected (death1 angle270, deaths2/3 angle0). Shoulders/forearms continuous, no obvious open fragments or corpse penetration. Offline right-hand grip remains deformed; bright weapon material patches are separately owned and pending. Runtime rear running image obscures the gun, so firing attachment motion remains unaccepted.",
     "private_evidence": "assets/remaster/work/character-welded-review/ and character-sarge-v2-welded/grip-inspection/",
     "retained_failures": "Initial browser review started before active snapshot and timed out; readiness wait added, subsequent three cases PASS. First MG run/fire attempt observed weapon5 at rocket pickup location; assertion failure retained, setup moved away and actual weapon2/velocity320 confirmed. No game rule changed.",
+    "recording_limit": "Two agent-browser recording attempts encountered CDP Runtime.evaluate timeouts during engine initialization; the first produced only a .1-second file and the second failed ffmpeg finalization. Failed recording/logs retained privately; neither counts as full-speed motion footage or acceptance.",
     "runtime_accepted": false
   }
 }

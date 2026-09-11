@@ -26,8 +26,8 @@
     "source_blend_sha256": "6499e2558b63dab69a00dcc604d322673d8e8d0a1e3b1000e62568d91292022c",
     "scope": "Closed-topology whole-rig Blender master, textures/config/bake/portrait, prepared IQM source JSON, segmented source/IQM and current PK3. Original paid GLB/receipts remain in original recovery and tracked records.",
     "cross_orb_copy_confirmed": true,
-    "confirmed_by": "https://ampcode.com/threads/T-01a089aa-d4b5-71ff-a906-157328758544",
-    "confirmation_scope": "Weapon owner reports exact archive and source.blend hashes match in its private orb. Integration copy requested separately; no external durable backup claim.",
+    "confirmed_by": "https://ampcode.com/threads/T-01a08650-c386-7680-a9f9-744898e9a239",
+    "confirmation_scope": "Integration owner independently rehashed the archive, internal source.blend and internal PK3; all three match. Weapon owner also confirmed archive/source.blend hashes in its private orb. This is cross-orb recovery, not external durable backup.",
     "external_durable_backup_confirmed": false
   },
   "previous_grounded_recovery": {
