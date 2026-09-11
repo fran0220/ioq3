@@ -1810,8 +1810,10 @@ void R_RenderDlightCubemaps(const refdef_t *fd)
 
 		Com_Memset( &shadowParms, 0, sizeof( shadowParms ) );
 
-		shadowParms.viewportX = tr.refdef.x;
-		shadowParms.viewportY = glConfig.vidHeight - ( tr.refdef.y + PSHADOW_MAP_SIZE );
+		shadowParms.targetFbo = tr.dlightCubeFbo;
+		shadowParms.targetFboCubemapIndex = i;
+		shadowParms.viewportX = 0;
+		shadowParms.viewportY = 0;
 		shadowParms.viewportWidth = PSHADOW_MAP_SIZE;
 		shadowParms.viewportHeight = PSHADOW_MAP_SIZE;
 		shadowParms.isPortal = qfalse;
@@ -1867,8 +1869,8 @@ void R_RenderDlightCubemaps(const refdef_t *fd)
 					break;
 			}
 
+			shadowParms.targetFboLayer = j;
 			R_RenderView(&shadowParms);
-			R_AddCapShadowmapCmd( i, j );
 		}
 	}
 }

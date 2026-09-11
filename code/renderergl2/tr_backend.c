@@ -350,6 +350,11 @@ void RB_BeginDrawingView (void) {
 			cubemap_t *cubemap = &tr.cubemaps[backEnd.viewParms.targetFboCubemapIndex];
 			FBO_AttachImage(fbo, cubemap->image, GL_COLOR_ATTACHMENT0_EXT, backEnd.viewParms.targetFboLayer);
 		}
+		else if (tr.dlightCubeFbo && fbo == tr.dlightCubeFbo)
+		{
+			FBO_AttachImage(fbo, tr.shadowCubemaps[backEnd.viewParms.targetFboCubemapIndex],
+				GL_COLOR_ATTACHMENT0, backEnd.viewParms.targetFboLayer);
+		}
 
 		FBO_Bind(fbo);
 	}
@@ -379,7 +384,15 @@ void RB_BeginDrawingView (void) {
 		clearBits |= GL_COLOR_BUFFER_BIT;
 	}
 
+	if (backEnd.viewParms.flags & VPF_SHADOWMAP)
+	{
+		// White decodes beyond the light radius: an empty face is unoccluded.
+		qglClearColor(1, 1, 1, 1);
+		clearBits |= GL_COLOR_BUFFER_BIT;
+	}
 	qglClear( clearBits );
+	if (backEnd.viewParms.flags & VPF_SHADOWMAP)
+		qglClearColor(0, 0, 0, 1);
 
 	if ( ( backEnd.refdef.rdflags & RDF_HYPERSPACE ) )
 	{
@@ -1143,6 +1156,11 @@ const void	*RB_DrawSurfs( const void *data ) {
 	{
 		qglDisable(GL_DEPTH_CLAMP);
 	}
+
+	// Point-light cubes store radial distance in color after their depth prepass.
+	// Sun and projected shadow views remain depth-only.
+	if (isShadowView && (backEnd.viewParms.flags & VPF_SHADOWMAP))
+		RB_RenderDrawSurfList(cmd->drawSurfs, cmd->numDrawSurfs);
 
 	if (!isShadowView)
 	{

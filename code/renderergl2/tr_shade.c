@@ -838,6 +838,10 @@ static void ForwardDlight( void ) {
 
 			index &= ~LIGHTDEF_LIGHTTYPE_MASK;
 			index |= LIGHTDEF_USE_LIGHT_VECTOR;
+			// Dynamic lights use radial cube visibility, never the primary sun mask.
+			index &= ~LIGHTDEF_USE_SHADOWMAP;
+			if (tr.dlightCubeFbo)
+				index |= LIGHTDEF_USE_CUBESHADOW;
 
 			sp = &tr.lightallShader[index];
 		}
@@ -944,7 +948,7 @@ static void ForwardDlight( void ) {
 			GLSL_SetUniformVec4(sp, UNIFORM_ENABLETEXTURES, enableTextures);
 		}
 
-		if (r_dlightMode->integer >= 2)
+		if (tr.dlightCubeFbo)
 			GL_BindToTMU(tr.shadowCubemaps[l], TB_SHADOWMAP);
 
 		ComputeTexMods( pStage, TB_DIFFUSEMAP, texMatrix );

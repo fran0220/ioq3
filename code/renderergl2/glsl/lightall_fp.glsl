@@ -18,6 +18,8 @@ uniform sampler2D u_SpecularMap;
 
 #if defined(USE_SHADOWMAP)
 uniform sampler2D u_ShadowMap;
+#elif defined(USE_CUBESHADOW)
+uniform samplerCube u_ShadowMap;
 #endif
 
 #if defined(USE_CUBEMAP)
@@ -345,6 +347,16 @@ void main()
   #endif
 
 	N = normalize(N);
+
+  #if defined(USE_CUBESHADOW)
+	// Faces use the renderer's inward cube convention: L points to the light.
+	vec3 packedDepth = textureCube(u_ShadowMap, L).rgb;
+	float blocker = dot(packedDepth, vec3(65536.0, 256.0, 1.0)) * (255.0 / 16777215.0);
+	float radius = sqrt(var_LightDir.w);
+	float receiver = sqrt(sqrLightDist) / radius;
+	float bias = 0.5 / radius + (1.0 - max(dot(N, L), 0.0)) / PSHADOW_MAP_SIZE;
+	attenuation *= step(receiver - bias, blocker);
+  #endif
 
   #if defined(USE_SHADOWMAP) 
 	vec2 shadowTex = gl_FragCoord.xy * r_FBufScale;

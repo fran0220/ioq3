@@ -415,6 +415,16 @@ void FBO_Init(void)
 		R_CheckFBO(tr.renderCubeFbo);
 	}
 
+	if (tr.shadowCubemaps[0])
+	{
+		// One reusable depth buffer, with each point-light face attached directly.
+		// Copying the HDR scene framebuffer into an RGBA8 cube is illegal in ES3.
+		tr.dlightCubeFbo = FBO_Create("_dlightCube", PSHADOW_MAP_SIZE, PSHADOW_MAP_SIZE);
+		FBO_AttachImage(tr.dlightCubeFbo, tr.shadowCubemaps[0], GL_COLOR_ATTACHMENT0, 0);
+		FBO_CreateBuffer(tr.dlightCubeFbo, GL_DEPTH_COMPONENT24, 0, 0);
+		R_CheckFBO(tr.dlightCubeFbo);
+	}
+
 	GL_CheckErrors();
 
 	GL_BindFramebuffer(GL_FRAMEBUFFER, 0);

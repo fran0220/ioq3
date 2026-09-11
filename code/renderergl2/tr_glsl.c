@@ -286,6 +286,7 @@ static void GLSL_GetShaderHeader( GLenum shaderType, const GLchar *extra, char *
 			Q_strcat(dest, size, "out vec4 out_Color;\n");
 			Q_strcat(dest, size, "#define gl_FragColor out_Color\n");
 			Q_strcat(dest, size, "#define texture2D texture\n");
+			Q_strcat(dest, size, "#define textureCube texture\n");
 			Q_strcat(dest, size, "#define textureCubeLod textureLod\n");
 			Q_strcat(dest, size, "#define shadow2D texture\n");
 		}
@@ -1125,6 +1126,13 @@ void GLSL_InitGPUShaders(void)
 		qboolean fastLight = !(r_normalMapping->integer || r_specularMapping->integer);
 
 		// skip impossible combos
+		if (i & LIGHTDEF_USE_CUBESHADOW)
+		{
+			if (r_dlightMode->integer < 2 || !glRefConfig.framebufferObject
+				|| lightType != LIGHTDEF_USE_LIGHT_VECTOR || (i & LIGHTDEF_USE_SHADOWMAP))
+				continue;
+			fastLight = qfalse; // radial shadow comparison is per fragment
+		}
 		if ((i & LIGHTDEF_USE_PARALLAXMAP) && !r_parallaxMapping->integer)
 			continue;
 
@@ -1141,8 +1149,11 @@ void GLSL_InitGPUShaders(void)
 
 		extradefines[0] = '\0';
 
-		if (r_dlightMode->integer >= 2)
-			Q_strcat(extradefines, 1024, "#define USE_SHADOWMAP\n");
+		if (i & LIGHTDEF_USE_CUBESHADOW)
+		{
+			Q_strcat(extradefines, 1024, "#define USE_CUBESHADOW\n");
+			Q_strcat(extradefines, 1024, va("#define PSHADOW_MAP_SIZE %f\n", (float)PSHADOW_MAP_SIZE));
+		}
 
 		if (glRefConfig.swizzleNormalmap)
 			Q_strcat(extradefines, 1024, "#define SWIZZLE_NORMALMAP\n");
@@ -1296,6 +1307,7 @@ void GLSL_InitGPUShaders(void)
 		attribs = ATTR_POSITION | ATTR_NORMAL | ATTR_TEXCOORD;
 
 		extradefines[0] = '\0';
+		Q_strcat(extradefines, 1024, "#define USE_DEPTH\n");
 
 		if (i & SHADOWMAPDEF_USE_VERTEX_ANIMATION)
 		{

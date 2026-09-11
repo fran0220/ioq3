@@ -589,8 +589,9 @@ enum
 	LIGHTDEF_USE_PARALLAXMAP     = 0x0010,
 	LIGHTDEF_USE_SHADOWMAP       = 0x0020,
 	LIGHTDEF_ENTITY_BONE_ANIMATION = 0x0040,
-	LIGHTDEF_ALL                 = 0x007F,
-	LIGHTDEF_COUNT               = 0x0080
+	LIGHTDEF_USE_CUBESHADOW      = 0x0080,
+	LIGHTDEF_ALL                 = 0x00FF,
+	LIGHTDEF_COUNT               = 0x0100
 };
 
 enum
@@ -1585,6 +1586,7 @@ typedef struct {
 	FBO_t					*screenSsaoFbo;
 	FBO_t					*hdrDepthFbo;
 	FBO_t                   *renderCubeFbo;
+	FBO_t                   *dlightCubeFbo;
 
 	shader_t				*defaultShader;
 	shader_t				*shadowShader;

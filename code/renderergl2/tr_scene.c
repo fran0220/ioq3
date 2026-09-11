@@ -499,8 +499,8 @@ void RE_RenderScene( const refdef_t *fd ) {
 
 	RE_BeginScene(fd);
 
-	// SmileTheory: playing with shadow mapping
-	if (!( fd->rdflags & RDF_NOWORLDMODEL ) && tr.refdef.num_dlights && r_dlightMode->integer >= 2)
+	// Point shadows require a renderable cube face; otherwise retain mode-1 lighting.
+	if (!( fd->rdflags & RDF_NOWORLDMODEL ) && tr.refdef.num_dlights && tr.dlightCubeFbo)
 	{
 		R_RenderDlightCubemaps(fd);
 	}
