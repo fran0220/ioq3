@@ -1,0 +1,138 @@
+{
+  "asset_id": "weapon-rail-v1",
+  "classification": "remaster-weapon-production-candidate",
+  "manifest_sha256": "ee0ab0952ffdd3037ccd4b2cd9bef4e54d2e133756837def143258c8b74d7ad4",
+  "prototype_review": {
+    "at": 1789095260,
+    "note": "Inspected full image: whole isolated rail silhouette, open muzzle, separated rear trigger grip and forward support grip, readable graphite rails and restrained cyan. Hidden back and inferred scale remain Blender gates; not runtime accepted.",
+    "reviewer": "Amp weapon production visual review",
+    "sha256": "bab13305760d49494e8c92189776837aa0960aea6d8ab698d19bde45b5ad2c00"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": null,
+      "task_id": null,
+      "request_id": null,
+      "request_sha256": null,
+      "response_sha256": null,
+      "generator_identity": null,
+      "model": "amp-painter",
+      "status": "downloaded",
+      "submissions": null,
+      "artifact": {
+        "bytes": 1902055,
+        "path": "prototype.png",
+        "sha256": "bab13305760d49494e8c92189776837aa0960aea6d8ab698d19bde45b5ad2c00"
+      },
+      "image": {
+        "height": 1024,
+        "mime": "image/png",
+        "width": 1536
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "not-exposed-by-amp-painter"
+      }
+    },
+    "shape": {
+      "operation_id": "274c954f-862f-4bef-a36a-b90b3525ca73",
+      "task_id": "task_p7qOTzOL4uvu7cjejoEYCHsgSslXUZCk",
+      "request_id": "202609110254213995046048268d9d6BrJuF8u2",
+      "request_sha256": "fa2006935d95fb1580724d368adcbaadef01645ee3182b6b83086e24e2d675b8",
+      "response_sha256": "47bc6e329faa0a29190bdc1d69f5049a9705fd3d9d7d721879eedd2fc879e423",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 3629364,
+        "path": "generated.glb",
+        "sha256": "ac90a04f5e627f6f9c238813f9ee5cf9bdd5a14c8e716714482699d91fda142f"
+      },
+      "image": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 47.748655513,
+          "paint_load_and_generate_seconds": 60.44203984500001,
+          "shape_load_and_generate_seconds": 35.79923586899999,
+          "texture_bake_seconds": 0.38190841400000863,
+          "texture_delight_seconds": 1.7537868590000016,
+          "texture_export_verify_seconds": 0.7297782580000103,
+          "texture_inpaint_seconds": 24.78361567600001,
+          "texture_load_seconds": 12.463988310000005,
+          "texture_mesh_preparation_seconds": 1.2437302010000053,
+          "texture_multiview_seconds": 5.986811224000007,
+          "texture_normal_render_seconds": 0.14838768900000332,
+          "texture_position_render_seconds": 0.10548789599999964,
+          "texture_uv_seconds": 14.491375387999994
+        }
+      },
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1789095262,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609110254213995046048268d9d6BrJuF8u2",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    }
+  },
+  "processing": {
+    "files": [
+      {
+        "bytes": 5850944,
+        "path": "processed/cleaned.blend",
+        "sha256": "5e45dd02986f0eccb407042a1352fe21cd5911596c07f429e810fa242dd9b4e2"
+      },
+      {
+        "bytes": 1706268,
+        "path": "processed/diffuse.tga",
+        "sha256": "90d0dda08c7a7c0fdd3a445ca0bba54168aebe94c489eae5c830fe641b233cb5"
+      },
+      {
+        "bytes": 2059,
+        "path": "processed/geometry-report.json",
+        "sha256": "0861c3f327e3e1e676595d3df7a7325c82a03d780bcf0c970fa521936970fad0"
+      },
+      {
+        "bytes": 284052,
+        "path": "processed/model.md3",
+        "sha256": "cf24995160247d42b440b9d11ffb21b7405ec3c19f8581e24fa019c451127267"
+      },
+      {
+        "bytes": 131,
+        "path": "processed/remaster.shader",
+        "sha256": "9d69cd27eaa291131ebc7c56253ee4d4e5806d3b8e3f7d7ba10bc0b15bfcc94c"
+      },
+      {
+        "bytes": 534784,
+        "path": "processed/review-back.png",
+        "sha256": "0855b315f2a6c45cdc186fc713096f4a02fd2e08f5c0240203ee3098d26e81b0"
+      },
+      {
+        "bytes": 539017,
+        "path": "processed/review-front.png",
+        "sha256": "ed0e2906654a405f5f8011910c4b75d84e334fa35d4b8c2198e4ee055e9d42e1"
+      }
+    ],
+    "scripts": {
+      "blender_static.py": "d23f16a7f7f003b92ab890b204699097c305871ee8c05f8e921e92016729dfad",
+      "md3_static.py": "3dedd7d9b05889969dce495804cff4b4c8fbf3e0d8c72b3d0c8d00813fa27e94"
+    },
+    "source_sha256": "ac90a04f5e627f6f9c238813f9ee5cf9bdd5a14c8e716714482699d91fda142f"
+  },
+  "package": null
+}

@@ -126,3 +126,28 @@ the previously extracted arms as a repair base; use the archived original
 already calls `remove_doubles` before `DECIMATE`; this ordering alone does not
 prove each candidate watertight, but the character diagnosis cannot be assumed
 to apply to the separate weapon pipeline.
+
+Follow-up actual BMesh inspection of six cleaned weapons (rocket, machinegun,
+shotgun, grenade, lightning, rail): each has zero boundary and nonmanifold edges
+before/after a 1e-5m weld. Counts are respectively 1800/3600, 1802/3600,
+2398/4800, 2396/4800, 2400/4800, 2372/4800 vertices/faces. This excludes the
+character's particular decimation-hole failure for these cleaned masters;
+it does not prove shading, silhouette, split-barrel or gameplay correctness.
+
+Rail original task `task_p7qOTzOL4uvu7cjejoEYCHsgSslXUZCk` completed with one
+matched $0.50 charge. Source GLB hash
+`ac90a04f5e627f6f9c238813f9ee5cf9bdd5a14c8e716714482699d91fda142f`.
+Blender cleanup/4800 triangles and provisional rigid IQM are complete. Inspected
+full-side and opposite-side views retain two grips and conductor gap; blurred
+ivory panels remain an art blocker. Socket config is explicitly provisional,
+not an approved measured hand target. No rail runtime package or browser gate
+is claimed yet; original sound/beam remains outstanding.
+
+Downloaded the character owner's newly welded source into weapon-private work:
+archive SHA256 `bae69b099cc13d7d243c0bd490d3253b360acc996a4855b38ea010f1f6730050`,
+prepared blend `6499e2558b63dab69a00dcc604d322673d8e8d0a1e3b1000e62568d91292022c`.
+Both independently match. Re-extracted forearms and inspected both left views;
+fingers now have visible separation, with joined bases needing close hand review.
+The extraction's deliberate proximal open cut remains and must be finished.
+No final finger rig/weapon-local palm contact or third-person correction has
+been delivered; no character source was modified and no new fee incurred.

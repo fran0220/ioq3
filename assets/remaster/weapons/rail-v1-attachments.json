@@ -1,0 +1,10 @@
+{
+  "shader": "models/remaster/weapons/rail/body",
+  "fit_scale": 0.9,
+  "grip_meters": [-0.3, 0, 0.065],
+  "sockets_meters": {
+    "tag_flash": [0.48, 0, 0.18],
+    "tag_barrel": [0.48, 0, 0.18]
+  },
+  "status": "provisional inspection sockets, not measured grip or runtime acceptance"
+}
