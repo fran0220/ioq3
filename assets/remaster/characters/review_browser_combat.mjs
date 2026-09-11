@@ -11,7 +11,8 @@ const output = resolve(directory);
 mkdirSync(output, { recursive: true });
 const b = await connect(cdp, join(output, 'character-combat.jsonl'));
 try {
-    const read = () => b.evaluate('readEngine()');
+    const read = () => b.evaluate('window.readEngine?.() ?? null');
+    await b.waitFor(read, s => s?.state === 8 && s.snap.valid, 45000);
     await b.command('devmap q3dm1');
     await b.waitFor(read, s => s.state === 8 && s.snap.valid);
     await b.command('fraglimit 0; com_blood 0; bot_minplayers 0; cg_debugAnim 1; cg_deferPlayers 0; model sarge; headmodel sarge; cg_draw2D 0; cg_thirdPerson 1');

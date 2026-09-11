@@ -37,7 +37,7 @@
     "Final material normal/F0/emission review",
     "Blue readability and both team shape symbols during combat, beyond default front/side/rear checks",
     "Full-speed death transition quality beyond now-inspected full-body settled corpse poses",
-    "Final offhand/finger/arm deformation: latest native rocket side review still reports upper-arm seam and compressed grip; browser full side shows contact, but opposite side hides the second hand",
+    "Final offhand/finger articulation and grip fit: closed topology resolves open forearm fragments in inspected poses, but decoded near-grip views still show finger deformation; weapon owner is preparing reusable same-source finger geometry/bind",
     "External durable source backup, beyond two orb copies",
     "Full authorized original character/skin inventory beyond private Demo subset"
   ],
@@ -62,5 +62,16 @@
     "sha256": "b52f5894cd472b45f692570c59b157446f81c60f8db5acdf23be620abb574a76",
     "confirmed_by": "T-01a08650-c386-7680-a9f9-744898e9a239",
     "scope": "Original paid source archive plus parented-source f989f107b0a1b28ae5d5b78e5a14ad49506f3148a249c7b975e24b22043ca322 and grounded-source 035429da68a6a5b3c94e8532e379deafe51f393eea8dad96c1bf6de24573ed6e confirmed matching by integration owner; archive PK3 matches Git candidate byte-for-byte. Second private orb copy only, external durable backup remains incomplete."
+  },
+  "welded_topology_revision": {
+    "character_sha256": "8af2817673ca88b2c99530bc48d1c1cd384400a943e37959d3f022f338ce1b19",
+    "root_cause": "Decimating disconnected GLB UV/normal islands before welding opened the surface. Original rig welded at 1e-5m has zero boundary edges; old prepared mesh still has 6834 boundary edges after welding. New weld-before-decimate master retains zero boundary edges.",
+    "uv_and_deform_weight_test": "PASS: shared geometric edge welded while distinct loop UVs and .375 bone weights remain unchanged",
+    "export_checks": {"waist_pairs":264,"neck_pairs":304,"maximum_seam_q3_units":0.000009009,"death_minimum_z":-24.000419},
+    "runtime": "Native death/respawn0/2/4 and nonfatal damage four PASS; WASM actual death/respawn0/2/4 three PASS; baseline four PASS. Browser FS nine PK3 hashes match disk. Actual MG full-speed run/fire snapshot weapon2, velocity[320,0,0], weaponTime20; not a complete motion-loop acceptance.",
+    "visual_review": "Native live respawn and three complete corpses inspected. Web MG/RL four-direction stances and three complete corpses inspected (death1 angle270, deaths2/3 angle0). Shoulders/forearms continuous, no obvious open fragments or corpse penetration. Offline right-hand grip remains deformed; bright weapon material patches are separately owned and pending. Runtime rear running image obscures the gun, so firing attachment motion remains unaccepted.",
+    "private_evidence": "assets/remaster/work/character-welded-review/ and character-sarge-v2-welded/grip-inspection/",
+    "retained_failures": "Initial browser review started before active snapshot and timed out; readiness wait added, subsequent three cases PASS. First MG run/fire attempt observed weapon5 at rocket pickup location; assertion failure retained, setup moved away and actual weapon2/velocity320 confirmed. No game rule changed.",
+    "runtime_accepted": false
   }
 }

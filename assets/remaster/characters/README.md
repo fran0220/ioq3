@@ -195,3 +195,28 @@ The generated-only candidate is tracked at
 hashes, provenance references, recovery chain and open QA are in
 `character-sarge-v2-runtime.json`. Rename it to the documented `zz-` basename
 when installing beside the private Demo. No Demo, VM or sound files are in it.
+
+## Closed-topology correction, 2026-09-11
+
+The source audit found a real preprocessing defect: decimating GLB's disconnected
+UV/normal islands before welding opened the surface. Original generated rig
+vertices weld from25003 to19927 with zero boundary edges; welding the already
+decimated old master still leaves6834 boundary edges. `prepare_rig.py` now welds
+geometry at1e-5m before decimation, preserves per-loop UVs and bone weights, and
+rejects an opened result from a previously closed surface. A focused Blender
+test preserves distinct UV islands and asymmetric .375 weights while restoring
+the shared edge. The new master remains closed after decimation.
+
+The independent rebuilt source is in private `character-sarge-v2-welded` rather
+than overwriting paid inputs or historical masters. Normals and portrait were
+rebaked, all seven source motions retained, and segmented clocks/timing remain
+unchanged. Current PK3 hash starts `8af28176`; full hashes/recovery paths are in
+the runtime manifest. No new generation request or cost was incurred.
+
+Native four checks and WASM three death/respawn cases plus four baseline checks
+pass with the new package. Runtime near views show continuous shoulders/forearms;
+settled full-body corpses were inspected in both clients. Finger/grip deformation
+and full-speed motion quality remain open. `review_browser_combat.mjs` and the
+native driver capture four corpse angles rather than accepting cropped views.
+`review_grips.py` reads actual IQM poses/normals and includes the MG barrel, but
+its Blender render is an inspection aid, never runtime acceptance.

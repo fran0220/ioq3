@@ -9,6 +9,7 @@ import math
 from pathlib import Path
 import sys
 
+import bmesh
 import bpy
 from mathutils import Matrix, Vector
 
@@ -29,6 +30,23 @@ def load(path):
 def rigid(matrix):
     t, q, scale = matrix.decompose()
     return Matrix.Translation(t) @ q.to_matrix().to_4x4()
+
+
+def weld_uv_seams(mesh):
+    """Restore geometric adjacency before collapse; UVs remain per face loop."""
+    editable = bmesh.new()
+    try:
+        editable.from_mesh(mesh)
+        before = len(editable.verts)
+        bmesh.ops.remove_doubles(editable, verts=list(editable.verts), dist=.00001)
+        report = {'vertices_before':before, 'vertices_after':len(editable.verts),
+                  'boundary_edges':sum(e.is_boundary for e in editable.edges),
+                  'merge_distance_meters':.00001}
+        editable.to_mesh(mesh)
+        mesh.update()
+        return report
+    finally:
+        editable.free()
 
 
 def main():
@@ -54,10 +72,20 @@ def main():
     arm.name = 'SargeRig'
     mesh.name = 'SargeBody'
     activate(mesh)
+    # GLB duplicates geometric vertices at UV/normal seams. Collapsing those
+    # disconnected islands independently leaves actual holes, not just normal
+    # discontinuities. Weld geometry while retaining per-loop UV coordinates.
+    topology = weld_uv_seams(mesh.data)
     decimate = mesh.modifiers.new('Web triangle budget', 'DECIMATE')
     decimate.ratio = .25
     decimate.use_collapse_triangulate = True
     bpy.ops.object.modifier_apply(modifier=decimate.name)
+    check = bmesh.new()
+    check.from_mesh(mesh.data)
+    topology['decimated_boundary_edges'] = sum(e.is_boundary for e in check.edges)
+    check.free()
+    if topology['boundary_edges'] == 0 and topology['decimated_boundary_edges']:
+        raise ValueError('Decimation opened a closed character surface')
     # Imported split normals no longer describe the reduced topology (one
     # observed loop produced a zero tangent). Recompute on the actual mesh.
     bpy.ops.mesh.customdata_custom_splitnormals_clear()
@@ -141,6 +169,7 @@ def main():
     config = {'classification':'generated-character-incomplete-runtime-review',
               'coordinate_system':'q3-x-forward-y-left-z-up','units_per_meter':40,
               'armature':arm.name,'meshes':[mesh.name],
+              'topology':topology,
               'materials':{material.name:'models/remaster/characters/sarge_review'},
               'attachments':[], 'clips':clips}
     (out / 'config.json').write_text(json.dumps(config,indent=2)+'\n')
