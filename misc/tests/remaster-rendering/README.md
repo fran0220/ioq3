@@ -182,10 +182,35 @@ scene entity capacity failure retain the whole group's original surfaces.
 Only one backend entity is allocated per group. Any member's leaf visibility
 permits rendering the model for that view; unrelated same-shader surfaces are
 never suppressed. Source members may be transparent (for example old flames),
-but replacement model materials remain opaque. General engine fatal hunk OOM
+but replacement models require an opaque body in every LOD. General engine fatal hunk OOM
 is not made recoverable by this feature. A union AABB is not a recomputed PVS
 or proof of physical containment within disjoint member geometry: content must
 select the actual original visibility owners, not unrelated remote surfaces.
+
+Opaque replacement models may include bounded additive companion surfaces in
+the same MD3/IQM. Each companion pass must use `blendFunc GL_ONE GL_ONE`,
+normal depth testing, no `depthWrite` and no `depthFunc equal`. Alpha-blended
+or additive-only replacement models are rejected. Missing companion materials
+reject the entire model/group, preserving the old source including flame
+members. The companion geometry also participates in the complete model bounds
+validation. The intended lamp shader is:
+
+```
+models/remaster/environment_fx/lamp_glow
+{
+    cull disable
+    {
+        map textures/remaster_environment_fx/lamp_glow.tga
+        blendFunc GL_ONE GL_ONE
+        rgbGen identity
+    }
+}
+```
+
+Use pure-black texture borders and a small quad just in front of the lamp
+surface, not a coplanar duplicate or through-wall sprite. This is visual glow,
+not a dynamic light, event or sound. Its visual acceptance still requires real
+content captures across HDR/LDR, viewing angles and foreground occlusion.
 
 Compile `surface-replacements.c`, `replacement-scene.c` and
 `replacement-visibility.c` using the native

@@ -2497,6 +2497,29 @@ static qboolean R_ReplacementTargetMatches(const world_t *world, int index, cons
 	return qtrue;
 }
 
+static qboolean R_ReplacementMaterialValid(const shader_t *shader, qboolean *hasOpaque)
+{
+	int i;
+	if (shader->defaultShader || !shader->numUnfoggedPasses)
+		return qfalse;
+	if (shader->sort <= SS_OPAQUE)
+	{
+		*hasOpaque = qtrue;
+		return qtrue;
+	}
+	// A bounded light fixture may carry black-backed additive glow geometry.
+	// It must still be occluded by the world and must not occlude later effects.
+	for (i = 0; i < shader->numUnfoggedPasses; i++)
+	{
+		const shaderStage_t *stage = shader->stages[i];
+		if (!stage || (stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS))
+			!= (GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE)
+			|| (stage->stateBits & (GLS_DEPTHMASK_TRUE | GLS_DEPTHTEST_DISABLE | GLS_DEPTHFUNC_EQUAL)))
+			return qfalse;
+	}
+	return qtrue;
+}
+
 static qboolean R_ReplacementModelFits(const refEntity_t *entity, vec3_t targetBounds[2])
 {
 	model_t *model = R_GetModelByHandle(entity->hModel);
@@ -2511,6 +2534,7 @@ static qboolean R_ReplacementModelFits(const refEntity_t *entity, vec3_t targetB
 		for (lod = 0; lod < model->numLods; lod++)
 		{
 			mdvModel_t *mdv = model->mdv[lod];
+			qboolean hasOpaque = qfalse;
 			if (!mdv || mdv->numFrames != 1 || !mdv->numSurfaces)
 				return qfalse;
 			AddPointToBounds(mdv->frames[0].bounds[0], bounds[0], bounds[1]);
@@ -2521,22 +2545,27 @@ static qboolean R_ReplacementModelFits(const refEntity_t *entity, vec3_t targetB
 				if (!mdv->surfaces[i].numShaderIndexes)
 					return qfalse;
 				shader = R_GetShaderByHandle(mdv->surfaces[i].shaderIndexes[0]);
-				if (shader->defaultShader || shader->sort > SS_OPAQUE || !shader->numUnfoggedPasses)
+				if (!R_ReplacementMaterialValid(shader, &hasOpaque))
 					return qfalse;
 			}
+			if (!hasOpaque)
+				return qfalse;
 		}
 	}
 	else if (model->type == MOD_IQM)
 	{
 		iqmData_t *iqm = model->modelData;
+		qboolean hasOpaque = qfalse;
 		if (!iqm->bounds || iqm->num_frames > 1 || !iqm->num_surfaces)
 			return qfalse;
 		for (i = 0; i < iqm->num_surfaces; i++)
 		{
 			shader_t *shader = iqm->surfaces[i].shader;
-			if (shader->defaultShader || shader->sort > SS_OPAQUE || !shader->numUnfoggedPasses)
+			if (!R_ReplacementMaterialValid(shader, &hasOpaque))
 				return qfalse;
 		}
+		if (!hasOpaque)
+			return qfalse;
 		R_ModelBounds(entity->hModel, bounds[0], bounds[1]);
 	}
 	else

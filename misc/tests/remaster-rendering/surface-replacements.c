@@ -142,8 +142,33 @@ int main(void)
     groupCheck(members, "valid.iqm", "[0,0,0]", 0); // valid first member must not hide
     groupCheck("[]", "valid.iqm", "[0,0,0]", 0);
     groupCheck("{}", "valid.iqm", "[0,0,0]", 0);
+    {
+        shaderStage_t stage = { .stateBits = GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE };
+        shader_t glow = { .sort = SS_BLEND1, .numUnfoggedPasses = 1 };
+        srfIQModel_t parts[2] = {{0}, {0}};
+        glow.stages[0] = &stage;
+        parts[0].shader = &material; parts[1].shader = &glow;
+        iqm.num_surfaces = 2; iqm.surfaces = parts;
+        snprintf(members, sizeof(members), "[%s,%s]", left, right);
+        original.sort = SS_BLEND1; // transparent source is allowed, independently of replacement
+        groupCheck(members, "valid.iqm", "[0,0,0]", 1);
+        for (int i = 0; i < 3; i++) {
+            const unsigned int forbidden[] = {GLS_DEPTHMASK_TRUE, GLS_DEPTHTEST_DISABLE, GLS_DEPTHFUNC_EQUAL};
+            stage.stateBits = GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE | forbidden[i];
+            groupCheck(members, "valid.iqm", "[0,0,0]", 0);
+        }
+        stage.stateBits = GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
+        groupCheck(members, "valid.iqm", "[0,0,0]", 0);
+        stage.stateBits = GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE;
+        glow.defaultShader = qtrue;
+        groupCheck(members, "valid.iqm", "[0,0,0]", 0); // missing companion rejects opaque member too
+        glow.defaultShader = qfalse; parts[0].shader = &glow;
+        groupCheck(members, "valid.iqm", "[0,0,0]", 0); // all-glow is not an opaque fixture
+        iqm.num_surfaces = 1; iqm.surfaces = &modelSurface;
+    }
     clearWorld();
     puts("PASS: exact map/surface/shader/bounds, transformed static model and material validation/fallback");
     puts("PASS: atomic group validation, union envelope boundaries, overlap, order and resource fallback");
+    puts("PASS: bounded additive companion, forbidden depth/blend states and whole-model fallback");
     return 0;
 }
