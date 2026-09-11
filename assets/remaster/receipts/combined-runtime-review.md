@@ -28,3 +28,24 @@ Inspected `.amp/in/artifacts/combined-v6-cw-gameplay.jpg`: scene, HUD and MG ren
 without a black frame/default-texture blocks; weapon/material detail remains soft.
 This is not full environment art/PVS acceptance, per-weapon combat validation,
 SG audio/visual synchronization, platform multiplayer, or hardware performance.
+
+## v7 statue scene — separate combined rerun
+
+Reused the exact WASM/JS/QVM hashes above: the intervening commits changed no
+compiled code. Replaced v6 with scene PK3
+`6aebc7e04cb521b8c96932aad5bbb285ef8ebcd4458308981dfa40b867f3cb48`.
+Private manifest revision `09a5505bafe7ee89de0458ea1b4648a007b8337979f6225e94d8c7aa00122b7e`.
+All 14 actual WASM FS package sizes/hashes match again. Independently compared
+v6/v7 ZIPs: all 14 old non-manifest members are byte-identical, all 13 old instance
+objects unchanged; three statue files and two instances are added (15 /42).
+
+Repeated the entire no-observer `match-browser.sh` successfully with v7; no reuse
+of the v6 gameplay result. Separate map load logs exactly 42 bindings, context
+intact, sampled `gl.getError()` =0 (not a continuous GL/performance claim).
+Private raw results: `assets/remaster/work/combined-v7-{fs,bindings,asset-delta}.json`.
+Inspected `.amp/in/artifacts/combined-v7-gameplay.jpg`: both statues, world, HUD
+and MG are visible without default-texture blocks. Right statue is washed out,
+left statue indistinct, and the right-edge view model is cropped. These are
+not final art acceptance. Sarge sculptures do not establish original Visor/Major
+identity fidelity; full map geometry, sound synchronization, combat matrix,
+PVS/occlusion, online matches and hardware performance remain open.
