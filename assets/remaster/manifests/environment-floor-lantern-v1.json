@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "asset_id": "environment-floor-lantern-v1",
+  "classification": "original-generated-environment-standing-light-q3dm1",
+  "authorization": "Human authorized remake/publication and unlimited generation; 2026-09-11 instructed complete q3dm1 environment production",
+  "style": "industrial-arena-v1",
+  "image_model": "amp-painter",
+  "shape_model": "hunyuan3d-2",
+  "prototype_source": "https://ampcode.com/user-content/attachments/b86c77d295c63d53b58715931489c622f23581d08b9e033d447ef21431bb3388-file.png",
+  "prototype_sha256": "1910c73549f62c0d59e25ab38246003cb538c2f6dc82972c73ed186d05b7dd5f",
+  "prompt": "Original single connected tall arena floor lantern, graphite structural frame and warm ivory plates, narrow cyan cap slit, small orange fasteners. 2.38m high and maximum0.74m square footprint. Replaces four measured q3dm1 standing torch meshes without touching collision or navigation. No extracted source images or meshes submitted.",
+  "processing": {
+    "height_meters": 2.38,
+    "units_per_meter": 40,
+    "target_triangles": 1800,
+    "texture_edge": 1024,
+    "rotation_z_degrees": 0,
+    "shader": "models/remaster/environment_floor_lantern"
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "asset_id": "environment-wall-lantern-v1",
+  "classification": "original-generated-environment-wall-light-q3dm1",
+  "manifest_sha256": "2bf02d5e89a7b436850611ef66fd3f333ae6161cc1a9c25d037719edd372fde5",
+  "prototype_review": {
+    "at": 1789091694,
+    "note": "Painter returned complete connected wall plate, opaque ivory panel and graphite support, thin cyan and orange fasteners; clean readable silhouette no floating parts. Approve one generated candidate, not unseen-back/runtime approval.",
+    "reviewer": "environment-production-thread",
+    "sha256": "e3be21cd376538354d0e6522069cc98717f6a68cb185345f7592a64790b42a7f"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": null,
+      "task_id": null,
+      "request_id": null,
+      "request_sha256": null,
+      "response_sha256": null,
+      "generator_identity": null,
+      "model": "amp-painter",
+      "status": "downloaded",
+      "submissions": 0,
+      "artifact": {
+        "bytes": 1588767,
+        "path": "prototype.png",
+        "sha256": "e3be21cd376538354d0e6522069cc98717f6a68cb185345f7592a64790b42a7f"
+      },
+      "image": {
+        "height": 1536,
+        "mime": "image/png",
+        "width": 1024
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "not-exposed-by-tool"
+      }
+    },
+    "shape": {
+      "operation_id": "4fe90724-4741-4e81-afa8-c5f7ca296e6f",
+      "task_id": "task_yJImjhxdjfCITQIFqFjbQWI978FRLlZM",
+      "request_id": "202609110154552913815298268d9d6ukzpQ5fs",
+      "request_sha256": "410ab33fb5a9f402dfbb939098a2e2d7f0f85713bc89191220b37e3d168e9669",
+      "response_sha256": "15e5f37aed00f4ac8a446b966979093d01cbd20e24d1a4d9875827d98e640698",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 3382348,
+        "path": "generated.glb",
+        "sha256": "705cd6a8a6359e19161bcd189467d7a08507392c3a3cd65406aab3ab5595c0b5"
+      },
+      "image": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 0.9334529870000097,
+          "paint_load_and_generate_seconds": 32.62705040399999,
+          "shape_load_and_generate_seconds": 33.818257500000016,
+          "texture_bake_seconds": 0.3839985900000329,
+          "texture_delight_seconds": 1.643706126999973,
+          "texture_export_verify_seconds": 0.7682480109999688,
+          "texture_inpaint_seconds": 6.159628177999991,
+          "texture_load_seconds": 9.002040223999984,
+          "texture_mesh_preparation_seconds": 2.0357320999999615,
+          "texture_multiview_seconds": 6.113572173000023,
+          "texture_normal_render_seconds": 0.12171443199997611,
+          "texture_position_render_seconds": 0.10667545799998379,
+          "texture_uv_seconds": 8.798256788000003
+        }
+      },
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1789091695,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609110154552913815298268d9d6ukzpQ5fs",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    }
+  },
+  "processing": {
+    "files": [
+      {
+        "bytes": 5032528,
+        "path": "processed/cleaned.blend",
+        "sha256": "d9219cd2ddb23de96374543353225f40c00a62f1e2fbd271cd1be195a493dab5"
+      },
+      {
+        "bytes": 1593904,
+        "path": "processed/diffuse.tga",
+        "sha256": "71e50eb84221c6543c9b409d7312095e3f518f7ecf0b6c10e1c440fd7ddc018c"
+      },
+      {
+        "bytes": 1040,
+        "path": "processed/geometry-report.json",
+        "sha256": "239052defd5526a513ac4d1abf83861e32fa0f14a2dcce17b76a2b15770e1fcb"
+      },
+      {
+        "bytes": 66180,
+        "path": "processed/model.md3",
+        "sha256": "3d25d53bb6d84ef9ee907c86c1fd16b6c2c1873791292ffd7c656fe36d850871"
+      },
+      {
+        "bytes": 145,
+        "path": "processed/remaster.shader",
+        "sha256": "fb4c5cb647c6df173117d511e5d139c2cc81adb69d720f07042fcbd94cb677c1"
+      },
+      {
+        "bytes": 467766,
+        "path": "processed/review-back.png",
+        "sha256": "d04dedfdb52f0392352bc32c0a60f4a42864f74408bc41e44fba6fb6971e1ba3"
+      },
+      {
+        "bytes": 475348,
+        "path": "processed/review-front.png",
+        "sha256": "3b342d538a99ba8d6adc4a0b0b93556d012de58021ad936982abdf367fbdb080"
+      }
+    ],
+    "scripts": {
+      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
+      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
+    },
+    "source_sha256": "705cd6a8a6359e19161bcd189467d7a08507392c3a3cd65406aab3ab5595c0b5"
+  },
+  "package": {
+    "bytes": 836842,
+    "path": "environment-wall-lantern-v1.pk3",
+    "sha256": "a9177cfb3840e795fa82e6eb2915b551e4f1232e54351d6650fade2ccc865941"
+  }
+}

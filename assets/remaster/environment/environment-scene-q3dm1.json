@@ -1,0 +1,21 @@
+{
+  "map": "q3dm1",
+  "source_scope": "private-demo-reference",
+  "assets": [
+    {
+      "asset_id": "environment-floor-lantern-v1",
+      "model": "models/remaster/environment_floor_lantern.md3",
+      "groups": [[2063], [2065], [2067], [2069]],
+      "yaw": 0,
+      "fit_margin": 0.98,
+      "runtime_accepted": false
+    }
+  ],
+  "existing_crest_placement": "assets/remaster/environment/environment-wall-crest-placement.json",
+  "pending_groups": {
+    "environment-wall-lantern-v1": [[2045,2046],[2048,2049],[2052,2053],[2055,2056],[2058,2059],[2061,2062]],
+    "paired-wall-reliefs": [[2071,2072],[2073,2074]],
+    "statues": [[2033,2034,2035],[2036,2037,2038,2039,2040,2041,2042,2043]]
+  },
+  "note": "Groups are measured source surfaces, not final visibility acceptance. Original fire effects pending effects-owner integration; do not credit retained originals as remade."
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "asset_id": "environment-wall-lantern-v1",
+  "classification": "original-generated-environment-wall-light-q3dm1",
+  "authorization": "Human authorized remake/publication and unlimited generation; latest instruction complete q3dm1 environment",
+  "style": "industrial-arena-v1",
+  "image_model": "amp-painter",
+  "shape_model": "hunyuan3d-2",
+  "prototype_source": "https://ampcode.com/user-content/attachments/7971dc02c6ababd6b74dba4bb2bb69c47acfdda9e07d157c5ad566b1cd4e52f7-file.png",
+  "prototype_sha256": "e3be21cd376538354d0e6522069cc98717f6a68cb185345f7592a64790b42a7f",
+  "prompt": "Original compact wall lantern, closed graphite backing/bracket, opaque frosted ivory panel, thin cyan horizontal accent, orange fasteners. No original source image/mesh sent. Repeated at six measured q3dm1 wall torch groups, matched to their union envelopes.",
+  "processing": {
+    "height_meters": 1.5,
+    "units_per_meter": 40,
+    "target_triangles": 1200,
+    "texture_edge": 1024,
+    "rotation_z_degrees": 0,
+    "shader": "models/remaster/environment_wall_lantern"
+  }
+}
