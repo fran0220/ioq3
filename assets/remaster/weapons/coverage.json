@@ -5,7 +5,7 @@
   "weapons": {
     "gauntlet": {"content": "not-produced", "ammo": null, "effects": ["continuous-melee-flash", "flesh-impact"]},
     "machinegun": {"content": "weapon-machinegun-v1 split body/barrel IQM candidate; HDR/LDR held-fire/release/switch tested, final art and damage acceptance pending", "ammo": "ammo_bullets", "effects": ["muzzle", "brass", "bullet-tracer", "bullet-impact", "flesh-impact"]},
-    "shotgun": {"content": "weapon-shotgun-v1 IQM candidate HDR/LDR single/held/release/switch tested; final materials/grip/damage pending; original sound reviewed but uninstalled", "ammo": "ammo_shells", "effects": ["muzzle", "shell-ejection", "pellet-impact", "flesh-impact"]},
+    "shotgun": {"content": "weapon-shotgun-v1 IQM candidate HDR/LDR single/held/release/switch tested; final materials/grip/damage pending; original sound packaged and registered, in-engine audio sync pending", "ammo": "ammo_shells", "effects": ["muzzle", "shell-ejection", "pellet-impact", "flesh-impact"]},
     "grenade": {"content": "weapon-grenade-v1 IQM candidate HDR/LDR single/held/release/switch tested; final materials/grip/damage pending", "ammo": "ammo_grenades", "effects": ["muzzle", "grenade-projectile", "smoke-trail", "bounce", "explosion", "scorch"]},
     "rocket": {"content": "weapon-rocket-v1 candidate; not runtime accepted", "ammo": "ammo_rockets", "effects": ["muzzle", "rocket-projectile", "smoke-trail", "explosion", "scorch"]},
     "lightning": {"content": "weapon-lightning-v1 Painter/Hunyuan/Blender complete; attachments/runtime/effects pending", "ammo": "ammo_lightning", "effects": ["continuous-muzzle", "lightning-beam", "lightning-impact", "flesh-impact"]},

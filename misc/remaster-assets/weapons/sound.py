@@ -5,15 +5,54 @@ Uses the existing private ledger/public receipt projection. Unlike Hunyuan,
 ElevenLabs SFX has no confirmed replay contract: never retry a submitted stage.
 """
 import argparse
+import io
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import subprocess
 import sys
 import time
 import uuid
+import wave
+import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from pipeline import Gateway, Production, atomic, digest, encoded, lock
+
+
+def package(manifest):
+    """Package already-reviewed PCM bytes offline, without another paid call."""
+    target = manifest['runtime_target']
+    path = PurePosixPath(target)
+    if (not target.startswith('sound/remaster/') or path.suffix != '.wav'
+            or '..' in path.parts or str(path) != target or '\\' in target):
+        raise ValueError('Expected a canonical remaster WAV path')
+    work = Path('assets/remaster/work') / manifest['asset_id']
+    with lock(work):
+        production = Production(manifest, work, None)
+        data = production.require_artifact('sound').read_bytes()
+        with wave.open(io.BytesIO(data), 'rb') as audio:
+            if (audio.getnchannels(), audio.getsampwidth(), audio.getframerate(), audio.getcomptype()) != (1, 2, 22050, 'NONE'):
+                raise ValueError('Expected mono PCM16 22050Hz')
+            frames = audio.getnframes()
+            if frames <= 0 or len(audio.readframes(frames)) != frames * 2:
+                raise ValueError('Empty or truncated sound')
+        output = Path('assets/remaster/runtime') / (manifest['asset_id'] + '-candidate.pk3')
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, 'w') as archive:
+            info = zipfile.ZipInfo(target, (2026, 9, 10, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            archive.writestr(info, data)
+        atomic(output, buffer.getvalue())
+        receipt = production.receipt()
+        receipt['sound_export'] = {
+            'runtime_accepted': False,
+            'files': {target: digest(data)},
+            'package_sha256': digest(buffer.getvalue()),
+            'frames': frames, 'sample_rate': 22050, 'channels': 1, 'sample_bits': 16,
+            'script_sha256': digest(Path(__file__).read_bytes()),
+        }
+        atomic(Path('assets/remaster/receipts') / (manifest['asset_id'] + '.json'), encoded(receipt) + b'\n')
+        return output
 
 
 def run(manifest, billing=False):
@@ -62,5 +101,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('manifest', type=Path)
     parser.add_argument('--billing', action='store_true')
+    parser.add_argument('--package', action='store_true', help='Offline package of existing reviewed sound')
     args = parser.parse_args()
-    run(json.loads(args.manifest.read_text()), args.billing)
+    manifest = json.loads(args.manifest.read_text())
+    if args.package:
+        if args.billing:
+            parser.error('--package and --billing are separate operations')
+        print(package(manifest))
+    else:
+        run(manifest, args.billing)

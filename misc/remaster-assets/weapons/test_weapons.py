@@ -12,6 +12,49 @@ from iqm_validate import read_iqm, matrices
 
 
 class WeaponTests(unittest.TestCase):
+    def test_shotgun_sound_registration_with_and_without_candidate(self):
+        root = Path(__file__).resolve().parents[3]
+        source = (root / 'code/cgame/cg_weapons.c').read_text()
+        start = source.index('\t\tfile = 0;', source.index('\tcase WP_SHOTGUN:'))
+        end = source.index('\t\tweaponInfo->ejectBrassFunc', start)
+        program = '''
+#include <assert.h>
+#include <string.h>
+#define FS_READ 0
+#define qfalse 0
+int length, closed, registered;
+int trap_FS_FOpenFile(const char *path, int *file, int mode) {
+    assert(!strcmp(path,"sound/remaster/weapons/shotgun/fire.wav"));
+    *file=length>=0?7:0;
+    return length;
+}
+int trap_S_RegisterSound(const char *path, int compressed) {
+    assert(!compressed);
+    registered++;
+    return !strcmp(path,"sound/remaster/weapons/shotgun/fire.wav")?91:
+        !strcmp(path,"sound/weapons/shotgun/sshotf1b.wav")?13:0;
+}
+void trap_FS_FCloseFile(int file) { assert(file==7); closed++; }
+int main(void) {
+    for(length=-1;length<=1;length++) {
+        struct { int flashSound[4]; } data={{0}}, *weaponInfo=&data;
+        int file=999;
+        closed=registered=0;
+''' + source[start:end] + '''
+        assert(registered==1);
+        assert(closed==(length>=0));
+        assert(data.flashSound[0]==(length>0?91:13));
+        assert(!data.flashSound[1]);
+    }
+}
+'''
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'registration.c'
+            path.write_text(program)
+            binary = Path(directory) / 'registration'
+            subprocess.run(['cc', str(path), '-o', str(binary)], check=True)
+            subprocess.run([str(binary)], check=True)
+
     def test_actual_damage_and_knockback_rules(self):
         root = Path(__file__).resolve().parents[3]
         with tempfile.TemporaryDirectory() as directory:

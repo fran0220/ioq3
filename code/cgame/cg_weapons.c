@@ -786,7 +786,15 @@ void CG_RegisterWeapon( int weaponNum ) {
 
 	case WP_SHOTGUN:
 		MAKERGB( weaponInfo->flashDlightColor, 1, 1, 0 );
-		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/shotgun/sshotf1b.wav", qfalse );
+		file = 0;
+		if ( trap_FS_FOpenFile( "sound/remaster/weapons/shotgun/fire.wav", &file, FS_READ ) > 0 ) {
+			weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/remaster/weapons/shotgun/fire.wav", qfalse );
+		} else {
+			weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/shotgun/sshotf1b.wav", qfalse );
+		}
+		if ( file ) {
+			trap_FS_FCloseFile( file );
+		}
 		weaponInfo->ejectBrassFunc = CG_ShotgunEjectBrass;
 		break;
 

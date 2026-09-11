@@ -105,3 +105,24 @@ inspection of its reported HDR/LDR contact sheets found no black quad/obvious
 ghosting; original LDR wall-east/west close frames remain too white to discern
 the vertical cyan capsule. Requested same-camera A/B from environment; do not
 claim all ten lamps accepted or infer the white wall light came from this glow.
+
+Shotgun audio follow-through: the already-paid `effect-shotgun-fire-v1` WAV is
+now packaged unchanged at `sound/remaster/weapons/shotgun/fire.wav`; candidate
+PK3 SHA256 `435722082ea0f1f9db78bb2d555804833e21e7acccc141639fcb66ce33fd0d6d`.
+Cgame selects it only when the file exists and is nonempty, otherwise retaining
+the reference shot. The original fire event/channel/timing are unchanged.
+Source audio was inspected again: immediate single blast, no reload/repeated
+shots/music/speech or audible clipping. This is not in-engine sync acceptance.
+Offline packaging checks exact source hash, PCM16/mono/22050Hz and full frames;
+test packages preserve bytes and fail on drift without overwriting prior output.
+Twelve weapon tests pass, including compiled production registration for absent,
+empty and present files and correct handle closure. Web cgame QVM and native
+`cgame.so` builds pass. No additional audio submission or charge occurred.
+
+Character owner identified a separate old-source defect: simplification before
+welding GLB split vertices damaged the prepared Sarge topology. Stop treating
+the previously extracted arms as a repair base; use the archived original
+`rigged.glb` or the owner's forthcoming welded master. Static weapon processing
+already calls `remove_doubles` before `DECIMATE`; this ordering alone does not
+prove each candidate watertight, but the character diagnosis cannot be assumed
+to apply to the separate weapon pipeline.
