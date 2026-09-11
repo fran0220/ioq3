@@ -182,6 +182,9 @@ def main(source, output, config):
     cleaning = None
     if config.get("drop_quantized_degenerates") is True:
         triangles, cleaning = clean_quantized_triangles(triangles)
+    # Blender outward faces are CCW. Q3 front-sided shaders cull GL_FRONT,
+    # requiring CW indices while normals, UVs and source geometry stay intact.
+    triangles = [(a, c, b) for a, b, c in triangles]
     md3 = write_md3(triangles, shader)
     (output / "model.md3").write_bytes(md3)
     parsed = read_md3(md3)
@@ -195,7 +198,9 @@ def main(source, output, config):
     for surface in parsed["surfaces"]:
         base = len(positions)
         positions.extend(tuple(c/units for c in v) for v in surface["positions"])
-        faces.extend(tuple(base+i for i in tri) for tri in surface["triangles"])
+        # Decoded engine CW geometry returns to Blender's CCW convention only
+        # for inspection; never reverse the exported normals to compensate.
+        faces.extend((base+a, base+c, base+b) for a, b, c in surface["triangles"])
         uvs.extend(surface["uvs"])
         normals.extend(surface["normals"])
     mesh.from_pydata(positions, [], faces)
@@ -204,6 +209,10 @@ def main(source, output, config):
     for loop in mesh.loops:
         u, v = uvs[loop.vertex_index]
         layer.data[loop.index].uv = (u, 1-v)
+    # Smooth faces use the decoded custom normals below, rather than replacing
+    # the engine's per-vertex lighting with Blender's flat triangle normals.
+    for polygon in mesh.polygons:
+        polygon.use_smooth = True
     mesh.use_auto_smooth = True
     mesh.normals_split_custom_set_from_vertices(normals)
     obj.data = mesh
@@ -216,6 +225,7 @@ def main(source, output, config):
               "runtime_surface_limits": {"vertices": RUNTIME_MAX_VERTS, "indices": RUNTIME_MAX_INDEXES},
               "md3_sha256": hashlib.sha256(md3).hexdigest(), "frames": 1,
               "render_source": "decoded exported MD3 + baked runtime TGA", "runtime_accepted": False,
+              "winding": {"source": "Blender CCW", "runtime": "Q3 CW", "decoded_preview": "Blender CCW"},
               "material_limitations": "Diffuse only; no PBR/emission preservation claim", "units_per_meter": units}
     if cleaning is not None:
         report["quantized_cleaning"] = cleaning

@@ -33,7 +33,21 @@ class BlenderIntegrationTests(unittest.TestCase):
             self.assertEqual(report["bounds_q3"][2], 0)
             self.assertEqual(report["bounds_q3"][5], 64)
             self.assertFalse(report["runtime_accepted"])
-            read_md3((root / "out/model.md3").read_bytes())
+            decoded = read_md3((root / "out/model.md3").read_bytes())
+            # Q3's default front-sided material culls GL_FRONT (CCW). Exported
+            # geometry must be CW with outward normals, not an inside-out shell.
+            center = [(decoded["bounds"][i]+decoded["bounds"][i+3])/2 for i in range(3)]
+            for surface in decoded["surfaces"]:
+                for a, b, c in surface["triangles"]:
+                    p, q, r = (surface["positions"][i] for i in (a, b, c))
+                    u, v = [q[i]-p[i] for i in range(3)], [r[i]-p[i] for i in range(3)]
+                    cross = (u[1]*v[2]-u[2]*v[1], u[2]*v[0]-u[0]*v[2], u[0]*v[1]-u[1]*v[0])
+                    normal = surface["normals"][a]
+                    self.assertLess(sum(cross[i]*normal[i] for i in range(3)), 0)
+                    # The convex fixture's normals still point away from its
+                    # center: negating normals must not satisfy the winding test.
+                    midpoint = [(p[i]+q[i]+r[i])/3 for i in range(3)]
+                    self.assertGreater(sum((midpoint[i]-center[i])*normal[i] for i in range(3)), 0)
             with Image.open(root / "out/diffuse.tga") as image:
                 colors = list(image.convert("RGB").getdata())
             self.assertGreater(sum(r > 150 and g < 150 and b < 80 for r, g, b in colors), 100)
