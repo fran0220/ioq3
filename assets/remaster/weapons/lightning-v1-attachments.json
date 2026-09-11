@@ -1,0 +1,9 @@
+{
+  "shader": "models/remaster/weapons/lightning/body",
+  "grip_meters": [-0.19, 0, 0.055],
+  "sockets_meters": {
+    "tag_flash": [0.333, 0, 0.17],
+    "tag_barrel": [0.333, 0, 0.17]
+  },
+  "status": "initial full-object inspection; conductor gap and grip require review"
+}

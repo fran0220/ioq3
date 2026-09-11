@@ -1,0 +1,43 @@
+{
+  "classification": "measured-foregrip-section-not-approved-palm-pose",
+  "source_blend_sha256": "0b2241af8acc521357275309e36f553f81f9eaf2b65cdc456e9197862c79b474",
+  "attachment_config_sha256": "3b594b2ee6e7f89f098f30a6bd65aab04eae3e408f655881d76b57bbb7487d93",
+  "section_z_m": 0.06,
+  "selection": "edge intersections at z, x > 0",
+  "intersection_count": 49,
+  "cleaned_bounds_m": [
+    [
+      0.08911386132240295,
+      -0.024609999731183052,
+      0.05999999865889549
+    ],
+    [
+      0.13610760867595673,
+      0.024816494435071945,
+      0.06000000238418579
+    ]
+  ],
+  "weapon_local_bounds_q3": [
+    [
+      10.364554452896119,
+      -0.9843999892473221,
+      -0.2000000536441804
+    ],
+    [
+      12.24430434703827,
+      0.9926597774028778,
+      -0.19999990463256845
+    ]
+  ],
+  "weapon_local_centerline_q3": [
+    11.304429399967194,
+    0.0041298940777778625,
+    -0.19999997913837442
+  ],
+  "weapon_local_section_size_q3": [
+    1.8797498941421509,
+    1.9770597666502,
+    1.4901161193847656e-07
+  ],
+  "note": "Surface contact requires palm orientation/offset outside section; centerline lies inside grip"
+}
