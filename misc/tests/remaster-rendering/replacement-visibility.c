@@ -119,7 +119,36 @@ int main(void)
         R_AddWorldSurfaces();
         assert(tr.refdef.numDrawSurfs == 2 && draws[0].surface == &surface && draws[1].surface == &surface);
     }
+    // The PVS diagnostic must really expose hidden leaves and invalidate the
+    // cached cluster on both toggle edges without changing the camera.
+    {
+        mnode_t nodes[3] = {0};
+        cplane_t plane = { .normal = {1, 0, 0} };
+        byte vis[2] = {1, 2};
+        cvar_t no = {0}, novis = {0};
+        world.nodes = nodes; world.numnodes = 3;
+        world.vis = vis; world.numClusters = 2; world.clusterBytes = 1;
+        nodes[0].contents = CONTENTS_NODE; nodes[0].cluster = -1;
+        nodes[0].plane = &plane;
+        nodes[0].children[0] = &nodes[1]; nodes[0].children[1] = &nodes[2];
+        nodes[1].cluster = 0; nodes[2].cluster = 1;
+        nodes[1].parent = nodes[2].parent = &nodes[0];
+        VectorSet(tr.viewParms.pvsOrigin, 1, 0, 0);
+        memset(tr.refdef.areamask, 0, sizeof(tr.refdef.areamask));
+        for (int i = 0; i < MAX_VISCOUNTS; i++) tr.visClusters[i] = -2;
+        r_lockpvs = r_showcluster = &no; r_novis = &novis;
+        R_MarkLeaves();
+        assert(nodes[1].visCounts[tr.visIndex] == tr.visCounts[tr.visIndex]);
+        assert(nodes[2].visCounts[tr.visIndex] != tr.visCounts[tr.visIndex]);
+        novis.integer = 1; novis.modified = qtrue;
+        R_MarkLeaves();
+        assert(nodes[2].visCounts[tr.visIndex] == tr.visCounts[tr.visIndex]);
+        novis.integer = 0; novis.modified = qtrue;
+        R_MarkLeaves();
+        assert(nodes[2].visCounts[tr.visIndex] != tr.visCounts[tr.visIndex]);
+    }
     puts("PASS: production PVS exit/reentry, per-view ownership, masks, world disable and depth shadows");
     puts("PASS: frustum turn and actual original draw submission on capacity failure/entities disabled");
+    puts("PASS: r_novis exposes occluded leaves and invalidates cached visibility on both toggle edges");
     return 0;
 }

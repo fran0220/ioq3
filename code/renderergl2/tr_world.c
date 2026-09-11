@@ -676,9 +676,9 @@ static void R_MarkLeaves (void) {
 
 	for(i = 0; i < MAX_VISCOUNTS; i++)
 	{
-		// if the areamask or r_showcluster was modified, invalidate all visclusters
-		// this caused doors to open into undrawn areas
-		if (tr.refdef.areamaskModified || r_showcluster->modified)
+		// Area visibility and diagnostic toggles invalidate all cached clusters.
+		// Otherwise opening doors or toggling PVS can reuse stale hidden leaves.
+		if (tr.refdef.areamaskModified || r_showcluster->modified || r_novis->modified)
 		{
 			tr.visClusters[i] = -2;
 		}
@@ -696,6 +696,7 @@ static void R_MarkLeaves (void) {
 	tr.visIndex = (tr.visIndex + 1) % MAX_VISCOUNTS;
 	tr.visCounts[tr.visIndex]++;
 	tr.visClusters[tr.visIndex] = cluster;
+	r_novis->modified = qfalse;
 
 	if ( r_showcluster->modified || r_showcluster->integer ) {
 		r_showcluster->modified = qfalse;
@@ -704,7 +705,7 @@ static void R_MarkLeaves (void) {
 		}
 	}
 
-	vis = R_ClusterPVS(tr.visClusters[tr.visIndex]);
+	vis = r_novis->integer ? NULL : R_ClusterPVS(tr.visClusters[tr.visIndex]);
 	
 	for (i=0,leaf=tr.world->nodes ; i<tr.world->numnodes ; i++, leaf++) {
 		cluster = leaf->cluster;
