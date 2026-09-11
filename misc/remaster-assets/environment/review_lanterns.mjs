@@ -3,10 +3,13 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { connect, sleep } from '../../tests/gameplay/browser.mjs';
 
-const [cdp, out] = process.argv.slice(2);
+const [cdp, out, batch = 'lamps'] = process.argv.slice(2);
+assert.ok(['lamps', 'reliefs'].includes(batch));
 mkdirSync(out, { recursive: true });
 const b = await connect(cdp, `${out}/journal.jsonl`);
-const cameras = [
+const cameras = batch === 'reliefs' ? [
+    ['relief-w', 620, 221, 80, 180], ['relief-e', 724, 221, 80, 0],
+] : [
     ['floor-ne', 825, 1510, 40, 90], ['floor-nw', 521, 1510, 40, 90],
     ['floor-se', 1201, 630, 0, 270], ['floor-sw', 145, 630, 0, 270],
     ['wall-nw', 420, 1538, 90, 180], ['wall-ne', 924, 1536, 90, 0],
@@ -21,7 +24,7 @@ try {
         await sleep(500);
         await b.waitFor(() => b.evaluate('window.readEngine?.()'), s => s?.state === 8 && s.snap.valid, 60000);
         const bindings = await b.evaluate('testLogs.filter(x=>x.startsWith("Surface replacement q3dm1:"))');
-        assert.equal(bindings.length, 27);
+        assert.equal(bindings.length, batch === 'reliefs' ? 31 : 27);
         await b.evaluate('document.querySelector("canvas").focus()');
         for (const [name, x, y, z, yaw] of cameras) {
             await b.command(`setviewpos ${x} ${y} ${z} ${yaw}`);

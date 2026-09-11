@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "asset_id": "environment-lion-relief-v1",
+  "classification": "original-generated-environment-paired-wall-relief-q3dm1",
+  "authorization": "Human authorized remake/publication and unlimited generation; complete q3dm1 environment",
+  "style": "industrial-arena-v1",
+  "image_model": "amp-painter",
+  "shape_model": "hunyuan3d-2",
+  "prototype_source": "https://ampcode.com/user-content/attachments/8b58a6c68700f2565e0963d1655ed5dee038278ca1d59f7edf34c49d73f83a3f-file.png",
+  "prototype_sha256": "9794f93b5a8a3a301d0da8133f499a9f049a45fbb6ba6bdc2929173674bb136a",
+  "prompt": "Original broad mechanical lion wall relief, shallow graphite backing, large ivory ceramic face plates, tiny cyan eyes and orange fasteners. No source mesh or commercial image submitted. Paired groups2071/2072 and2073/2074 preserve original logical BSP and measured bounds.",
+  "processing": {
+    "height_meters": 1.5,
+    "units_per_meter": 40,
+    "target_triangles": 1800,
+    "texture_edge": 1024,
+    "rotation_z_degrees": 0,
+    "shader": "models/remaster/environment_lion_relief"
+  }
+}

@@ -15,10 +15,10 @@
     "E4-paired-wall-reliefs": 4,
     "E8-hazard-surface-art": 16
   },
-  "original_geometry_surface_count": 2070,
+  "original_geometry_surface_count": 2066,
   "full_map_complete": false,
   "full_game_complete": false,
-  "scene_sha256": "2e7d5f8b23ebd4da47642be9880be2ffad6a1182e952f291a1a0449116a69881",
+  "scene_sha256": "7d00bcad472778af563a6a85a50dac2c9423690322fa9dee157e4f73e22f8c0a",
   "note": "Material candidates do not count as geometry remakes. Bound candidates are not full visibility or art acceptance. Flame ownership requires explicit handoff; existing original effects must not be credited as new.",
   "surfaces": [
     {
@@ -29023,8 +29023,8 @@
       "indices": 369,
       "batch": "E4-paired-wall-reliefs",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -29037,8 +29037,8 @@
       "indices": 39,
       "batch": "E4-paired-wall-reliefs",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -29051,8 +29051,8 @@
       "indices": 369,
       "batch": "E4-paired-wall-reliefs",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -29065,8 +29065,8 @@
       "indices": 39,
       "batch": "E4-paired-wall-reliefs",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false

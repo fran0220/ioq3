@@ -1,0 +1,142 @@
+{
+  "asset_id": "environment-lion-relief-v1",
+  "classification": "original-generated-environment-paired-wall-relief-q3dm1",
+  "manifest_sha256": "5931a688fafc0c42fd61255c6acdd2290cbe56c15f76f34de8eebec749fb525d",
+  "prototype_review": {
+    "at": 1789092739,
+    "note": "Inspected Painter image: complete connected broad graphite backing and ivory mechanical lion face, restrained cyan eyes, no floating pieces. Approve one shape candidate; back/depth/orientation and runtime acceptance remain unverified.",
+    "reviewer": "environment-production-thread",
+    "sha256": "9794f93b5a8a3a301d0da8133f499a9f049a45fbb6ba6bdc2929173674bb136a"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": null,
+      "task_id": null,
+      "request_id": null,
+      "request_sha256": null,
+      "response_sha256": null,
+      "generator_identity": null,
+      "model": "amp-painter",
+      "status": "downloaded",
+      "submissions": 0,
+      "artifact": {
+        "bytes": 2028719,
+        "path": "prototype.png",
+        "sha256": "9794f93b5a8a3a301d0da8133f499a9f049a45fbb6ba6bdc2929173674bb136a"
+      },
+      "image": {
+        "height": 981,
+        "mime": "image/png",
+        "width": 1603
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "not-exposed-by-tool"
+      }
+    },
+    "shape": {
+      "operation_id": "2ae0aa55-74e5-45ab-ac71-edebd2f7b4b6",
+      "task_id": "task_GglJp5WglwgwfGKZTIaE8b6Ai8UuM8gW",
+      "request_id": "202609110212205688720078268d9d6UxnZJ5Jk",
+      "request_sha256": "0815bb7126e3ec816e36fe3d253da677e017a9859242c080c59642cd5df1dc22",
+      "response_sha256": "256e6931970d81b39e85c3443456a915662041268c83fdec8027e008c3116d6d",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 3850864,
+        "path": "generated.glb",
+        "sha256": "55524466c277165319150eb189236ed2048349f4f94ab19fc2e52b4f77fbc9d6"
+      },
+      "image": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 39.96159443,
+          "paint_load_and_generate_seconds": 60.421073369,
+          "shape_load_and_generate_seconds": 33.12566288699999,
+          "texture_bake_seconds": 0.48185939499998653,
+          "texture_delight_seconds": 1.0812912589999968,
+          "texture_export_verify_seconds": 0.8506903580000085,
+          "texture_inpaint_seconds": 4.078356194000008,
+          "texture_load_seconds": 12.548441639000004,
+          "texture_mesh_preparation_seconds": 4.425982509999997,
+          "texture_multiview_seconds": 5.587094780000001,
+          "texture_normal_render_seconds": 0.21487052299997345,
+          "texture_position_render_seconds": 0.15070152900000267,
+          "texture_uv_seconds": 35.93292310699999
+        }
+      },
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1789092741,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609110212205688720078268d9d6UxnZJ5Jk",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    }
+  },
+  "processing": {
+    "files": [
+      {
+        "bytes": 6621984,
+        "path": "processed/cleaned.blend",
+        "sha256": "da5c4d34076754988039b89ac4c3917c0efc749b6947b008656b436d8f69dd44"
+      },
+      {
+        "bytes": 2644583,
+        "path": "processed/diffuse.tga",
+        "sha256": "2263f23434c422e9404f25848c8c98e167af52ccff4281aa13086660aa069ed9"
+      },
+      {
+        "bytes": 1209,
+        "path": "processed/geometry-report.json",
+        "sha256": "97ba2e76167cedefdb83c12eab821c239f11d3bbb75b6e1c4123f132f5b71e43"
+      },
+      {
+        "bytes": 103588,
+        "path": "processed/model.md3",
+        "sha256": "7e1d14590ffcf83662934aee0019cc2067556bc7314396f1c8d8200f49dd5de9"
+      },
+      {
+        "bytes": 143,
+        "path": "processed/remaster.shader",
+        "sha256": "4dbd49c320efe81dfacfdb54636fae0bb4ed5bb65c2b1587dba6c7c315e833ff"
+      },
+      {
+        "bytes": 579296,
+        "path": "processed/review-back.png",
+        "sha256": "ab9e24fddef86e168a20538d1125e7cf4ff473ab02c1fbf8d3946e6143b83f9e"
+      },
+      {
+        "bytes": 614726,
+        "path": "processed/review-front.png",
+        "sha256": "8a489ba2f781927606d8193b22158637d3eb7d894851dfaa7d3eba9e45e05f1a"
+      }
+    ],
+    "scripts": {
+      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
+      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
+    },
+    "source_sha256": "55524466c277165319150eb189236ed2048349f4f94ab19fc2e52b4f77fbc9d6"
+  },
+  "package": {
+    "bytes": 1539695,
+    "path": "environment-lion-relief-v1.pk3",
+    "sha256": "bf25f17591b9199fcc2e605ebaf2a3cc4f15d75a37fc86c658924c8c70b559be"
+  }
+}

@@ -29,11 +29,20 @@
       ],
       "fit_margin": 0.98,
       "runtime_accepted": false
+    },
+    {
+      "asset_id": "environment-lion-relief-v1",
+      "model": "models/remaster/environment_lion_relief.md3",
+      "instances": [
+        {"surfaces":[2071,2072],"fit_surfaces":[2071,2072],"yaw":-90},
+        {"surfaces":[2073,2074],"fit_surfaces":[2073,2074],"yaw":90}
+      ],
+      "fit_margin": 0.98,
+      "runtime_accepted": false
     }
   ],
   "existing_crest_placement": "assets/remaster/environment/environment-wall-crest-placement.json",
   "pending_groups": {
-    "paired-wall-reliefs": [[2071,2072],[2073,2074]],
     "statues": [[2033,2034,2035],[2036,2037,2038,2039,2040,2041,2042,2043]]
   },
   "note": "Groups include original flames, suppressed atomically only with successful model and companion material load. Fit uses solid members only and includes new quad bounds. Wall yaw passed six-location HDR/LDR front inspection; new glow companion requires repeated review."

@@ -17,10 +17,15 @@ Rebuilt current WASM with additive companion support and repackaged current
 Release QVM via `misc/tests/gameplay/prepare.mjs`, including current inv.h.
 `review_lanterns.mjs`: ten positions × HDR1/HDR0 =20 PASS; 27binding logs,
 real300ms lateral input moved each camera >10 units, no context loss.
-Inspected `.amp/in/artifacts/environment-e3-v3-glow/{hdr-contact,ldr-contact}.jpg`:
-all ten lamps show restrained narrow cyan centers, no visible black rectangle,
-wrong facing or bleed through the body. Large bright wall patches predate
-these emissive surfaces and remain a separate environment-art refinement.
+Initial contact-sheet inspection suggested all ten cyan centers were visible.
+Closer LDR inspection disproved that for east/west wall lamps: the panel is
+nearly white and the visible cyan diagonal belongs to the original diffuse,
+not the new vertical capsule. Those two readability approvals are withdrawn;
+the contacts cannot certify10/10. Original and closer images remain in
+`.amp/in/artifacts/environment-e3-v3-glow/`, including `wall-e-hdr0-near-canvas.jpg`.
+No visible black rectangle, wrong facing or bleed through the body was found.
+Same-camera no-glow/v3 comparison is needed to isolate the additive change;
+do not attribute surrounding white light to glow from a single still image.
 
 Five scene/companion tests pass, including byte-preserved opaque surfaces,
 independent expected appended bounds, signed rotations and degenerate fit
