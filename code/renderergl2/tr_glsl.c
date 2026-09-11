@@ -1324,6 +1324,7 @@ void GLSL_InitGPUShaders(void)
 	extradefines[0] = '\0';
 
 	Q_strcat(extradefines, 1024, "#define USE_PCF\n#define USE_DISCARD\n");
+	Q_strcat(extradefines, 1024, va("#define PSHADOW_MAP_SIZE %f\n", (float)PSHADOW_MAP_SIZE));
 
 	if (!GLSL_InitGPUShader(&tr.pshadowShader, "pshadow", attribs, qtrue, extradefines, qtrue, fallbackShader_pshadow_vp, fallbackShader_pshadow_fp))
 	{

@@ -8,6 +8,25 @@ uniform float     u_LightRadius;
 varying vec3      var_Position;
 varying vec3      var_Normal;
 
+float SampleProjectedShadow(vec2 st)
+{
+#if defined(USE_PCF)
+	// Interpolate coverage, not depth. Equal-weight nearest taps jump in 25%
+	// steps as the receiver moves; texel-centred bilinear PCF uses the same
+	// four fetches without those quantized dark fringes.
+	vec2 texel = st * PSHADOW_MAP_SIZE - vec2(0.5);
+	vec2 weight = fract(texel);
+	vec2 base = (floor(texel) + vec2(0.5)) / PSHADOW_MAP_SIZE;
+	float a = float(texture2D(u_ShadowMap, base).r != 1.0);
+	float b = float(texture2D(u_ShadowMap, base + vec2(1.0, 0.0) / PSHADOW_MAP_SIZE).r != 1.0);
+	float c = float(texture2D(u_ShadowMap, base + vec2(0.0, 1.0) / PSHADOW_MAP_SIZE).r != 1.0);
+	float d = float(texture2D(u_ShadowMap, base + vec2(1.0, 1.0) / PSHADOW_MAP_SIZE).r != 1.0);
+	return mix(mix(a, b, weight.x), mix(c, d, weight.x), weight.y);
+#else
+	return float(texture2D(u_ShadowMap, st).r != 1.0);
+#endif
+}
+
 void main()
 {
 	vec3 lightToPos = var_Position - u_LightOrigin.xyz;
@@ -52,26 +71,14 @@ void main()
 
 	intensity *= fade;
 
-	float part;
-#if defined(USE_PCF)
-	part  = float(texture2D(u_ShadowMap, st + vec2(-1.0/512.0, -1.0/512.0)).r != 1.0);
-	part += float(texture2D(u_ShadowMap, st + vec2( 1.0/512.0, -1.0/512.0)).r != 1.0);
-	part += float(texture2D(u_ShadowMap, st + vec2(-1.0/512.0,  1.0/512.0)).r != 1.0);
-	part += float(texture2D(u_ShadowMap, st + vec2( 1.0/512.0,  1.0/512.0)).r != 1.0);
-#else
-	part  = float(texture2D(u_ShadowMap, st).r != 1.0);
-#endif
+	float part = SampleProjectedShadow(st);
 
 	if (part <= 0.0)
 	{
 		discard;
 	}
 
-#if defined(USE_PCF)
-	intensity *= part * 0.25;
-#else
 	intensity *= part;
-#endif
 
 	gl_FragColor.rgb = vec3(0);
 	gl_FragColor.a = clamp(intensity, 0.0, 0.75);
