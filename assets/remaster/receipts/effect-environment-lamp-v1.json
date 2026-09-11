@@ -1,0 +1,20 @@
+{
+  "asset_id": "effect-environment-lamp-v1",
+  "runtime_accepted": false,
+  "source": "Original Amp Painter cyan capsule, no game texture input",
+  "source_url": "https://ampcode.com/user-content/attachments/830a1a6e0a2dbbd76f2206163b6b30af7694763d500361bf0cb8c209bcf9ac1d-file.png",
+  "prototype_sha256": "2164c070204648ff0d85b1d7a1cbc8651628c4d5df98734e1f78bf149440c72e",
+  "cost": {
+    "status": "not-exposed-by-amp-painter",
+    "actual_usd": null
+  },
+  "review": "Inspected cyan filament/capsule with narrow halo, no flame, sparks or text; runtime pending",
+  "derivation": "RGB Lanczos 448 square, quarter intensity, 32px exact-black padding to 512 square",
+  "integration": "Independent quad in opaque replacement MD3; ONE/ONE, identity, default depth test, no depthWrite/equal; wait for renderer atomic companion support",
+  "files": {
+    "textures/remaster_environment_fx/lamp_glow.tga": "0a09102aa96009e88da8c37c953609dfc9dd674e10b27de98dde1fba62cdc05d",
+    "scripts/remaster_environment_lamp_glow.shader": "81b0c675014f8bf60b1e2b9511f03bcfe453d7587db2bb071c77d8f315a2842f"
+  },
+  "package_sha256": "5b6e8030ca2a09936760b44d7b0ea51d312253e82521f9b9683d1d2c33b5f42b",
+  "script_sha256": "8561404481c31e3e2e4bcf6e23b801f00b146787258ed62652687cf765b1c892"
+}
