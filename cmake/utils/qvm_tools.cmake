@@ -50,6 +50,11 @@ function(add_qvm MODULE_NAME)
     set(QVM_ASM_DIR ${CMAKE_BINARY_DIR}/qvm.dir/${MODULE_NAME})
     file(MAKE_DIRECTORY ${QVM_ASM_DIR})
 
+    # q3lcc does not emit a CMake-compatible depfile. A header-only layout
+    # change must rebuild every VM translation unit, not mix old/new struct
+    # offsets in one QVM. Include newly added headers on reconfiguration too.
+    file(GLOB_RECURSE QVM_HEADERS CONFIGURE_DEPENDS "${SOURCE_DIR}/*.h")
+
     set(LCC_FLAGS "")
     foreach(DEFINITION IN LISTS ARG_DEFINITIONS)
         list(APPEND LCC_FLAGS "-D${DEFINITION}")
@@ -69,7 +74,7 @@ function(add_qvm MODULE_NAME)
         add_custom_command(
             OUTPUT ${ASM_FILE}
             COMMAND ${Q3LCC} ${LCC_FLAGS} -o ${ASM_FILE} ${SOURCE}
-            DEPENDS ${SOURCE} qvm_tools ${Q3RCC} ${Q3CPP} ${Q3LCC}
+            DEPENDS ${SOURCE} ${QVM_HEADERS} qvm_tools ${Q3RCC} ${Q3CPP} ${Q3LCC}
             COMMENT "Building C object ${ASM_FILE_COMMENT}")
 
         list(APPEND ASM_FILES ${ASM_FILE})
