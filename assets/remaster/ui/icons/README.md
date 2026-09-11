@@ -6,9 +6,10 @@ source URL/hash and the unavailable cost/task-ID information. No source game
 texture, model, text or logo was used as input. The first atlas's similar flag
 silhouettes are intentionally excluded in favor of the dedicated status atlas.
 
-`ui-icons-v1.pk3` contains only 73 textures. It covers all 51 `bg_itemlist` icon
-paths, native status flags and six medal textures. Shader names and gameplay
-remain unchanged. Character portraits belong to the character workstream;
+`ui-icons-v1.pk3` contains 73 textures and one file of six medal shader aliases.
+It covers all 51 `bg_itemlist` icon paths, native status flags and six medal
+textures. Public shader names and gameplay remain unchanged; aliases also work
+with older content distributions that lack team-medal definitions. Character portraits belong to the character workstream;
 world pickups and first-person 3D models are not this UI package's scope.
 
 `ui/remaster/loading.jpg` reuses the existing Painter hangar, with the earlier
@@ -34,10 +35,15 @@ do not copy the private Demo used in local engine tests into a release.
 
 ## Acceptance status
 
-Web engine/QVM build passes; processed icon contact sheet inspected at 64px.
-Actual WASM mounts the 73-file pack. Native HUD visual acceptance is **pending**:
-current local engine shows default black/white placeholder textures in both the
-new-pack case and the stock-Demo negative control, including original numeric
-digits. This is not recorded as a successful icon rendering test. The renderer
-owner has the paired captures. Final flag/medal/loading state captures and the
-combined remaster release remain required after resolving that control failure.
+Web engine/QVM full rebuild passes (567 steps); processed icon contact sheet
+inspected at 64px. Actual WASM mounts the pack. Native weapon-selector capture
+with DOM HUD disabled shows transparent detailed gauntlet/machinegun art and
+intact native numeric digits; the final 74-file pack is verified in that view.
+An earlier stock-Demo/new-pack negative control exposed mixed QVM struct layouts
+from missing header dependencies. The shared build fix and clean rebuild resolve
+that failure without changing shader registration. Browser VFS QVM package hash
+matches the disk package after rebuilding every VM translation unit.
+
+Full-content flag/medal gameplay, transient native loading-frame capture and the
+combined remaster release remain separate acceptance gates. A video attempt did
+not capture that transient cgame loading screen; it is not claimed as verified.

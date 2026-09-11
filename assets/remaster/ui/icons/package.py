@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproducible VFS texture-only UI pack. No game data, models, shaders or VM."""
+"""Reproducible VFS UI art pack. No source game data, models or VM."""
 import argparse
 import hashlib
 import io
@@ -84,6 +84,12 @@ def package(output):
     buffer = io.BytesIO()
     image.save(buffer, format="JPEG", quality=90)
     files["ui/remaster/loading.jpg"] = buffer.getvalue()
+    # Some source distributions predate team medals. Define every public medal
+    # name so the renderer can resolve the generated textures there as well.
+    files["scripts/remaster_ui.shader"] = "\n".join(
+        f"medal_{name}\n{{\n nopicmip\n {{\n  clampmap menu/medals/medal_{name}.tga\n  blendFunc blend\n }}\n}}\n"
+        for name in ["impressive", "excellent", "gauntlet", "defend", "assist", "capture"]
+    ).encode()
     source = (REPO / "code/game/bg_misc.c").read_text()
     required = set(re.findall(r'"(icons/[^"\n]+)"', source))
     missing = sorted(path for path in required if f"{path}.tga" not in files)
@@ -99,9 +105,9 @@ def package(output):
                "sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
                "files": {path: hashlib.sha256(data).hexdigest() for path, data in sorted(files.items())},
                "bgItemIconCoverage": len(required), "missing": missing,
-               "scope": "UI textures only. Player portraits are character workstream owned. No source game data or gameplay modifications."}
+               "scope": "UI textures and six medal shader aliases. Player portraits are character workstream owned. No source game data or gameplay modifications."}
     (ROOT / "package-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
-    print(f"PASS: {len(files)} UI textures; all {len(required)} bg_itemlist icon paths covered; {output}")
+    print(f"PASS: {len(files)} UI files; all {len(required)} bg_itemlist icon paths covered; {output}")
 
 
 if __name__ == "__main__":

@@ -217,3 +217,12 @@ trusted shell. Connected removes the trouble banner but never announces a ready
 Quake match. Unknown values are ignored; terminal engine failure overrides late
 network events. The Node and DOM presentation fixtures pass and the banner
 capture is inspected; these are not real reconnect acceptance evidence.
+
+Subsequent `wss-status-browser.sh` passes with the actual compiled production
+transport and a real local TLS WebSocket responder: auth/ready → 1012 transient
+close → same-session reconnect/auth/ready → terminal 1008 close. The production
+host report drives banner appearance, recovery hiding and failure text; raw
+session text is not displayed. The inner `ready` event and outer `connected`
+normalization both clear only the trouble notice. Failure screenshot inspected.
+This is real WSS/DOM integration with a controlled responder, not platform
+admission, RTC or a Quake gameplay handshake. Test service/certificate removed.

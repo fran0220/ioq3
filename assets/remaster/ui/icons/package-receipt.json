@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "package": "ui-icons-v1.pk3",
-  "sha256": "0f381a640d4d73172289b2140faa7fbd2f0a491e0b6d8e2d1fa319c18e6849c7",
+  "sha256": "de95ca7c32d66d441b352887d759d2f780951f1169752185b0b8be62626d439e",
   "files": {
     "gfx/2d/defer.tga": "85f24fb691db734b4ce06548e9ec075fd8e4bc035da9cf2014b15165968b35a7",
     "gfx/2d/lag.tga": "a9aa63838ba45660d06e89a8907fddad786e09ae9e7671813fd6c6794ac529e7",
@@ -72,6 +72,7 @@
     "menu/medals/medal_excellent.tga": "215e8766093d5f88be677655591c6593008c707219f73de0773321ba80d2b084",
     "menu/medals/medal_gauntlet.tga": "be9ab2015085f9dd65627053d132362f18d2ffe617f9347b5cebb999f886705e",
     "menu/medals/medal_impressive.tga": "13c21e5f74e3c434df7902833786ed430477715cbdcc44364ce6259cd5854f73",
+    "scripts/remaster_ui.shader": "529d86636ab31f2ac3f83bfef880d980c9784c743f012d5e011b0ea348bbdf8b",
     "ui/assets/statusbar/flag_capture.tga": "bbd3f0522e63cebd46041c3bcb9b34c0d8dce8556839057789c648d372a5445c",
     "ui/assets/statusbar/flag_in_base.tga": "c4df17e5833adc8635aa5e62ef0946150743ce629cf04722b434c8896266eb46",
     "ui/assets/statusbar/flag_missing.tga": "a9974c1516997d3319b0e32801e28940a99487b561f4d633690b98e578764223",
@@ -79,5 +80,5 @@
   },
   "bgItemIconCoverage": 51,
   "missing": [],
-  "scope": "UI textures only. Player portraits are character workstream owned. No source game data or gameplay modifications."
+  "scope": "UI textures and six medal shader aliases. Player portraits are character workstream owned. No source game data or gameplay modifications."
 }

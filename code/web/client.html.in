@@ -34,7 +34,7 @@
     <p id="status" role="status" aria-live="polite">Loading engine…</p>
     <p id="detail">Preparing the browser runtime.</p>
     <button id="retry" hidden>Reload and retry</button>
-    <p class="note">Game data must be installed by the build owner. The engine alone is not a playable game.</p>
+    <p class="note">Game assets are verified before play. Saved settings remain local to this browser.</p>
   </main>
   <section id="menu" aria-label="Arena menu" hidden>
     <header><span class="eyebrow">IOQ3 / REMASTER PROGRAM</span><span class="badge">PC · WEBGL2</span></header>

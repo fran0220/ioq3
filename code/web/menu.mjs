@@ -9,10 +9,12 @@ export function networkNotice(state) {
     switch (state) {
     case 'admitting': return 'Requesting admission. No transport connection yet.';
     case 'connecting': return 'Connecting transport. The game handshake is still required.';
+    // Inner host reports transport `ready`; the outer shell normalizes it.
+    case 'ready':
     case 'connected': return '';
     case 'reconnecting': return 'Connection interrupted — reconnecting with the existing session.';
-    case 'failed': return 'Connection failed. Open Multiplayer / Lobby to retry with a fresh engine.';
-    case 'closed': return 'Transport closed. Open Multiplayer / Lobby or start a local match.';
+    case 'failed': return 'Connection failed. Open Rooms / engine to retry with a fresh engine.';
+    case 'closed': return 'Transport closed. Open Rooms / engine or start a local match.';
     default: return undefined;
     }
 }

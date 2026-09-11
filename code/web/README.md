@@ -164,3 +164,15 @@ filtering, profile validation, key conflict/protected-script checks and IDBFS
 reload. Configure this local test build with `-DIOQ3_WEB_TEST_OBSERVER=ON` so its
 final rebound-key check can observe authoritative movement in q3dm1. Reconfigure
 with that flag OFF for production; never deploy this test server or demo data.
+
+`wss-status-browser.sh` exercises the actual production WASM transport against
+`tests/wss-status-server.py`, a local TLS WebSocket responder, not a Quake server
+or platform admission API. Install Python `websockets==15.0.1`, create a disposable
+localhost certificate/key outside tracked files, and start the responder with
+`--cert <cert.pem> --key <key.pem> --port 4175` as an orb service. Run the browser
+script against the private engine test server. It uses the explicit test-only
+boot session in `wss-status-init.js`, never replaces WebSocket, and checks real
+auth/ready, transient 1012 close/same-session reconnect, recovery and terminal
+1008 close reaching the production banner. Stop that service and delete the
+disposable certificate/key afterward. These tests do not certify multiplayer
+gameplay, production room admission or RTC; no test assets go into a release.

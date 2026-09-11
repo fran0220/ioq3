@@ -5,6 +5,7 @@ import { networkNotice } from './menu.mjs';
 test('transport notices never promote admission or transport readiness to a match', () => {
     assert.match(networkNotice('admitting'), /No transport connection/);
     assert.match(networkNotice('connecting'), /handshake is still required/);
+    assert.equal(networkNotice('ready'), '');
     assert.equal(networkNotice('connected'), '');
     assert.match(networkNotice('reconnecting'), /existing session/);
     assert.match(networkNotice('failed'), /fresh engine/);

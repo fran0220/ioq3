@@ -30,5 +30,5 @@
   "cost": "Painter returned no provider task ID or cost; not recorded as zero",
   "authorization": "User authorized original Painter UI asset generation and publication",
   "processing": "package.py crops equal source cells; rembg/u2net segments alpha; Pillow resizes to 128px and colorizes health/armor variants without drawing new shapes. Existing Painter hangar reused as loading background. No game data input.",
-  "review": "Runtime acceptance pending. Similar flags in first atlas intentionally unused; dedicated status atlas has distinct team shapes and base/carried/dropped silhouettes."
+  "review": "Processed contact sheet inspected at 64px; actual production WASM native gauntlet/machinegun selection transparency and native digits verified after full QVM rebuild. Similar flags in first atlas intentionally unused; dedicated status atlas has distinct team shapes and base/carried/dropped silhouettes. Full-content flag/medal gameplay and transient cgame loading capture remain pending."
 }
