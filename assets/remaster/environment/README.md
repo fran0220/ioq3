@@ -1,5 +1,14 @@
 # Environment material candidate v1 — not a complete level remake
 
+**2026-09-11 static-mesh release blocker:** the original Blender static exporter
+retained CCW indices while Q3's front-sided MD3 path requires CW. Real WASM
+lantern probes changing only triangle indices exposed the true black backplate
+where earlier captures had shown the distant ivory face through the culled
+near shell. Consequently earlier crest/lantern/relief front/yaw and material
+readability conclusions are provisional and must be repeated after corrected
+export. Loading/grouping logs remain observations, not exterior-art approval.
+See `environment-winding-review.md`. Do not ship the old scene-v1–v4 candidates.
+
 Original Painter 2D artwork is integrated into real q3dm1 WASM rendering, not a
 testmodel or Blender preview. The package has 16 × 512² TGA materials and unique
 `textures/remaster_environment/*` shaders. It contains no original map, model,
