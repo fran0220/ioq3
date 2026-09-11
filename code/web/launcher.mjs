@@ -53,7 +53,15 @@ const display = createDisplayPreview({
         }[update.state] || '';
         if (update.state === 'preview') {
             closeLobby();
-            document.querySelector('#display-revert').focus();
+            const frame = attached, boot = currentBoot;
+            // The child's ready handler opens its menu in a microtask after
+            // reporting to the shell. Focus the confirmation after that work,
+            // but never let a cancelled/replaced preview steal focus later.
+            requestAnimationFrame(() => {
+                if (display.state === 'preview' && attached === frame && lifecycle.isCurrent(boot) && !panel.open) {
+                    document.querySelector('#display-revert').focus();
+                }
+            });
         }
         if (update.detail) {
             status.textContent = update.detail;

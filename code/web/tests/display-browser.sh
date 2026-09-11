@@ -11,9 +11,13 @@ ab eval 'document.querySelector("iframe").contentWindow.IOQ3_BOOT.openDisplay();
 ab select '#display-preset' balanced
 ab click '#display-start'
 ab wait --fn 'document.body.dataset.displayState === "preview"'
+ab eval 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))'
+ab eval 'if(document.activeElement.id!=="display-revert")throw Error("Child ready menu stole preview focus");true'
 ab eval 'if(!document.querySelector("#display-current").textContent.includes("1280 × 720, texture reduction 1"))throw Error("Renderer differs from preset"); const banner=document.querySelector("#display-preview").getBoundingClientRect();const controls=document.querySelector("iframe").contentDocument.querySelector("#controls").getBoundingClientRect();if(banner.bottom>controls.top||banner.top<0)throw Error("Preview covers toolbar or escapes viewport");true'
 if [[ -n "${SCREENSHOT_DIR:-}" ]]; then ab screenshot "$SCREENSHOT_DIR/display-preview-short.jpg"; fi
-ab click '#display-keep'
+ab press Shift+Tab
+ab eval 'if(document.activeElement.id!=="display-keep")throw Error("Keep display not keyboard reachable");true'
+ab press Enter
 ab wait --fn 'document.body.dataset.displayState === "idle"'
 ab reload
 ab wait --fn 'document.body.dataset.engineState === "ready"'
@@ -33,4 +37,19 @@ ab wait --fn 'document.body.dataset.displayState === "preview"'
 ab eval 'window.oldPreview=document.querySelector("iframe");oldPreview.contentDocument.querySelector("canvas").dispatchEvent(new Event("webglcontextlost",{cancelable:true}));true'
 ab wait --fn 'document.body.dataset.engineState === "ready" && document.querySelector("iframe") !== window.oldPreview'
 ab eval 'if(!document.querySelector("#display-current").textContent.includes("1280 × 720, texture reduction 1"))throw Error("Failed preview did not restore settings");true'
-echo 'PASS: actual 720p/picmip1 confirm/reload → 1080p/picmip0 15s timeout rollback → context failure rollback; short-height toolbar unobscured'
+# Hold only the parent's focus RAF; the production child keeps its normal ready
+# microtask. Exercise both cancelled state and replacement identity boundaries.
+ab click '#hide-lobby'
+ab click '#open-lobby'
+ab eval 'window.originalRAF=window.requestAnimationFrame;window.focusCallbacks=[];window.requestAnimationFrame=fn=>{focusCallbacks.push(fn);return 0};true'
+ab click '#display-start'
+ab wait --fn 'document.body.dataset.displayState === "preview"'
+ab eval 'if(focusCallbacks.length!==1)throw Error("Expected one deferred focus");window.oldPreview=document.querySelector("iframe");document.querySelector("#open-lobby").focus();document.querySelector("#display-revert").click();focusCallbacks[0]();if(document.activeElement.id!=="open-lobby")throw Error("Cancelled callback stole focus");window.requestAnimationFrame=originalRAF;true'
+ab wait --fn 'document.body.dataset.engineState === "ready" && document.querySelector("iframe") !== window.oldPreview'
+ab click '#open-lobby'
+ab click '#display-start'
+ab wait --fn 'document.body.dataset.displayState === "preview"'
+ab eval 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))'
+ab eval 'document.querySelector("#display-keep").focus();focusCallbacks[0]();if(document.activeElement.id!=="display-keep")throw Error("Previous frame callback stole new preview focus");window.oldPreview=document.querySelector("iframe");document.querySelector("#display-revert").click();true'
+ab wait --fn 'document.body.dataset.engineState === "ready" && document.querySelector("iframe") !== window.oldPreview'
+echo 'PASS: actual display confirm/reload, 15s/context rollback, short-height toolbar, keyboard focus and cancelled/replaced focus callbacks'
