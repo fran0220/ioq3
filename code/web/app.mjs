@@ -18,6 +18,7 @@ const menu = createMenu(canvas);
 function report(update) {
     if (disposed) return;
     boot?.report?.(update);
+    menu.report(update);
     if (update.state) {
         document.body.dataset.state = update.state;
         document.body.dataset.ready = String(!!update.ready);
@@ -26,7 +27,6 @@ function report(update) {
         detail.textContent = update.detail;
         retry.hidden = update.state !== 'failed';
         document.querySelector('#controls').hidden = update.state !== 'ready';
-        menu.report(update);
     }
     if (update.persistence) document.querySelector('#save-status').textContent = {
         saving: 'Saving…', saved: 'Settings saved', failed: 'Save failed — retry Save settings',
