@@ -27,8 +27,9 @@ def prepare(source, config, output):
     for polygon in obj.data.polygons:
         polygon.use_smooth = True
     grip = Vector(config['grip_meters'])
+    scale = config.get('fit_scale', 1)
     for vertex in obj.data.vertices:
-        vertex.co -= grip
+        vertex.co = (vertex.co - grip) * scale
     rig_data = bpy.data.armatures.new('weapon_rig')
     rig = bpy.data.objects.new('weapon_rig', rig_data)
     bpy.context.collection.objects.link(rig)
@@ -41,7 +42,7 @@ def prepare(source, config, output):
     root.tail = (0, .05, 0)
     for name, position in config['sockets_meters'].items():
         bone = rig_data.edit_bones.new(name)
-        bone.head = Vector(position) - grip
+        bone.head = (Vector(position) - grip) * scale
         bone.tail = bone.head + Vector((0, .05, 0))
         bone.parent = root
         bone.use_deform = False

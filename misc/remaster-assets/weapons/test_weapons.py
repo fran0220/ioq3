@@ -12,6 +12,18 @@ from iqm_validate import read_iqm, matrices
 
 
 class WeaponTests(unittest.TestCase):
+    def test_shotgun_fit_scales_socket_with_mesh_and_keeps_unit_axes(self):
+        root = Path(__file__).resolve().parents[3]
+        with zipfile.ZipFile(root / 'assets/remaster/runtime/weapon-shotgun-v1-candidate.pk3') as archive:
+            model = read_iqm(archive.read('models/remaster/weapons/shotgun/weapon.iqm'))
+        index = next(i for i, joint in enumerate(model['joints']) if joint['name'] == 'tag_flash')
+        socket = matrices(model['joints'], model['frames'][0])[index]
+        # Independent measured socket minus grip, .8 authored fit, 40 units/m.
+        for axis, expected in enumerate((25.664, 0, 4.48)):
+            self.assertAlmostEqual(socket[axis][3], expected, delta=.001)
+            for other in range(3):
+                self.assertAlmostEqual(socket[axis][other], int(axis == other), places=6)
+
     def test_partial_pack_keeps_reference_view_parts_together(self):
         source = (Path(__file__).resolve().parents[3] / 'code/cgame/cg_weapons.c').read_text()
         start = source.index('\tcg_remasterHands[weaponNum] = qfalse;')

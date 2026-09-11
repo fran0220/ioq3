@@ -1,9 +1,10 @@
 {
   "shader": "models/remaster/weapons/shotgun/body",
+  "fit_scale": 0.8,
   "grip_meters": [-0.3, 0, 0.06],
   "sockets_meters": {
     "tag_flash": [0.502, 0, 0.2],
     "tag_barrel": [0.502, 0, 0.2]
   },
-  "status": "initial full-object inspection; grip and barrel center require review"
+  "status": "full side inspected; uniform .8 fit gives .80m length; runtime grip acceptance pending"
 }

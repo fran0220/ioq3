@@ -140,14 +140,18 @@
     "rotating_barrel": false,
     "hand_slots": [
       "rocket",
-      "machinegun"
+      "machinegun",
+      "shotgun",
+      "grenade"
     ],
     "material": "diffuse-only candidate; normal/specular/emission not yet baked",
     "files": {
       "models/remaster/weapons/rocket/hands.iqm": "f1789316b0081676c32374940d346baec55ff48647be9ae2bf232f45f929b245",
       "models/remaster/weapons/hands/arm.tga": "69c28c8eb62e148c348ddb0b2f029124fafc169bfa19098556950428e2c75051",
       "scripts/remaster_weapon_hands_v1.shader": "4e1c942a8ab37c52f7a7374fcfa6c37d9ba86961459cebf538ad800f8267c9a4",
-      "models/remaster/weapons/machinegun/hands.iqm": "f1789316b0081676c32374940d346baec55ff48647be9ae2bf232f45f929b245"
+      "models/remaster/weapons/machinegun/hands.iqm": "f1789316b0081676c32374940d346baec55ff48647be9ae2bf232f45f929b245",
+      "models/remaster/weapons/shotgun/hands.iqm": "f1789316b0081676c32374940d346baec55ff48647be9ae2bf232f45f929b245",
+      "models/remaster/weapons/grenade/hands.iqm": "f1789316b0081676c32374940d346baec55ff48647be9ae2bf232f45f929b245"
     },
     "source_files": {
       "rigged/hands.blend": "5980c7b9486c7f91f7c3c88670280e3e0f1a60d2c6444aa6b7257c0def5239ea",
@@ -161,6 +165,6 @@
       "/home/user/workspace/repo/misc/remaster-assets/blender_iqm.py": "4a9e62fc5e5286615e261cdecf838007251125ab27c0fc28ae2bbedc1775b963",
       "/home/user/workspace/repo/misc/remaster-assets/iqm_export.py": "20b1ce54fff786182e23eb95318cc86d88d75b5c01accada4159c2f215a0efa8"
     },
-    "package_sha256": "e9d0fe2d2768e2a0f624bb71b986a598aca5b033f245e8a5637586533103b312"
+    "package_sha256": "e131121fe0d1092c59167c6f56a07a3f958ee9257f6e331bd75e29e84b4e8438"
   }
 }

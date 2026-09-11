@@ -1,0 +1,9 @@
+{
+  "shader": "models/remaster/weapons/grenade/body",
+  "grip_meters": [-0.17, 0, 0.065],
+  "sockets_meters": {
+    "tag_flash": [0.241, 0, 0.17],
+    "tag_barrel": [0.241, 0, 0.17]
+  },
+  "status": "initial full-object inspection; grip and bore center require review"
+}

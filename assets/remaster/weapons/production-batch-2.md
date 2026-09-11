@@ -44,3 +44,20 @@ in the validated runtime package yet. Bake output alone is not material approval
 All new source data remains private in `assets/remaster/work/{asset-id}`;
 cross-orb recovery and final source archival are required before closing this
 batch. Original Demo is reference only, never part of these generated outputs.
+
+Runtime follow-through: shotgun fit uniformly scales mesh/socket translations
+by .8, giving .80m length and unit attachment axes. Actual IQM bytes independently
+test tag_flash (25.664,0,4.48) Q3 units. Grenade retains measured .48m length.
+Both have candidate PK3s; right-arm package explicitly supplies those two view
+slots in addition to MG/RL, still no final left arm/finger articulation.
+`verify_batch2.mjs` ran in actual Chromium SwiftShader HDR and LDR with original
+private Demo reference character/environment: each gun single shot costs one,
+held input costs three, release stops, switch preserves ammo. VFS body/hand/QVM
+hashes and actual r_hdr are checked, not inferred from the URL alone. Current
+full Web build and eight weapon-tool tests pass. First/third-person screenshots
+were inspected: forward continuous attachment, no visible inverted faces/spikes;
+washed-out receivers and obscured grips block final art acceptance. This is not
+exact cadence, damage, knockback or final segmented-character fit acceptance.
+New source archives before fitting were copied/hash-verified by the integration
+orb; later rigged derivatives still need recovery transfer. Sound remains
+reviewed but uninstalled and no new firearm FX is claimed complete.

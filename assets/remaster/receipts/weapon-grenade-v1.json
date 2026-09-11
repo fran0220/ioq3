@@ -134,5 +134,29 @@
     },
     "source_sha256": "cfa5cb7eac09e969864eabdaf85cf3fa682c236a8ade97463002d4e026505c37"
   },
-  "package": null
+  "package": null,
+  "weapon_export": {
+    "runtime_accepted": false,
+    "rotating_barrel": false,
+    "hand_slots": [],
+    "material": "diffuse-only candidate; normal/specular/emission not yet baked",
+    "files": {
+      "models/remaster/weapons/grenade/weapon.iqm": "eb852002c7486094516b07151f837e3165feb13fd842674417a877fb7cee4226",
+      "models/remaster/weapons/grenade/body.tga": "5319246e1dba870ac5b24ec227df9c9170092f4516662c243e1d9b3187c3b25c",
+      "scripts/remaster_weapon_grenade_v1.shader": "7b1181cd127bf189348ed70967adee86fd6856d0353e51f0deba15d4cb98c513"
+    },
+    "source_files": {
+      "rigged/weapon.blend": "1bc83d67a87d8bc0b48ead73aa8dffbd3110cade9e26b414975715e78989554a",
+      "rigged/iqm-config.json": "2a475e7432381b4f61c15d189900b293a92aa1c3378041524dc0e9a3d7267cf6",
+      "rigged/iqm/source.json": "6323ff6d5f0e4c15be610b2360e6e7b74db402f2dca8f8ada6c070845f9ac0bb",
+      "rigged/iqm/animation-contract.json": "af4549d827485c253884d02bd18db024141a38f2e01f4107813d0eec8f1c0b92"
+    },
+    "export_scripts": {
+      "/home/user/workspace/repo/misc/remaster-assets/weapons/package_weapon.py": "4331c27cb0be623314792e90bc5776aec097e67c82d78cac985a5b5c4c00f0f5",
+      "/home/user/workspace/repo/misc/remaster-assets/weapons/rig_weapon.py": "fe1e83bbbded681d9b0f4a52ce4a784229a958da69cf781a7140b5b190ebb458",
+      "/home/user/workspace/repo/misc/remaster-assets/blender_iqm.py": "4a9e62fc5e5286615e261cdecf838007251125ab27c0fc28ae2bbedc1775b963",
+      "/home/user/workspace/repo/misc/remaster-assets/iqm_export.py": "20b1ce54fff786182e23eb95318cc86d88d75b5c01accada4159c2f215a0efa8"
+    },
+    "package_sha256": "3b9aa1af689a1b14a5d985448ad11d7c2216c8e6a7b314bac708e660c0a9c074"
+  }
 }
