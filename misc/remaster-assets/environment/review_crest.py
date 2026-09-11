@@ -1,6 +1,6 @@
 """Render six measured orthographic views of exported MD3, not the source GLB.
 
-blender -b --factory-startup --python review_crest.py -- PROCESSED OUTPUT
+blender -b --factory-startup --python review_crest.py -- PROCESSED OUTPUT [--legacy-ccw]
 """
 import json
 from pathlib import Path
@@ -13,20 +13,26 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from md3_static import read_md3
 
 
-def review(processed, output):
+def review(processed, output, legacy_ccw=False):
     output.mkdir(parents=True, exist_ok=True)
     parsed = read_md3((processed / 'model.md3').read_bytes())
-    positions, faces, uvs = [], [], []
+    positions, faces, uvs, normals = [], [], [], []
     for surface in parsed['surfaces']:
         base = len(positions)
         positions.extend(tuple(c / 40 for c in p) for p in surface['positions'])
         uvs.extend(surface['uvs'])
-        faces.extend(tuple(base + i for i in tri) for tri in surface['triangles'])
+        normals.extend(surface['normals'])
+        faces.extend(tuple(base + i for i in (tri if legacy_ccw else (tri[0], tri[2], tri[1])))
+                     for tri in surface['triangles'])
     bpy.ops.object.select_all(action='SELECT')
     bpy.ops.object.delete(use_global=False)
     mesh = bpy.data.meshes.new('exported_wall_crest')
     mesh.from_pydata(positions, [], faces)
     mesh.update()
+    for polygon in mesh.polygons:
+        polygon.use_smooth = True
+    mesh.use_auto_smooth = True
+    mesh.normals_split_custom_set_from_vertices(normals)
     uv = mesh.uv_layers.new()
     for loop in mesh.loops:
         u, v = uvs[loop.vertex_index]
@@ -80,10 +86,14 @@ def review(processed, output):
     (output / 'dimensions.json').write_text(json.dumps({
         'units_per_meter': 40, 'minimum_m': list(minimum), 'maximum_m': list(maximum),
         'size_m': list(maximum - minimum), 'render_source': 'decoded runtime MD3 and TGA',
+        'input_winding': 'legacy-invalid-CCW' if legacy_ccw else 'engine-CW',
+        'preview_winding': 'Blender-CCW', 'normals': 'decoded MD3 normals, smooth shaded',
         'note': 'Preview lights/cameras never exported; not an in-engine approval',
     }, indent=2) + '\n')
 
 
 if __name__ == '__main__':
-    source, target = sys.argv[sys.argv.index('--') + 1:]
-    review(Path(source).resolve(), Path(target).resolve())
+    args = sys.argv[sys.argv.index('--') + 1:]
+    if len(args) not in (2, 3) or (len(args) == 3 and args[2] != '--legacy-ccw'):
+        raise ValueError('Expected PROCESSED OUTPUT [--legacy-ccw]')
+    review(Path(args[0]).resolve(), Path(args[1]).resolve(), len(args) == 3)

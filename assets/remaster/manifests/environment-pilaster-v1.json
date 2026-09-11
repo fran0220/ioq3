@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "asset_id": "environment-pilaster-v1",
+  "classification": "original-generated-environment-portal-pilaster-q3dm1",
+  "authorization": "Human authorized full q3dm1 environment remake/publication and unlimited generation",
+  "style": "industrial-arena-v1",
+  "image_model": "amp-painter",
+  "shape_model": "hunyuan3d-2",
+  "prototype_source": "https://ampcode.com/user-content/attachments/04d3f4f70224bda9ba391bfa8b1c71b8431ae9ef49086849d2de419eafd086db-file.png",
+  "prototype_sha256": "c7d521b4690702d9987a637fa2c2c48644df0a20b553c6fa5d2247d8216352b7",
+  "prototype_history": [{"source":"https://ampcode.com/user-content/attachments/91a5ba580d901e1e65f849fd2f1cfb41152e87d937ce00ad6ae02227d19123d0-file.png","status":"superseded-proportions-too-narrow","cost_usd":null}],
+  "prompt": "Original shallow graphite wall pilaster, three long ivory insets, restrained cyan seam and orange tabs. Revised Painter prototype corrected width to approximately1:9 height. Original surfaces75/76/77/80 have32x8x284 Q3 unit envelopes; generated geometry still requires measured depth and connector review. No commercial images or meshes submitted.",
+  "processing": {
+    "height_meters": 7.1,
+    "units_per_meter": 40,
+    "target_triangles": 1800,
+    "texture_edge": 1024,
+    "rotation_z_degrees": 0,
+    "shader": "models/remaster/environment_pilaster"
+  }
+}
