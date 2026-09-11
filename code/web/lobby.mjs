@@ -1,21 +1,27 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Admission is a reservation, not an engine connection. Session capabilities
 // are deliberately never requested or stored by this view.
-export function createLobby(og) {
+export function createLobby(og, { enter, beforeRelease } = {}) {
+    // Inside an engine, the reservation UI belongs to the persistent shell.
+    if (globalThis.IOQ3_BOOT?.openLobby) return {
+        show(value) { if (value) globalThis.IOQ3_BOOT.openLobby(); },
+        stop() {}, reservation() { return null; },
+    };
     const status = document.querySelector('#lobby-status');
     const controls = document.querySelector('#lobby-controls');
     const rooms = document.querySelector('#lobby-rooms');
     const api = og?.native;
     const supported = ['list', 'create', 'join', 'leave', 'close'].every(name => typeof api?.[name] === 'function');
     let current = null, busy = false, visible = false, stopped = false, timer, renewedAt = 0;
-    const describe = () => current ? `Reserved room ${current.code} · ${current.players}/${current.capacity} members. Engine entry unavailable until trusted session lifecycle is connected.` : 'Choose a room or create one. Membership is a reservation, not an active match.';
+    const describe = () => current ? `Reserved room ${current.code} · ${current.players}/${current.capacity} members. ${enter ? 'Enter to start a fresh engine connection.' : 'Engine entry unavailable until trusted session lifecycle is connected.'}` : 'Choose a room or create one. Membership is a reservation, not an active match.';
     function enable() {
         for (const button of controls.querySelectorAll('button')) button.disabled = busy || button.dataset.full === 'true' || (rooms.contains(button) && !!current);
         document.querySelector('#lobby-create').disabled = busy || !!current;
         document.querySelector('#lobby-leave').disabled = busy || !current;
         document.querySelector('#lobby-join button').disabled = busy || !!current;
         document.querySelector('#lobby-close').disabled = busy || !current?.owner;
-        document.querySelector('#lobby-enter').disabled = true;
+        document.querySelector('#lobby-enter').disabled = busy || !current || !enter;
+        if (enter) document.querySelector('#lobby-enter').textContent = 'Enter reserved room';
     }
     function schedule() {
         clearTimeout(timer);
@@ -72,15 +78,20 @@ export function createLobby(og) {
     });
     document.querySelector('#lobby-leave').addEventListener('click', () => run(async () => {
         if (!current) return;
+        await beforeRelease?.();
         const result = await api.leave(current.roomId);
         if (result.left !== true) throw new Error('No leave confirmation');
         current = null; status.textContent = 'Reservation released. This does not assert transport teardown.';
     }));
     document.querySelector('#lobby-close').addEventListener('click', () => run(async () => {
         if (!current?.owner) return;
+        await beforeRelease?.();
         const result = await api.close(current.roomId);
         if (result.closed !== true) throw new Error('No close confirmation');
         current = null; status.textContent = 'Room closed by its owner. Members must reserve another room.';
+    }));
+    document.querySelector('#lobby-enter').addEventListener('click', () => run(async () => {
+        if (current && enter) await enter(current.roomId);
     }));
     controls.hidden = !supported;
     enable();

@@ -5,6 +5,16 @@
 
 配套工作包：[引擎与玩法](plans/wasm-engine-remaster.md)、[全资产生产](plans/remaster-asset-pipeline.md)、[发布与长期验收](plans/remaster-release-validation.md)。本文为主计划；工作包保留的不同性能数字和技术建议属于实验候选，以本文统一决策为准。
 
+### 2026-09-11 全量闭环执行批次
+
+用户明确要求后续全部实现并达到上线水平。五个既有 high 线程继续执行，不新建线程，不以候选样件结案：环境按落地灯→墙灯→狮首/雕像→门廊/整关精修；角色先完成 Sarge 后制作已核实 Grunt/Major/Visor，不能换色冒充；武器完成九武器、全部 pickups/FX/audio；UI 完成多分辨率/可访问性和原创图标；renderer 完成原子 surface 组、移动 PVS、组合阴影/材质/透明与性能检查。缺完整 baseQ3 原档仍阻塞全量参考和正式地图发布，不阻塞上述独立制作。
+
+主线程持有共享注册、宿主生命周期、最终资源聚合和发布门禁。root `index.html` 为持久 shell，`engine.html` 为一次性同源引擎。SDK 仅由 root 调用，当前 child 通过身份校验的闭包取得一次 session；资产载入后才请求，旧异步结果失效，Module.ogNetwork 不可变。短断线保持原 transport/token；显式重开先停止 reconnect、保存设置并移除旧 iframe，再启动新实例。仅对平台明确的 active-transport 拒绝作有界重试，未知超时不重复提交。leave/close 保持真实 admission 语义，不能当 transport 完成确认。
+
+当前宿主阶段验证：Node 生命周期覆盖离线零 admission、旧回调失效、迟到 session 不启动引擎、申请串行、明确拒绝/未知错误区别；真实 observer OFF 浏览器完成新引擎/唯一写锁、context failure→仅替换 child、停止释放写锁及重开。房间预留由 root 持有，不在 child 销毁时丢失；联网 UI 区分 admitting/connecting/connected/reconnecting/failed，connected 仅为真实 transport ready，不代表 Quake 握手或多人比赛已通过。实际平台 room/release 绑定及双玩家整局仍待干净正式产物，不发布 Demo 或 observer。
+
+平台只读复核：Meshy 仅现有 channel10，余额4，无第二可用通道；新增该上游付费提交仍暂停，可继续手工 rig/动作。退款去重修复已随 Gateway 版本上线，但未声称生产并发故障注入通过。完整授权原档入口仍未找到，源文件外部持久备份仍待落实；已核哈希的跨 orb 私有归档不是外部持久备份。
+
 ### 2026-09-10 剩余阻塞与继续执行
 
 最新用户指令优先完整游戏画面；平台已启动以下五个 high 线程，不再重复 RTC/admission 工程，也不再新建线程。先交付 q3dm1 完整环境、正式动画角色、全武器/拾取物/FX、HUD/menu 的可玩比赛纵向切片，再按 base Q3 清单扩展。以下所有权替代本文后面的历史启动分工：

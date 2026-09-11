@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ioq3 — PC WASM remaster</title>
+  <script>window.OG?.loading?.begin?.(['Engine', 'Settings', 'Assets', 'World']);</script>
+  <link rel="stylesheet" href="./shell.css">
+  <link rel="stylesheet" href="./launcher.css">
+</head>
+<body>
+  <main id="engine-slot" aria-label="Game engine"></main>
+  <button id="open-lobby" aria-haspopup="dialog">Rooms / engine</button>
+  <dialog id="room-panel" aria-labelledby="room-title">
+    <header><h1 id="room-title">Play together.</h1><button id="hide-lobby">Return to game</button></header>
+    <p id="engine-status" role="status" aria-live="polite">Loading engine…</p>
+    <p class="note">Local matches run on this PC. Online rooms require capacity provisioned for this release. Reopening an engine starts a fresh connection; a brief network interruption reconnects automatically.</p>
+    <div class="launcher-actions"><button id="local-engine">New local engine</button><button id="retry-engine">Retry current engine</button><button id="stop-engine">Stop engine</button></div>
+    <h2>Native rooms</h2>
+    <p id="lobby-status" role="status" aria-live="polite">Native rooms unavailable in this standalone build. Local play is available.</p>
+    <div id="lobby-controls" hidden>
+      <div class="launcher-actions"><button id="lobby-refresh">Refresh rooms</button><label>Public listing <input id="lobby-listed" type="checkbox" checked></label><button id="lobby-create">Create room</button></div>
+      <form id="lobby-join"><label>Room code <input id="lobby-code" pattern="[0-9A-F]{8}" maxlength="8" required autocomplete="off" placeholder="8 uppercase HEX"></label><button type="submit">Join room</button></form>
+      <div id="lobby-rooms"></div>
+      <div class="launcher-actions"><button id="lobby-enter" disabled>Enter reserved room</button><button id="lobby-leave">Leave reservation</button><button id="lobby-close">Close owned room</button></div>
+    </div>
+  </dialog>
+  <script type="module" src="./launcher.mjs"></script>
+</body>
+</html>

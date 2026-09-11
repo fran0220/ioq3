@@ -14,15 +14,15 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         path = self.path.split('?', 1)[0]
         if path == '/engine-test.html':
-            data = (build / 'index.html').read_text().replace('./ioquake3.js', './tests/real-engine.mjs')
+            data = (build / 'engine.html').read_text().replace('./ioquake3.js', './tests/real-engine.mjs')
             self.reply(data.encode(), 'text/html')
         elif path == '/tests/canvas.html':
-            data = (build / 'index.html').read_text().replace('<head>', '<head><base href="/">')
+            data = (build / 'engine.html').read_text().replace('<head>', '<head><base href="/">')
             data = data.replace('./app.mjs', './tests/canvas-probe.mjs')
             self.reply(data.encode(), 'text/html')
         elif path == '/tests/controls.html':
             # Production DOM/CSS/event handlers with an explicitly fake engine.
-            data = (build / 'index.html').read_text().replace('<head>', '<head><base href="/">')
+            data = (build / 'engine.html').read_text().replace('<head>', '<head><base href="/">')
             data = data.replace('./ioquake3.js', './tests/fake-engine.mjs')
             data = data.replace('ioq3 remaster', 'HOST FIXTURE — NOT A GAME')
             self.reply(data.encode(), 'text/html')

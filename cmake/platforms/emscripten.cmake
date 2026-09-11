@@ -49,8 +49,10 @@ function(deploy_shell_files)
         target_compile_definitions(${CLIENT_BINARY} PRIVATE IOQ3_WEB_TEST_OBSERVER=1)
     endif()
     configure_file(${SOURCE_DIR}/web/client.html.in
+        ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/engine.html @ONLY)
+    configure_file(${SOURCE_DIR}/web/launcher.html.in
         ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/index.html @ONLY)
-    foreach(file host.mjs app.mjs menu.mjs hud.mjs lobby.mjs play.mjs shell.css)
+    foreach(file host.mjs app.mjs menu.mjs hud.mjs lobby.mjs play.mjs shell.css launcher.mjs launcher.css lifecycle.mjs)
         configure_file(${SOURCE_DIR}/web/${file}
             ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${file} COPYONLY)
     endforeach()

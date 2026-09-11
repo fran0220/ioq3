@@ -2,16 +2,22 @@
 import { startHost } from './host.mjs';
 import { createMenu } from './menu.mjs';
 
-const og = window.OG ?? null;
+let boot = window.IOQ3_BOOT;
+try { if (parent !== window) boot = parent.IOQ3_SHELL?.attach(window) ?? boot; }
+catch { /* Standalone embedding in a different origin has no private shell. */ }
+if (boot) window.IOQ3_BOOT = boot;
+const og = boot?.og ?? window.OG ?? null;
 const canvas = document.querySelector('#canvas');
 const status = document.querySelector('#status');
 const detail = document.querySelector('#detail');
 const retry = document.querySelector('#retry');
 const inputStatus = document.querySelector('#input-status');
-let host;
+let host, module, disposed = false;
 const menu = createMenu(canvas);
 
 function report(update) {
+    if (disposed) return;
+    boot?.report?.(update);
     if (update.state) {
         document.body.dataset.state = update.state;
         document.body.dataset.ready = String(!!update.ready);
@@ -28,7 +34,7 @@ function report(update) {
     if (update.network) document.querySelector('#network-status').textContent = `Network: ${update.network}`;
 }
 
-retry.addEventListener('click', () => location.reload());
+retry.addEventListener('click', () => boot?.retry ? boot.retry() : location.reload());
 document.querySelector('#save').addEventListener('click', () => void host?.flush().catch(() => {}));
 function resumeAudio() { host?.resumeAudio(); }
 window.addEventListener('pointerdown', resumeAudio, { capture: true });
@@ -53,6 +59,18 @@ const loseFocus = () => {
     host?.loseFocus();
     if (document.pointerLockElement) document.exitPointerLock();
 };
+Object.defineProperty(window, 'IOQ3_ENGINE', { value: Object.freeze({
+    pauseInput: loseFocus,
+    async dispose() {
+        if (disposed) return;
+        loseFocus();
+        // Disable same-token reconnect before the parent can request a fresh
+        // session. Removing this document then destroys workers/timers/GL.
+        module?.__ioq3Network?.stop();
+        disposed = true;
+        await host?.flush();
+    },
+}) });
 window.addEventListener('blur', loseFocus);
 document.addEventListener('visibilitychange', () => { if (document.hidden) loseFocus(); });
 canvas.addEventListener('contextmenu', event => event.preventDefault());
@@ -80,11 +98,12 @@ try {
     await navigator.locks.request('ioq3-player-home-v1', { ifAvailable: true }, async lock => {
         if (!lock) throw new Error('This game is already open in another tab. Close that tab, then retry to protect your settings.');
         host = await startHost({ factory, canvas, og, report,
-            onModule: module => menu.attach(module),
+            onModule: value => { module = value; menu.attach(value); },
+            isCurrent: () => !disposed,
             manifestURL: new URL('./game-manifest.json', location.href),
             // Trusted integration may acquire a fresh session; never read credentials
             // from location, archived cvars, localStorage or the asset manifest.
-            getSession: window.IOQ3_BOOT?.getSession,
+            getSession: boot?.getSession,
         });
         // Browser releases the exclusive write lease on iframe/tab destruction.
         await new Promise(() => {});

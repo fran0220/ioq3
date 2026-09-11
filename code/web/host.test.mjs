@@ -83,7 +83,7 @@ test('IDBFS serializes dirty writes arriving during save; failed writes retry', 
     await store.flush();
 });
 
-async function fixture({ files = [file], restoreError = false, getSession, abort = false } = {}) {
+async function fixture({ files = [file], restoreError = false, getSession, abort = false, isCurrent } = {}) {
     const events = [], reports = [], writes = [], calls = [];
     let options;
     const module = {
@@ -96,7 +96,7 @@ async function fixture({ files = [file], restoreError = false, getSession, abort
         factory: async o => { options = o; return module; }, manifestURL: new URL('https://test/game-manifest.json'),
         og: { loading: { begin: () => events.push('begin'), progress() {}, fail: e => events.push(e) },
             ready: () => events.push('ready') },
-        getSession, report: r => reports.push(r),
+        getSession, isCurrent, report: r => reports.push(r),
         fetcher: async url => String(url).endsWith('.json') ? Response.json({ ...manifest, files }) : new Response('abc'),
     });
     return { host, module, options, events, reports, calls, writes };
@@ -134,4 +134,16 @@ test('session acquisition error text cannot leak token to UI or OG telemetry', a
     const f = await fixture({ getSession: async () => { throw new Error(session.token); } });
     assert.equal(f.calls.length, 0);
     assert(!JSON.stringify([f.reports, f.events]).includes(session.token));
+});
+
+test('a disposed host cannot install a late session or start/ready the engine', async () => {
+    let current = true;
+    const f = await fixture({ isCurrent: () => current,
+        getSession: async () => { current = false; return session; } });
+    assert.equal(f.calls.length, 0);
+    assert.equal(f.module.ogNetwork, undefined);
+    f.options.onEngineFrame({ playable: true, configChanged: true });
+    f.options.onExit(3);
+    assert(!f.events.includes('ready'));
+    assert(!f.reports.some(r => r.state === 'failed'));
 });

@@ -100,19 +100,19 @@ export function persistence(FS, onStatus) {
 }
 
 export async function startHost({ factory, canvas, manifestURL, og = null, getSession,
-    report = () => {}, onModule = () => {}, fetcher = fetch }) {
+    report = () => {}, onModule = () => {}, fetcher = fetch, isCurrent = () => true }) {
     let module, saves, failed = false, ready = false, mainStarted = false;
     const log = [];
     const emit = (state, detail = '') => report({ state, detail, runtimeLoaded: !!module, ready });
     const fail = (code, message) => {
-        if (failed) return;
+        if (failed || !isCurrent()) return;
         failed = true;
         emit('failed', message);
         if (typeof og?.loading?.fail === 'function') og.loading.fail({ code, message, retryable: true });
         else og?.loading?.stage?.('Loading failed — reload to retry');
     };
     const frame = ({ playable, configChanged }) => {
-        if (failed || !mainStarted) return;
+        if (failed || !mainStarted || !isCurrent()) return;
         if (configChanged) saves.changed();
         if (playable && !ready) {
             ready = true;
@@ -135,7 +135,7 @@ export async function startHost({ factory, canvas, manifestURL, og = null, getSe
             onAbort: () => fail('ENGINE_ABORT', 'WASM engine aborted. Reload to retry.'),
             onExit: code => fail('ENGINE_EXIT', `Engine stopped (${code}). ${log.slice(-4).join('\n')}`),
         });
-        if (failed) return;
+        if (failed || !isCurrent()) return;
         onModule(module);
         emit('loading', 'WASM loaded; restoring settings');
         og?.loading?.progress?.(0.15, 'Settings');
@@ -143,6 +143,7 @@ export async function startHost({ factory, canvas, manifestURL, og = null, getSe
         module.FS.mount(module.IDBFS, {}, HOME);
         saves = persistence(module.FS, status => report({ persistence: status }));
         await saves.restore();
+        if (!isCurrent()) return;
         const response = await fetcher(manifestURL, { cache: 'no-cache', signal: AbortSignal.timeout(30000) });
         if (!response.ok) throw new Error(`Game manifest unavailable (HTTP ${response.status}).`);
         const manifest = validateManifest(await response.json());
@@ -152,6 +153,7 @@ export async function startHost({ factory, canvas, manifestURL, og = null, getSe
         for (const file of manifest.files) {
             emit('loading', `Checking ${file.path}`);
             const data = await fetchChecked(new URL(file.path, manifestURL), file, fetcher);
+            if (!isCurrent()) return;
             module.FS.mkdirTree(`/${file.path.slice(0, file.path.lastIndexOf('/'))}`);
             module.FS.writeFile(`/${file.path}`, data);
             completed += file.bytes;
@@ -161,6 +163,7 @@ export async function startHost({ factory, canvas, manifestURL, og = null, getSe
         let session;
         try { session = validateSession(await getSession?.()); }
         catch { throw new Error('Unable to acquire a valid multiplayer session. Reload to request a fresh session.'); }
+        if (!isCurrent()) return;
         Object.defineProperty(module, 'ogNetwork', { value: session, writable: false });
         og?.loading?.progress?.(0.9, 'World');
         emit('starting', 'Starting engine; waiting for a playable frame');
