@@ -28,6 +28,11 @@ export function createMenu(canvas) {
     }).observe(document.querySelector('#controls'));
     const hud = createHUD(document.querySelector('#hud'));
     const lobby = createLobby(window.OG);
+    const displayQuality = document.querySelector('#display-quality');
+    displayQuality.disabled = typeof window.IOQ3_BOOT?.openDisplay !== 'function';
+    if (!displayQuality.disabled) document.querySelector('#display-quality-note').textContent =
+        'Open display quality in Rooms / engine. Preview restarts the engine; Keep saves, while Revert or the 15-second timeout restores the previous settings.';
+    displayQuality.addEventListener('click', () => window.IOQ3_BOOT?.openDisplay?.());
     const tell = text => { for (const node of root.querySelectorAll('.edit-status')) node.textContent = text; };
     const saving = () => { document.querySelector('#save-status').textContent = 'Applied — waiting for engine save…'; };
     let module, ready = false, failed = false, snapshot, heldAction = null;

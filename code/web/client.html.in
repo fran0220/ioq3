@@ -99,11 +99,13 @@
         </section>
         <section data-page="display" class="config-page" hidden>
           <p class="eyebrow">IMAGE / READABILITY</p><h2 tabindex="-1">DISPLAY</h2>
+          <button id="display-quality" type="button" aria-describedby="display-quality-note" disabled>Resolution &amp; texture detail…</button>
+          <p id="display-quality-note" class="note">Display preview requires the full game launcher. Live controls below remain available.</p>
           <label class="setting-row">Texture filtering<select id="texture-filter"><option value="-2" disabled>Custom / unavailable</option><option value="0">Nearest mipmap</option><option value="1">Bilinear</option><option value="2">Trilinear</option></select></label>
           <div id="display-fields"></div>
           <p class="edit-status" role="status" aria-live="polite"></p>
           <p class="note">Filtering updates existing world textures without restart. Crosshair 0 is off; 1–10 select engine shapes. Crosshair/FPS controls require a loaded map. Spectator and gameplay rules may hide the crosshair.</p>
-          <p class="note">Resolution and texture detail require renderer restart with recovery; those remain in the engine menu. Browser gamma is not offered as a misleading live brightness control.</p>
+          <p class="note">Browser gamma is not offered as a misleading live brightness control.</p>
         </section>
         <section data-page="bindings" class="config-page" hidden>
           <p class="eyebrow">INPUT / ACTIONS</p><h2 tabindex="-1">KEY BINDINGS</h2>
