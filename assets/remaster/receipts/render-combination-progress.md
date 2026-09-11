@@ -120,3 +120,52 @@ Placement/atomic fallback tests remain valid; content front direction, yaw,
 glow placement and screenshots require rerun after the exporter correction.
 Lamp glow itself uses cull disable, so its visibility must not be attributed
 to its own triangle winding alone. No material brightening was applied.
+
+## Current-scene cube freshness and mode costs
+
+Real GL tracing exposed a second defect: the first rocket-light frame sampled
+cube shadows seven times with zero faces submitted. `dlightMask` came from the
+previous world's traversal; transient light slots are not persistent identities,
+and cube views also overwrite this mask. The renderer now populates all current
+light cubes rather than skipping slots using that stale mask.
+
+`point-freshness.mjs` was red against the pre-fix WASM. It observes the actual
+sampler's bound texture for every point draw and requires all six faces in the
+same RAF interval. With the fix, LDR 312 / HDR 251 point draws passed, rocket
+ammo 999→997, GL0/no loss. This tests submission freshness, not completion of
+GPU execution or in-map shadow accuracy. Native and Web builds passed and
+the production GLSL cube writer/reader test remains green.
+
+`point-modes.mjs` measures 120 RAF intervals during continuous PM_NORMAL rocket
+fire from the same q3dm1 spawn, without the freshness instrumentation. All six
+cases actually consumed ammo and returned GL0/no loss. SwiftShader results:
+
+| HDR | mode | P50 ms | P95 ms | P99 ms |
+| --- | --- | --- | --- | --- |
+| 0 | 0 | 33.3 | 33.4 | 33.4 |
+| 0 | 1 | 33.3 | 50.0 | 50.1 |
+| 0 | 2 | 50.0 | 83.4 | 100.0 |
+| 1 | 0 | 33.4 | 50.1 | 66.7 |
+| 1 | 1 | 49.9 | 50.1 | 66.7 |
+| 1 | 2 | 66.6 | 83.4 | 116.6 |
+
+These are short software runs, not hardware GPU timings or a deterministic
+same-projectile-frame comparison. Longer frame times mean more wall-clock
+firing during 120 intervals. No build ran concurrently with the measurements.
+Inspected `.amp/in/artifacts/render-point-modes/contact.jpg`: all modes retain
+geometry/effects, no black scene squares; mode1 is visibly brighter near the
+pedestal/floor. Explosion phases differ, so the contact is not blocker/receiver
+proof. The fixture still uses pre-CW environment v2, not revised art acceptance.
+
+The actual engine default is **mode0** (`tr_init.c`), unchanged. Do not enable
+mode2 as a production default on the strength of functional tests: the complete
+path costs substantially more in this software workload and still reserves
+192 MiB cube color storage by dimensions. Mode1 is an unshadowed forward-light
+option, not an equivalent substitute for point-shadow quality. A hardware
+matrix, longer runs, multi-light worst case and controlled geometry comparison
+remain required before choosing a changed shipping quality profile.
+
+Fresh prepared binary hashes: WASM
+`8ecae3bb93ea98d652feb90d3d75387eb884e9f3dcd63df6b21d9f15729c8e85`,
+JS `54af96565172eeb83db1e8c50fb51840400cf2c1a89f43a5580b6eb5e3abd300`,
+QVM pack `023b4697af1310ff431093cc24b8bd0e55d21083ed2724fadc91781558b64c5d`.

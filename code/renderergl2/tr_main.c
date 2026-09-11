@@ -1804,9 +1804,9 @@ void R_RenderDlightCubemaps(const refdef_t *fd)
 		viewParms_t		shadowParms;
 		int j;
 
-		// use previous frame to determine visible dlights
-		if ((1 << i) & tr.refdef.dlightMask)
-			continue;
+		// Dlight slots are rebuilt each scene, not persistent light identities.
+		// Last view's mask can skip a new light (and shadow views overwrite it).
+		// Every sampled cube must therefore be populated for this scene.
 
 		Com_Memset( &shadowParms, 0, sizeof( shadowParms ) );
 
