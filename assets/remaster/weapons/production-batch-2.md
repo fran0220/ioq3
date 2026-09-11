@@ -76,3 +76,32 @@ simulation. Independent normal/haste interval tables test each base weapon at
 one millisecond before/at refire, release, missing ammo, infinite-ammo melee
 contact, and 200ms drop/250ms raise boundaries. This is native shared-rule
 verification, not browser cadence/damage/knockback/rocketjump acceptance.
+
+After the QVM header dependency fix, fetched through b5b519cd and executed
+`cmake --build build-web --clean-first --parallel 2` (602 steps), then rebuilt
+the private QVM/`inv.h` package using gameplay `prepare.mjs`. Package SHA256:
+ac503e3d24a38fef5a8cded5a9a7a1d69f1b1da51c503781eb48d8966a6e1991.
+SG/GL/MG/RL all reran successfully in HDR and LDR with actual VFS hashes,
+`ps.weapon`/ready checks and ammo assertions. Evidence is private
+`weapon-shotgun-v1/browser-clean-{hdr,ldr}` (also GL), and corresponding
+MG/RL work directories. Clean-build inspected images still show overbright
+ivory; do not attribute this to mixed QVMs or fix it by global exposure changes.
+
+Ten tool tests now pass including actual `G_Damage`/`CheckArmor` and production
+team predicate for nonfatal FFA cases. Asymmetric direction (3,0,4), 100 damage,
+g_knockback=1000 gives (300,0,400) impulse; self-health damage halves only after
+impulse. Armor uses .66 (50 self damage saves33, takes17), not exact two-thirds.
+Battlesuit radius protection retains impulse; explicit no-knockback does not.
+This tests server damage math, not full projectile collision, radial falloff,
+target deaths, browser hit registration or performed rocket jumps.
+
+`extract_arms.py` executed against copied Sarge source; left/right forearm/hand
+cuts have 699/859 vertices. Inspected left render shows coarse joined finger
+geometry and an open proximal cut: not a finished hand rig or releasable arms.
+No character source was changed and no additional generation fee was incurred.
+
+Environment lamp companion was handed off to the environment owner. Independent
+inspection of its reported HDR/LDR contact sheets found no black quad/obvious
+ghosting; original LDR wall-east/west close frames remain too white to discern
+the vertical cyan capsule. Requested same-camera A/B from environment; do not
+claim all ten lamps accepted or infer the white wall light came from this glow.

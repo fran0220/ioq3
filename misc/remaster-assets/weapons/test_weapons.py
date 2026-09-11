@@ -12,6 +12,19 @@ from iqm_validate import read_iqm, matrices
 
 
 class WeaponTests(unittest.TestCase):
+    def test_actual_damage_and_knockback_rules(self):
+        root = Path(__file__).resolve().parents[3]
+        with tempfile.TemporaryDirectory() as directory:
+            team = Path(directory) / 'team.o'
+            executable = Path(directory) / 'damage-rules'
+            subprocess.run(['cc', '-ffunction-sections', '-fdata-sections',
+                            '-DTeam_CheckHurtCarrier=Discarded_Team_CheckHurtCarrier',
+                            '-c', str(root / 'code/game/g_team.c'), '-o', str(team)], check=True)
+            subprocess.run(['cc', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
+                            str(root / 'misc/remaster-assets/weapons/damage_rules.c'), str(team),
+                            str(root / 'code/qcommon/q_math.c'), '-lm', '-o', str(executable)], check=True)
+            subprocess.run([str(executable)], check=True)
+
     def test_actual_shared_weapon_rules(self):
         root = Path(__file__).resolve().parents[3]
         with tempfile.TemporaryDirectory() as directory:
