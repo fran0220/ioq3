@@ -74,6 +74,14 @@ def main():
                 wait_for('Anim: '+str(animation),start)
                 time.sleep(1.7)
                 screenshot('character-native-verified-death-'+str(number))
+                # Camera collision can push a single view into the corpse.
+                # Orbit the unchanged dead entity; preserve every occluded view
+                # rather than silently accepting a cropped-body screenshot.
+                for angle in (0,90,180,270):
+                    send(f'cg_thirdPersonRange 140; cg_thirdPersonAngle {angle}')
+                    time.sleep(.15)
+                    screenshot(f'character-native-death-{number}-orbit-{angle}')
+                send('cg_thirdPersonRange 95; cg_thirdPersonAngle 90')
                 start = len(lines)
                 send('+attack')
                 time.sleep(.15)

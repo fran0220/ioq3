@@ -17,7 +17,9 @@
     "Parented candidate native/browser actual CG_Player: backjump Anim20, turn Anim24, walk Anim14 + attack Anim7, run Anim15 + attack Anim7 logged and screenshots inspected; attached weapon and connected limbs, run muzzle flash visible. Browser movement inspection used timescale .2, restored to 1; not a performance or timing regression test",
     "Armor-only dye native/browser front/back inspected: distinguishable red/blue, natural face/arms, back chevron/two bars. Front marks may be hidden by weapon; this is skin inspection, not full team combat acceptance",
     "Final grounded package: native driver and actual WASM console/input each logged three non-gib deaths Anim0/2/4 and live respawns. Six corpse captures inspected: no clear remaining floor penetration, but several have incomplete framing/near-camera occlusion",
-    "Native and browser nonfatal bot damage logged with blue player visible; inspected neck/waist remain connected. Native shows a leaned pose; browser still does not establish the precise twitch curve. Damage inspection used slow motion, not timing acceptance"
+    "Native and browser nonfatal bot damage logged with blue player visible; inspected neck/waist remain connected. Native shows a leaned pose; browser still does not establish the precise twitch curve. Damage inspection used slow motion, not timing acceptance",
+    "2026-09-11 consistent QVM rerun: native four PASS (three death/respawn pairs and nonfatal damage), WASM baseline four PASS, actual FS nine PK3 hashes match disk; see character-consistent-qvm-review.md",
+    "2026-09-11 four-direction corpse review: native and WASM each run actual deaths 0/2/4 and live respawns, preserving all 24 corpse captures. Angle0 fully frames all three native/browser bodies; inspected contacts show no clear floor penetration or disconnected mesh. Near-wall angle180/90 crops remain recorded, not counted as passes. Private evidence character-orbit-review and character-orbit-browser; this closes settled corpse framing, not full-speed transition quality"
   ],
   "issues_found_and_resolved": [
     "CCW exporter faces were invisible on outward surfaces in Q3; writer now uses CW with independent winding test",
@@ -34,7 +36,7 @@
     "Full-speed combined locomotion/fire/pain timing review beyond debug-pose captures and prior bot rules regression",
     "Final material normal/F0/emission review",
     "Blue readability and both team shape symbols during combat, beyond default front/side/rear checks",
-    "Complete corpse framing and near-camera foreground-geometry review for all three deaths; current event checks do not close full-body visual acceptance",
+    "Full-speed death transition quality beyond now-inspected full-body settled corpse poses",
     "Final offhand/finger/arm deformation: latest native rocket side review still reports upper-arm seam and compressed grip; browser full side shows contact, but opposite side hides the second hand",
     "External durable source backup, beyond two orb copies",
     "Full authorized original character/skin inventory beyond private Demo subset"
