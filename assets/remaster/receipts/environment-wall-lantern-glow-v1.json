@@ -1,0 +1,75 @@
+{
+  "asset_id": "environment-wall-lantern-glow-v1",
+  "source_asset": "environment-wall-lantern-v1",
+  "source_receipt_sha256": "cd92c1db3c02093edcb25204058d00bbd1a7d710dae9ddc65a30631ac0474a71",
+  "fx_source_package_sha256": "5b6e8030ca2a09936760b44d7b0ea51d312253e82521f9b9683d1d2c33b5f42b",
+  "derivation": {
+    "source_model_sha256": "3d25d53bb6d84ef9ee907c86c1fd16b6c2c1873791292ffd7c656fe36d850871",
+    "derived_model_sha256": "fb1de48dcd67af80cad7be576f840ee2df015be4713fb3b41d31349fc906d2bc",
+    "opaque_surface_bytes_identical": true,
+    "bounds": [
+      -13.09375,
+      -4.0,
+      0.0,
+      13.109375,
+      4.03125,
+      59.984375
+    ],
+    "quads": [
+      {
+        "positions": [
+          [
+            -10.0,
+            4.03125,
+            15
+          ],
+          [
+            10.0,
+            4.03125,
+            15
+          ],
+          [
+            10.0,
+            4.03125,
+            55
+          ],
+          [
+            -10.0,
+            4.03125,
+            55
+          ]
+        ],
+        "uvs": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "normal": [
+          -0.0,
+          1.0,
+          0
+        ]
+      }
+    ]
+  },
+  "new_paid_submissions": 0,
+  "runtime_accepted": false,
+  "package": {
+    "path": "environment-wall-lantern-glow-v1.pk3",
+    "sha256": "4b4b648a97c1ab0d6f283c24e66c43c9730641ded1ccbb0a5794f983373174fa",
+    "bytes": 836936
+  }
+}

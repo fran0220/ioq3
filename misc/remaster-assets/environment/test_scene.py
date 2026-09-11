@@ -32,6 +32,20 @@ class SceneFitTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             fit([0, 0, 0, 1, 2, 3], [[0, 0, 0], [0, 5, 6]], .9)
 
+    def test_glow_preserves_opaque_and_expands_bounds(self):
+        from lamp_glow import append_glow, SHADER
+        from md3_static import read_md3, write_md3
+        source = write_md3([[((0, 0, 0), (0, 0), (0, 1, 0)),
+                             ((0, 0, 5), (0, 1), (0, 1, 0)),
+                             ((3, 0, 0), (1, 0), (0, 1, 0))]], 'models/remaster/test')
+        result, report = append_glow(source, False)
+        model = read_md3(result)
+        self.assertEqual(model['surfaces'][0], read_md3(source)['surfaces'][0])
+        self.assertEqual(model['surfaces'][-1]['shader'], SHADER)
+        self.assertEqual(model['bounds'], [-10, 0, 0, 10, 4.03125, 55])
+        self.assertEqual(len(model['surfaces'][-1]['triangles']), 2)
+        self.assertTrue(report['opaque_surface_bytes_identical'])
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,9 +1,11 @@
 {
   "map": "q3dm1",
   "source_scope": "private-demo-reference",
+  "lamp_glow_package": "assets/remaster/runtime/effect-environment-lamp-v1-candidate.pk3",
+  "lamp_glow_sha256": "5b6e8030ca2a09936760b44d7b0ea51d312253e82521f9b9683d1d2c33b5f42b",
   "assets": [
     {
-      "asset_id": "environment-floor-lantern-v1",
+      "asset_id": "environment-floor-lantern-glow-v1",
       "model": "models/remaster/environment_floor_lantern.md3",
       "instances": [
         {"surfaces":[2063,2064],"fit_surfaces":[2063],"yaw":0},
@@ -15,7 +17,7 @@
       "runtime_accepted": false
     },
     {
-      "asset_id": "environment-wall-lantern-v1",
+      "asset_id": "environment-wall-lantern-glow-v1",
       "model": "models/remaster/environment_wall_lantern.md3",
       "instances": [
         {"surfaces":[2044,2045,2046],"fit_surfaces":[2045,2046],"yaw":-90},
@@ -34,5 +36,5 @@
     "paired-wall-reliefs": [[2071,2072],[2073,2074]],
     "statues": [[2033,2034,2035],[2036,2037,2038,2039,2040,2041,2042,2043]]
   },
-  "note": "Groups include original flames, suppressed atomically only with successful opaque model load. Fit uses solid members only. Wall yaw inferred from bracket-to-cage direction, pending runtime front-side inspection; glow companion not yet included."
+  "note": "Groups include original flames, suppressed atomically only with successful model and companion material load. Fit uses solid members only and includes new quad bounds. Wall yaw passed six-location HDR/LDR front inspection; new glow companion requires repeated review."
 }

@@ -18,7 +18,7 @@
   "original_geometry_surface_count": 2070,
   "full_map_complete": false,
   "full_game_complete": false,
-  "scene_sha256": "0fbc6d2fdd5da67191864a7a840dbc6cfbbbb4e386fb25761ea1df7a98027726",
+  "scene_sha256": "2e7d5f8b23ebd4da47642be9880be2ffad6a1182e952f291a1a0449116a69881",
   "note": "Material candidates do not count as geometry remakes. Bound candidates are not full visibility or art acceptance. Flame ownership requires explicit handoff; existing original effects must not be credited as new.",
   "surfaces": [
     {

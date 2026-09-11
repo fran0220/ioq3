@@ -42,6 +42,15 @@ def build(root, spec_path, measurements_path, output):
     used = {s['surface'] for s in placement['replacements']}
     with zipfile.ZipFile(root / 'assets/remaster/environment/environment-wall-crest-q3dm1-v1.pk3') as archive:
         files = {name: archive.read(name) for name in archive.namelist() if name != 'maps/q3dm1.remaster.json'}
+    if spec.get('lamp_glow_package'):
+        fx = root / spec['lamp_glow_package']
+        if hashlib.sha256(fx.read_bytes()).hexdigest() != spec['lamp_glow_sha256']:
+            raise ValueError('FX package hash mismatch')
+        with zipfile.ZipFile(fx) as archive:
+            for name in archive.namelist():
+                if name in files or not name.startswith(('scripts/', 'textures/remaster_environment_fx/')):
+                    raise ValueError('Unexpected shared FX path')
+                files[name] = archive.read(name)
     reports = []
     for asset in spec['assets']:
         receipt = json.loads((root / f"assets/remaster/receipts/{asset['asset_id']}.json").read_text())
