@@ -14,7 +14,7 @@ the background source, transformation and hash live in assets/remaster/ui.
 | Overview | Painter hangar, DOM navigation | Brand/title final approval |
 | Play / map / bot / mode selection | VFS catalogue, supported-mode masks, eight bot slots, skill and transactional limits | Full-content/multimode acceptance; unavailable assets remain disabled |
 | Settings: volume/music/sensitivity/pitch/FOV | Numeric C allowlist, live readback, archived engine saves | Actual map input/audio and browser reload; FOV disabled until registered |
-| Display | Real live texture filtering, crosshair style/size, FPS | Resolution/picmip preview-confirm-rollback transaction; no misleading live browser gamma |
+| Display | Live filtering/crosshair/FPS plus trusted root resolution/picmip preview, confirmation and rollback | Other-browser/physical-GPU acceptance; no misleading live browser gamma |
 | Key bindings | 30 fixed actions, per-key slots/add/clear, explicit conflict replacement, custom-command protection | Non-US keyboard layout testing; original custom console scripts remain outside editor |
 | Player profile | Transactional ASCII name, handicap, colors and installed model/skin selection | Full remade-character catalogue; Unicode requires engine text support |
 | Field manual | Accessible DOM navigation, PC lifecycle instructions | Update alongside final bindings |
@@ -89,8 +89,10 @@ All additions reuse the existing Painter background and real DOM controls; no
 new generated art is required. Display filter is a three-value enum, not a string
 command. Crosshair 0 is off, 1..10 select the engine's ten shapes; HUD-related
 controls require CA_ACTIVE even when archived cvars exist before a map loads.
-Resolution and picmip remain explicitly outside the live panel because a safe
-renderer-restart preview needs durable rollback, not just a queued vid_restart.
+Resolution and picmip use the root-owned restart/preview/confirm/rollback
+transaction. The child only calls the current boot's `openDisplay()` capability;
+without that capability it disables the entry and explains that the full launcher
+is required. It does not copy preset state, timers, persistence or cvar commands.
 
 Bindings use immutable action IDs and engine key-code enumeration. Existing
 alternate slots are preserved. A conflict makes no mutation until confirmed;
@@ -226,3 +228,22 @@ session text is not displayed. The inner `ready` event and outer `connected`
 normalization both clear only the trouble notice. Failure screenshot inspected.
 This is real WSS/DOM integration with a controlled responder, not platform
 admission, RTC or a Quake gameplay handshake. Test service/certificate removed.
+
+### Display entry keyboard acceptance (2026-09-11)
+
+`display-entry-browser.sh` passes at 1024×600, 1280×720 and 2560×1080: Tab reaches
+the child Display quality entry; Enter opens the root section and focuses its
+heading without starting a transaction. Preset and Preview are keyboard reachable.
+Actual balanced preview reads 1280×720/picmip1. Revert receives default focus;
+Shift+Tab reaches Keep. Keyboard confirmation and explicit rollback return focus
+to the engine iframe. The panel remains centered and above the engine toolbar.
+Standalone `engine-test.html` correctly disables the unavailable root capability.
+
+This test exposed a real ready-order focus race: the child's queued menu opening
+stole focus from Revert. The root now focuses after that work with current-frame,
+current-boot, preview-state and dialog guards; the previously failing assertion
+passes without being removed. Separate `display-browser.sh` also passed actual
+confirmation/reload, 15-second timeout rollback and context-failure rollback.
+Final short-height entry and ultrawide focused-Revert captures are inspected;
+the combined Web Node tests pass 29/29. This is display/input acceptance, not a
+publication or whole-game release declaration.
