@@ -4,6 +4,19 @@ import { createHUD, readHUD, matchClock, teamNames } from './hud.mjs';
 import { createLobby } from './lobby.mjs';
 import { createPlay } from './play.mjs';
 
+// Read-only transport events, not session admission or Quake match readiness.
+export function networkNotice(state) {
+    switch (state) {
+    case 'admitting': return 'Requesting admission. No transport connection yet.';
+    case 'connecting': return 'Connecting transport. The game handshake is still required.';
+    case 'connected': return '';
+    case 'reconnecting': return 'Connection interrupted — reconnecting with the existing session.';
+    case 'failed': return 'Connection failed. Open Multiplayer / Lobby to retry with a fresh engine.';
+    case 'closed': return 'Transport closed. Open Multiplayer / Lobby or start a local match.';
+    default: return undefined;
+    }
+}
+
 export function createMenu(canvas) {
     const root = document.querySelector('#menu');
     // The toolbar wraps at short PC widths. Reserve its measured height so
@@ -284,7 +297,14 @@ export function createMenu(canvas) {
     return {
         attach(value) { module = value; requestAnimationFrame(frame); },
         report(update) {
+            const notice = document.querySelector('#connection-notice');
+            const message = networkNotice(update.network);
+            if (message !== undefined && !failed) {
+                notice.textContent = message;
+                notice.hidden = !message;
+            }
             if (update.state === 'failed') {
+                notice.hidden = true;
                 releaseAction(); hud.hide(); lobby.stop();
                 failed = true; root.hidden = true;
                 canvas.inert = true;

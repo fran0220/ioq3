@@ -162,3 +162,5 @@ select:disabled { opacity: .65; cursor: not-allowed; }
     button, .menu-nav button { border-color: #a8c4c7; }
     .note, .badge, #menu footer { color: #edece4; }
 }
+#connection-notice { position: fixed; inset: 0 0 auto; height: 48px; margin: 0; padding: 12px 4vw; display: flex; align-items: center; justify-content: center; background: #402b24; border-bottom: 1px solid #e6a579; color: #ffe4cf; font-size: 13px; line-height: 1.4; z-index: 2; }
+#connection-notice:not([hidden]) ~ #hud, #connection-notice:not([hidden]) ~ #menu { top: 48px; }

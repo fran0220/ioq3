@@ -14,6 +14,7 @@
 <body data-engine="./@CLIENT_BINARY@.js" data-state="loading">
   <!-- SDL2's Emscripten backend requires the literal #canvas selector. -->
   <canvas id="canvas" tabindex="0" aria-label="ioq3 game canvas"></canvas>
+  <p id="connection-notice" role="status" aria-live="polite" hidden></p>
   <section id="hud" aria-label="Live match" hidden>
     <div class="match-strip"><div><span data-hud="mode"></span><small data-hud="map"></small></div><strong data-hud="clock"></strong><div><span data-hud="team"></span><small>SCORE <b data-hud="score"></b></small></div></div>
     <div class="team-scores" data-hud="teams" hidden><span>▲ RED <b data-hud="red"></b></span><span>■ BLUE <b data-hud="blue"></b></span></div>
@@ -24,7 +25,7 @@
       <p data-hud="empty">Waiting for the server's score report…</p>
     </section>
     <div class="vitals" data-hud="vitals"><div class="health"><span>+ HEALTH</span><strong data-hud="health"></strong></div><div><span>◇ ARMOR</span><strong data-hud="armor"></strong></div><div class="ammo"><span data-hud="weapon"></span><strong data-hud="ammo"></strong></div></div>
-    <div class="weapon-inventory" data-hud="inventory" aria-label="Available weapons"></div>
+    <div class="weapon-inventory" data-hud="inventory" role="group" aria-label="Available weapons"></div>
     <p class="hud-help">F10 / MENU · HOLD SCORES KEY / STANDINGS</p>
   </section>
   <main id="status-panel" aria-labelledby="title">
@@ -67,7 +68,7 @@
             <label class="setting-row">Arena<select id="arena-map" required></select></label>
             <label class="setting-row">Mode<select id="arena-mode" required></select></label>
             <label class="setting-row">Bot difficulty<select id="arena-skill"><option value="1">I can win</option><option value="2">Bring it on</option><option value="3" selected>Hurt me plenty</option><option value="4">Hardcore</option><option value="5">Nightmare</option></select></label>
-            <div id="arena-bots" class="bot-roster" tabindex="0" aria-label="Eight bot slots, scroll to select opponents"><p>8 OPPONENT SLOTS · SCROLL ↓</p></div>
+            <div id="arena-bots" class="bot-roster" role="group" tabindex="0" aria-label="Eight bot slots, scroll to select opponents"><p>8 OPPONENT SLOTS · SCROLL ↓</p></div>
             <div class="match-limits"><label class="setting-row">Frag / capture limit<input id="arena-limit" type="number" min="0" max="999" value="10" required></label><label class="setting-row">Minutes<input id="arena-time" type="number" min="0" max="999" value="10" required></label></div>
             <label class="setting-row">Character<select id="arena-model"></select><button type="button" data-apply-model="play" disabled>Apply</button></label>
             <p id="arena-rule-note" class="note"></p>
@@ -108,7 +109,7 @@
           <p class="eyebrow">INPUT / ACTIONS</p><h2 tabindex="-1">KEY BINDINGS</h2>
           <p class="note">Change or clear individual slots; additional existing bindings are preserved. Esc, console, F10–F12 and OS-reserved shortcuts stay outside this editor. Custom command bindings cannot be overwritten.</p>
           <p class="list-caption">30 actions · Scroll the list for weapons and advanced controls ↓</p>
-          <div id="binding-fields" class="binding-list" tabindex="0" aria-label="Scrollable action bindings"></div>
+          <div id="binding-fields" class="binding-list" role="group" tabindex="0" aria-label="Scrollable action bindings"></div>
           <div id="binding-conflict" hidden><p id="binding-conflict-text"></p><button id="binding-replace">Replace conflicting action</button><button id="binding-cancel">Cancel</button></div>
           <p class="edit-status" role="status" aria-live="polite"></p>
         </section>

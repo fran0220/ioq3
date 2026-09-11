@@ -10,7 +10,7 @@ the background source, transformation and hash live in assets/remaster/ui.
 | Screen/state | Current implementation | Remaining interface/acceptance |
 | --- | --- | --- |
 | WASM / IDBFS / asset verification / world startup | code/web host, real stage messages | Platform and standalone; slow/missing/corrupt assets, no premature ready |
-| Startup / runtime failure | DOM recovery, OG.loading.fail capability detection | iframe replacement, fresh session, IDBFS preserved |
+| Startup / runtime failure | DOM recovery, OG.loading.fail, persistent shell/one-shot engine iframe | Production embedded retry/fresh session; actual local replacement and IDBFS lock transfer tested |
 | Overview | Painter hangar, DOM navigation | Brand/title final approval |
 | Play / map / bot / mode selection | VFS catalogue, supported-mode masks, eight bot slots, skill and transactional limits | Full-content/multimode acceptance; unavailable assets remain disabled |
 | Settings: volume/music/sensitivity/pitch/FOV | Numeric C allowlist, live readback, archived engine saves | Actual map input/audio and browser reload; FOV disabled until registered |
@@ -19,7 +19,7 @@ the background source, transformation and hash live in assets/remaster/ui.
 | Player profile | Transactional ASCII name, handicap, colors and installed model/skin selection | Full remade-character catalogue; Unicode requires engine text support |
 | Field manual | Accessible DOM navigation, PC lifecycle instructions | Update alongside final bindings |
 | In-match menu / resume | F10, UI VM open/close, releases held input | Remote game continues; local pause semantics belong to engine |
-| Lobby / join / reconnect | Native list/create/join/leave/owner-close reservation UI, 20s heartbeat, explicit unavailable entry | Persistent shell/engine teardown + fresh-session handoff; published release and multiplayer match acceptance |
+| Lobby / join / reconnect | Root native reservation UI, 20s heartbeat, persistent shell/engine lifecycle and transport notices | Published release and real multiplayer/expiry/reconnect acceptance; standalone remains unavailable |
 | HUD / scoreboard / death / respawn / intermission | Leased production VM snapshot → DOM vitals/inventory/scoreboard/phases; real held respawn/scores, restart/team/leave actions | Full-content modes and multiplayer; original native HUD restores when lease expires |
 | Credits / licenses / provenance | This asset record and engine source licenses | Complete product-level asset ledger and public source offer before release |
 
@@ -176,15 +176,14 @@ and production embedded multiplayer remain release gates. The private Demo has
 no complete CTF artwork/maps; a controlled CTF-mode HUD check showed missing
 flag shader placeholders, not a validated CTF match.
 
-**Native entry remains honestly unavailable.** OG.native presence is SDK
-support, not proof of a provisioned release. Admission returns reservations,
-not connected players. The UI never calls getSession or places tokens in URLs,
-storage or cvars. The platform currently has no public iframe-remount/transport
-teardown API; loading Retry is not a room-switch API. A trusted persistent
-shell must close all old transports before obtaining a fresh session and
-starting a new engine instance. Until integrated, the entry button stays
-disabled and local play remains available. Reconnect/409/expiry and actual
-multi-client matches must be tested on that real lifecycle, not this fixture.
+**Admission still does not mean connected play.** OG.native presence is SDK
+support, not proof of a provisioned release. The new root shell owns room
+reservation and engine replacement. Inner `engine.html` only receives the
+current boot's memory-only facade; tokens never enter URLs, storage or cvars.
+The platform loading Retry is not a room-switch API. The shell closes old
+transports and destroys the old iframe before requesting a fresh session.
+Standalone rooms remain unavailable. Reconnect/409/expiry and actual multi-client
+matches still need production release validation, not the DOM admission fixture.
 
 ### PC layout/accessibility follow-through (2026-09-11)
 
@@ -202,3 +201,19 @@ Inspected 2560×1080 Play/live HUD and corrected 1024×600 scrolled Play screens
 Physical GPU, screen-reader output, non-US keyboards and other browser engines
 still require separate acceptance. This supersedes the earlier ultrawide gate
 only for the tested Chromium configuration, not every display/browser.
+
+The root/child lifecycle browser test also passes real engine replacement,
+single IDBFS write-lock transfer, context-failure retry, stop and restart. At
+1024×600, child fullscreen controls enter/exit parent-document fullscreen while
+the menu keeps canvas inert and pointer lock released. Closing the root rooms
+dialog returns focus to the engine iframe. Its short-height capture is inspected.
+Axe 4.12.1 reports zero violations for the root dialog and inner Play; named
+scroll groups now have explicit group roles. Background-image contrast remains
+an incomplete automatic check, not a claimed screen-reader/contrast certification.
+
+`networkNotice` accepts only the documented transport event enum. Reconnecting
+explicitly retains the existing session; failed/closed directs users to the
+trusted shell. Connected removes the trouble banner but never announces a ready
+Quake match. Unknown values are ignored; terminal engine failure overrides late
+network events. The Node and DOM presentation fixtures pass and the banner
+capture is inspected; these are not real reconnect acceptance evidence.
