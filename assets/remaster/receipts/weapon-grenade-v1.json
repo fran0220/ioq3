@@ -1,0 +1,138 @@
+{
+  "asset_id": "weapon-grenade-v1",
+  "classification": "remaster-weapon-production-candidate",
+  "manifest_sha256": "08fb249d74055d3bfcc19c85aa115c1e754bbc15538b1f3ee6294ed0b97a4790",
+  "prototype_review": {
+    "at": 1789091747,
+    "note": "Inspected complete compact grenade launcher, distinct short single bore, fixed foregrip, clean large panels and handle opening; approved for geometry generation, final dimensions/material pending",
+    "reviewer": "Amp weapon production visual review",
+    "sha256": "93326a92d382fb10abdc6bfa4f669daa7a2bebbb205dc0272b0129dd275d1e79"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": null,
+      "task_id": null,
+      "request_id": null,
+      "request_sha256": null,
+      "response_sha256": null,
+      "generator_identity": null,
+      "model": "amp-painter",
+      "status": "downloaded",
+      "submissions": null,
+      "artifact": {
+        "bytes": 2073093,
+        "path": "prototype.png",
+        "sha256": "93326a92d382fb10abdc6bfa4f669daa7a2bebbb205dc0272b0129dd275d1e79"
+      },
+      "image": {
+        "height": 1024,
+        "mime": "image/png",
+        "width": 1536
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "not-exposed-by-amp-painter"
+      }
+    },
+    "shape": {
+      "operation_id": "4a1b25bd-8329-46c5-a3c8-57cede01cc47",
+      "task_id": "task_a53zMOoUfFmv3F4Le5bxwSotgfV5JVZP",
+      "request_id": "202609110155477552241218268d9d6wGahAy8m",
+      "request_sha256": "fc455889242f4adee319cb7c1df11808fbd6803acb088d5499f857318acbeeac",
+      "response_sha256": "c9664334b0d4f71676745278c64b60e0a3e33beea859f1d5c424fa7e4c811b7a",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 3277168,
+        "path": "generated.glb",
+        "sha256": "cfa5cb7eac09e969864eabdaf85cf3fa682c236a8ade97463002d4e026505c37"
+      },
+      "image": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 0.9051875800000175,
+          "paint_load_and_generate_seconds": 43.36779202500003,
+          "shape_load_and_generate_seconds": 32.89932055999998,
+          "texture_bake_seconds": 0.3804712059999815,
+          "texture_delight_seconds": 1.6311743449999767,
+          "texture_export_verify_seconds": 0.7520202279999921,
+          "texture_inpaint_seconds": 15.816998124999998,
+          "texture_load_seconds": 8.440993123999988,
+          "texture_mesh_preparation_seconds": 2.7738951940000334,
+          "texture_multiview_seconds": 6.15352016199995,
+          "texture_normal_render_seconds": 0.1266456530000255,
+          "texture_position_render_seconds": 0.11376023600001872,
+          "texture_uv_seconds": 10.403052236000008
+        }
+      },
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1789091748,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609110155477552241218268d9d6wGahAy8m",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    }
+  },
+  "processing": {
+    "files": [
+      {
+        "bytes": 5478500,
+        "path": "processed/cleaned.blend",
+        "sha256": "0b2241af8acc521357275309e36f553f81f9eaf2b65cdc456e9197862c79b474"
+      },
+      {
+        "bytes": 1604546,
+        "path": "processed/diffuse.tga",
+        "sha256": "5319246e1dba870ac5b24ec227df9c9170092f4516662c243e1d9b3187c3b25c"
+      },
+      {
+        "bytes": 1945,
+        "path": "processed/geometry-report.json",
+        "sha256": "c821605d0bc9317d7a4fa2778f1b8908af452f2d6d90db046629b85fc6d2d52f"
+      },
+      {
+        "bytes": 284772,
+        "path": "processed/model.md3",
+        "sha256": "6c3a14ab1d2a008f5629eaa1e820adde44824b31bb74afc9ba6f159a2746474b"
+      },
+      {
+        "bytes": 137,
+        "path": "processed/remaster.shader",
+        "sha256": "8574a23e9b4d38f73ebff1ae0f4a8120d48df73f1912caeb548c6d47c6c4f5a3"
+      },
+      {
+        "bytes": 523869,
+        "path": "processed/review-back.png",
+        "sha256": "66a5b84f680f2670afc12819edd1c72c04fcc92b11accdca4b7a210af432c665"
+      },
+      {
+        "bytes": 512666,
+        "path": "processed/review-front.png",
+        "sha256": "989ff1a986f8968d3e490c3181ba5cb529bcef1865328d0542004b78cfe5248a"
+      }
+    ],
+    "scripts": {
+      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
+      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
+    },
+    "source_sha256": "cfa5cb7eac09e969864eabdaf85cf3fa682c236a8ade97463002d4e026505c37"
+  },
+  "package": null
+}

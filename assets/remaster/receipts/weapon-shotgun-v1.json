@@ -1,0 +1,138 @@
+{
+  "asset_id": "weapon-shotgun-v1",
+  "classification": "remaster-weapon-production-candidate",
+  "manifest_sha256": "f96672416159c59b0266903a947078e83a8e0f1aef7ad83f7113cf9083f2d1e8",
+  "prototype_review": {
+    "at": 1789091682,
+    "note": "Inspected full isolated twin-barrel silhouette, fixed forward/rear grips, coherent graphite ivory panels, ample margin; approved for generated geometry, not final runtime art",
+    "reviewer": "Amp weapon production visual review",
+    "sha256": "dfe43af684c8cf0879d2a794a1af937745be007adef9b51522fce4b652b2a7cd"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": null,
+      "task_id": null,
+      "request_id": null,
+      "request_sha256": null,
+      "response_sha256": null,
+      "generator_identity": null,
+      "model": "amp-painter",
+      "status": "downloaded",
+      "submissions": null,
+      "artifact": {
+        "bytes": 1282822,
+        "path": "prototype.png",
+        "sha256": "dfe43af684c8cf0879d2a794a1af937745be007adef9b51522fce4b652b2a7cd"
+      },
+      "image": {
+        "height": 887,
+        "mime": "image/png",
+        "width": 1774
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "not-exposed-by-amp-painter"
+      }
+    },
+    "shape": {
+      "operation_id": "544779e1-66f7-4231-8aea-45d27b86be7e",
+      "task_id": "task_Cjyt1XZ1JdAYFhwEI7JEa25oMMTK4ZJE",
+      "request_id": "202609110154426788379048268d9d6SYRoePZK",
+      "request_sha256": "8530775b49a5fc2086044273214081e104064e3911ec70880c121df57efc81f2",
+      "response_sha256": "259f9e712aee3bdd1e8377bd8dbabfedb79704ac4711ac51205e438da280e296",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 3432144,
+        "path": "generated.glb",
+        "sha256": "e900688fd73ab09585694d5defed5990ab214db7ebd41e463973f9d2291280b2"
+      },
+      "image": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 0.9340738330000136,
+          "paint_load_and_generate_seconds": 56.34310661699999,
+          "shape_load_and_generate_seconds": 32.54465081499998,
+          "texture_bake_seconds": 0.36880582999998524,
+          "texture_delight_seconds": 1.651652820999999,
+          "texture_export_verify_seconds": 0.7579945589999966,
+          "texture_inpaint_seconds": 25.425289491,
+          "texture_load_seconds": 10.128210768000002,
+          "texture_mesh_preparation_seconds": 0.8094508599999983,
+          "texture_multiview_seconds": 6.127426874999998,
+          "texture_normal_render_seconds": 0.12267443400000388,
+          "texture_position_render_seconds": 0.11046796399998016,
+          "texture_uv_seconds": 12.10586883800002
+        }
+      },
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1789091683,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609110154426788379048268d9d6SYRoePZK",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    }
+  },
+  "processing": {
+    "files": [
+      {
+        "bytes": 5822404,
+        "path": "processed/cleaned.blend",
+        "sha256": "c420b6f85aba7926a3ab821f5f58772ae859ce1a397436042ed47302c0c8c94b"
+      },
+      {
+        "bytes": 1828754,
+        "path": "processed/diffuse.tga",
+        "sha256": "b9fe16aa5ede530e3b4a10c8ceb2b3c566f95ea262505b70474cd135998ab2aa"
+      },
+      {
+        "bytes": 1942,
+        "path": "processed/geometry-report.json",
+        "sha256": "3453af39fb1b4bb5ad2931b48e58db3f5a47b647507de4852d3bd4b6cc668017"
+      },
+      {
+        "bytes": 283988,
+        "path": "processed/model.md3",
+        "sha256": "aee99c2b68a0f9fc9c3bf5b928a8c0c33cbec55717f37bb47bf9a5bc57c72eb6"
+      },
+      {
+        "bytes": 137,
+        "path": "processed/remaster.shader",
+        "sha256": "3ae53ac64ae99b93ae7de96d71338f1af77ea27789da7a057bf8ffe6578a4775"
+      },
+      {
+        "bytes": 472330,
+        "path": "processed/review-back.png",
+        "sha256": "6ae332d931bebbb09d70a3a670448aa53ccb84c9939f17e8b2a9c51cca99a374"
+      },
+      {
+        "bytes": 467670,
+        "path": "processed/review-front.png",
+        "sha256": "f72714f4b44b95e67f85f5fd481129bb28bc017aee5b29b8ee03b794968f4e45"
+      }
+    ],
+    "scripts": {
+      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
+      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
+    },
+    "source_sha256": "e900688fd73ab09585694d5defed5990ab214db7ebd41e463973f9d2291280b2"
+  },
+  "package": null
+}

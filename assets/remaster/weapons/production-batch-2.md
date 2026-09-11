@@ -1,0 +1,46 @@
+# Continued complete base-Q3 production, not a two-weapon scope
+
+Execution order: finish MG/RL materials and two-hand fitting while producing
+shotgun/grenade; then gauntlet/lightning/rail/plasma/BFG individually with
+view/world/pickup meshes, hands, attachment sockets, sound and associated FX.
+Follow with all eight ammunition classes, health/armor, holdables, six powerups,
+two CTF flags and shared blood/water/teleport/respawn effects. Every item retains
+its independent visual, audio and actual-gameplay acceptance gate. No weapon
+is complete merely because its image or GLB exists.
+
+Shared registration stays with the integration owner: cg_main graphics/sounds,
+cg_ents pickup presentation and cg_event mappings only where required by actual
+new content. Weapon IQM body/hands/barrel/flash interfaces currently suffice;
+no new shared header/ABI, game event, reload, damage or physics change is planned.
+Per-weapon measured left-hand points go to the character owner after mesh review.
+
+2026-09-11 paid batch, original Painter concepts:
+
+- Shotgun: `task_Cjyt1XZ1JdAYFhwEI7JEa25oMMTK4ZJE`, generated GLB downloaded,
+  Blender cleanup and initial rigid IQM complete. Full side view inspected:
+  distinct twin barrel and fixed grips; generated length about 1m exceeds the
+  intended .7m and needs authored size/fitting. Material still dark/noisy and
+  is not final. Matched Hunyuan charge $0.50.
+- Grenade launcher: `task_a53zMOoUfFmv3F4Le5bxwSotgfV5JVZP`, GLB downloaded and
+  Blender cleanup complete; attachment fitting pending. Matched charge $0.50.
+- `effect-shotgun-fire-v1`: one ElevenLabs sound submission, matched $0.0007.
+  Inspected audio has one immediate blast, decay under a second, no speech,
+  music, reload or extra shot. ffprobe: mono PCM16, 22050Hz, 1.48 seconds.
+  Source hash and request/cost in receipt. Not yet installed or in-engine synced.
+- Painter costs are not exposed and remain unknown, not zero.
+
+`sound.py` saves submission-unknown before network and never automatically
+retries a sound POST, even after transport failure. The recovery unit test
+simulates an ambiguous failure, repeats the invocation and changes input,
+proving only one request occurs and the immutable state survives. Seven weapon
+tool tests pass. Decoding a saved successful response is local/repeatable.
+
+`bake_normal.py` runs the actual paid high-resolution mesh against the immutable
+cleaned runtime UV mesh, records hashes, and writes a separate material stage.
+Rocket bake executed and atlas inspected: coherent main islands, localized
+saturated small islands need engine inspection. No new normal map is installed
+in the validated runtime package yet. Bake output alone is not material approval.
+
+All new source data remains private in `assets/remaster/work/{asset-id}`;
+cross-orb recovery and final source archival are required before closing this
+batch. Original Demo is reference only, never part of these generated outputs.

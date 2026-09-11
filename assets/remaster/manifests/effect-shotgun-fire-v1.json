@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "asset_id": "effect-shotgun-fire-v1",
+  "classification": "original-weapon-sound-production-candidate",
+  "authorization": "User authorized complete weapon audio remake and paid asset generation",
+  "prompt": "One single isolated powerful futuristic double barrel arena shotgun blast. Immediate sharp dry mechanical transient followed by a short deep punch and tight metallic decay. No speech, no music, no ambience, no echo, no repeated firing, no reload, no pump action. Clean close studio game sound effect, silence after decay, not clipped or distorted.",
+  "duration_seconds": 1.5,
+  "loop": false,
+  "runtime_target": "sound/remaster/weapons/shotgun/fire.wav",
+  "runtime_accepted": false
+}
