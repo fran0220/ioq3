@@ -95,7 +95,7 @@
       {
         "bytes": 6312800,
         "path": "processed/cleaned.blend",
-        "sha256": "d16801acabc98c5836825b12f2dca173361c5300442e4e79864c7ef4cb5905ac"
+        "sha256": "6f14e6eff352969f29b6f2f8df51aa5c446f6964bc4916769c27aba38386e45b"
       },
       {
         "bytes": 1998425,
@@ -103,14 +103,14 @@
         "sha256": "fc27a4310a3f3d3c513836e45b4343d9fa0741c7ea77aed124380581327d3999"
       },
       {
-        "bytes": 1210,
+        "bytes": 1320,
         "path": "processed/geometry-report.json",
-        "sha256": "732d8a794c2983f1d347b1f9be2a4e21a690078887d91fe0602507f84cdd7450"
+        "sha256": "3f6967676042f38c951abd0339aadb9a4d1244134e5fa3496ae4398df5f51ad8"
       },
       {
         "bytes": 104980,
         "path": "processed/model.md3",
-        "sha256": "3962a19476b0c77b83cd236f20cd4435ef6713232a1f7f44ca7e628bbe234f7c"
+        "sha256": "80a3679f36fac6343b237106980414a9ec33b6242b497f0cb1489ef7ba7232ec"
       },
       {
         "bytes": 147,
@@ -118,25 +118,25 @@
         "sha256": "74fd62652d5ac967884e83ec64f16c4245af0b025513ffb78cc254b3f6f3d240"
       },
       {
-        "bytes": 463199,
+        "bytes": 463304,
         "path": "processed/review-back.png",
-        "sha256": "4988ca6ff4c81f24790f902ba8439c2dc69921c476eb094247e4f4def7e36b89"
+        "sha256": "9b773698a0839f9f8853964029413f739ce1a17a24bcf96223d81f21d4854ef1"
       },
       {
-        "bytes": 456120,
+        "bytes": 456206,
         "path": "processed/review-front.png",
-        "sha256": "4ac291854fcd58e240293ca94dc78d51aba602d68b3cad1c5e5b846668e1471f"
+        "sha256": "08a941de2425adebe01493c467ca0e23891eb5e71a2642432902df8f2715c30b"
       }
     ],
     "scripts": {
-      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
-      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
+      "blender_static.py": "d23f16a7f7f003b92ab890b204699097c305871ee8c05f8e921e92016729dfad",
+      "md3_static.py": "3dedd7d9b05889969dce495804cff4b4c8fbf3e0d8c72b3d0c8d00813fa27e94"
     },
     "source_sha256": "0e537ff6fd9860120004e8d7ef3d97dff182aff6e68cf536d92caf6ad1030da1"
   },
   "package": {
-    "bytes": 1188724,
+    "bytes": 1188730,
     "path": "environment-floor-lantern-v1.pk3",
-    "sha256": "13f2c1660b8a090757370edd235265db5686c93c79da410857bf05e4e7f91f77"
+    "sha256": "cd89b6c35f6a6d1bdbe136fb0b3ba807cd06c545c87c4ccba8e6e1a3fb8e5311"
   }
 }

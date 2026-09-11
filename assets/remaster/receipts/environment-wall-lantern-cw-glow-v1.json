@@ -1,0 +1,76 @@
+{
+  "asset_id": "environment-wall-lantern-cw-glow-v1",
+  "source_asset": "environment-wall-lantern-v1",
+  "source_receipt_sha256": "93d6df493c6cda8d6fa351c8c6359c2d75126b70f6baad6b429938fcb042fce2",
+  "fx_source_package_sha256": "5b6e8030ca2a09936760b44d7b0ea51d312253e82521f9b9683d1d2c33b5f42b",
+  "derivation": {
+    "source_model_sha256": "c6e48b3d9c1f8c6f22dd18b622c4a03123089ae50025447d28a2a804ade26276",
+    "derived_model_sha256": "a0800a1ba6ea5f72b7004eee9dfd18506086f41c5cbda9ffada9838a506e7fa9",
+    "opaque_surface_bytes_identical": true,
+    "winding": "Q3 CW",
+    "bounds": [
+      -13.09375,
+      -4.078125,
+      0.0,
+      13.109375,
+      3.953125,
+      59.984375
+    ],
+    "quads": [
+      {
+        "positions": [
+          [
+            -10.0,
+            -4.078125,
+            15
+          ],
+          [
+            10.0,
+            -4.078125,
+            15
+          ],
+          [
+            10.0,
+            -4.078125,
+            55
+          ],
+          [
+            -10.0,
+            -4.078125,
+            55
+          ]
+        ],
+        "uvs": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "normal": [
+          0.0,
+          -1.0,
+          0
+        ]
+      }
+    ]
+  },
+  "new_paid_submissions": 0,
+  "runtime_accepted": false,
+  "package": {
+    "path": "environment-wall-lantern-cw-glow-v1.pk3",
+    "sha256": "5e0e8771d44b005af5feeec3c33f48dc74fdf316484bd4e5d48d1652723ab633",
+    "bytes": 836967
+  }
+}

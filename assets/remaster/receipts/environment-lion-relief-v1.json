@@ -95,7 +95,7 @@
       {
         "bytes": 6621984,
         "path": "processed/cleaned.blend",
-        "sha256": "da5c4d34076754988039b89ac4c3917c0efc749b6947b008656b436d8f69dd44"
+        "sha256": "b93c1035c9c6222f36f6965ea2ef2b9cd70d80698f0afc00889cdce4b67064f3"
       },
       {
         "bytes": 2644583,
@@ -103,14 +103,14 @@
         "sha256": "2263f23434c422e9404f25848c8c98e167af52ccff4281aa13086660aa069ed9"
       },
       {
-        "bytes": 1209,
+        "bytes": 1319,
         "path": "processed/geometry-report.json",
-        "sha256": "97ba2e76167cedefdb83c12eab821c239f11d3bbb75b6e1c4123f132f5b71e43"
+        "sha256": "597c7b9d082346a7ca0cddfe657f040dc274d6ec60a0e3d1d90c8a88ba1914b7"
       },
       {
         "bytes": 103588,
         "path": "processed/model.md3",
-        "sha256": "7e1d14590ffcf83662934aee0019cc2067556bc7314396f1c8d8200f49dd5de9"
+        "sha256": "a8aa3468833103aa99a119ee0a20bdaafefa70f8c8c42717bc887c8a3ce45ccf"
       },
       {
         "bytes": 143,
@@ -118,25 +118,25 @@
         "sha256": "4dbd49c320efe81dfacfdb54636fae0bb4ed5bb65c2b1587dba6c7c315e833ff"
       },
       {
-        "bytes": 579296,
+        "bytes": 579352,
         "path": "processed/review-back.png",
-        "sha256": "ab9e24fddef86e168a20538d1125e7cf4ff473ab02c1fbf8d3946e6143b83f9e"
+        "sha256": "0518ae90558eee94f36e5d9a8fd3710fcfc032eb77928b102cbf4576c03af00a"
       },
       {
-        "bytes": 614726,
+        "bytes": 614583,
         "path": "processed/review-front.png",
-        "sha256": "8a489ba2f781927606d8193b22158637d3eb7d894851dfaa7d3eba9e45e05f1a"
+        "sha256": "0c27b93b08bb411683ee86292068700631d6a12a76e5aff02aca4085ba187848"
       }
     ],
     "scripts": {
-      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
-      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
+      "blender_static.py": "d23f16a7f7f003b92ab890b204699097c305871ee8c05f8e921e92016729dfad",
+      "md3_static.py": "3dedd7d9b05889969dce495804cff4b4c8fbf3e0d8c72b3d0c8d00813fa27e94"
     },
     "source_sha256": "55524466c277165319150eb189236ed2048349f4f94ab19fc2e52b4f77fbc9d6"
   },
   "package": {
-    "bytes": 1539695,
+    "bytes": 1539682,
     "path": "environment-lion-relief-v1.pk3",
-    "sha256": "bf25f17591b9199fcc2e605ebaf2a3cc4f15d75a37fc86c658924c8c70b559be"
+    "sha256": "9568452815b5ff7992fdf0447697f5767cba40b612dee8fe5fa663f825447c0f"
   }
 }

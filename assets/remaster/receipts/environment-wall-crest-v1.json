@@ -95,7 +95,7 @@
       {
         "bytes": 6273160,
         "path": "processed/cleaned.blend",
-        "sha256": "9df24a2825f610d7af3d57786693f9a4303f62cae15f26d872219c33b73a1b12"
+        "sha256": "a898702d5e2f838cf30a2ce988b1e6399bc2fbd13de93421bf12a8f672a7ed9f"
       },
       {
         "bytes": 2098912,
@@ -103,14 +103,14 @@
         "sha256": "79a05544fe43f6718aa6b97c5117e02ab214dea585a418f0c189ed32aeaeb2c8"
       },
       {
-        "bytes": 1124,
+        "bytes": 1234,
         "path": "processed/geometry-report.json",
-        "sha256": "8b6d2b0ca40452719688e2474b351515325daf3c90f4ae835a5f6a6ef326cfe8"
+        "sha256": "6ef70d172ac89058d5420442d2df2d964dfc4e956593c712923d27b00d48091d"
       },
       {
         "bytes": 100340,
         "path": "processed/model.md3",
-        "sha256": "fb39b208dcf27603601e33a50651c88aab2f44881413541939452f026b49f8f7"
+        "sha256": "c4d21b67ffec3e6b3ca3e80b29820f09f9e395b869c7a29c8a7f25226f4bebe3"
       },
       {
         "bytes": 141,
@@ -118,25 +118,25 @@
         "sha256": "cee449f836c9c05d1d4ee51fd59cdeee248841b692040228b39371b488abd87b"
       },
       {
-        "bytes": 547714,
+        "bytes": 547580,
         "path": "processed/review-back.png",
-        "sha256": "179a26bf4b3c273a587553392909f0e950d3ff07191997b65254de58c1b7e6cf"
+        "sha256": "b6df3dc96ac6251f971481b68a634052679e2b9081c1b3632d9368d16fffb7ee"
       },
       {
-        "bytes": 593675,
+        "bytes": 593744,
         "path": "processed/review-front.png",
-        "sha256": "bf76e09d2cbc5b275134128395d5c16dce9164d80e5daa0d8a70de1756cabb4f"
+        "sha256": "7e24532104b7eb20e0352b9417342f0e6adf1fe194c7d9bcd9c5f41d7c3acddd"
       }
     ],
     "scripts": {
-      "blender_static.py": "9735c8865d47b2e705883c7810664214fd49a755604de104d818e69cbbdbe46c",
-      "md3_static.py": "48be28cdfe1525990800993023586a1a6f22828db93e3443171f0faccd34d496"
+      "blender_static.py": "d23f16a7f7f003b92ab890b204699097c305871ee8c05f8e921e92016729dfad",
+      "md3_static.py": "3dedd7d9b05889969dce495804cff4b4c8fbf3e0d8c72b3d0c8d00813fa27e94"
     },
     "source_sha256": "cf1d9898ad027cd6db528e32d7d7e1384c3e2b3938124f30ec4ea0ab307931f9"
   },
   "package": {
-    "bytes": 1194441,
+    "bytes": 1194380,
     "path": "environment-wall-crest-v1.pk3",
-    "sha256": "57eba5f42ecd4429529be131faceba910ee60ecab60423313a6bcf1cfe7945b6"
+    "sha256": "17b3126fd3a6e0bfc3f1c15862a7e58e7d84a13c44ad7ab0d44f4af6c0e3f695"
   }
 }

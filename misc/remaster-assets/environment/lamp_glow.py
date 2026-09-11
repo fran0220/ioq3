@@ -18,15 +18,15 @@ def append_glow(data, floor):
     triangles = []
     quads = []
     for yaw in ([0, 90, 180, 270] if floor else [0]):
-        width, low, high, depth = (8, 12, 82, 12.78125) if floor else (10, 15, 55, 4.03125)
+        width, low, high, depth = (8, 12, 82, 12.78125) if floor else (10, 15, 55, -4.078125)
         angle = math.radians(yaw)
         c, s = math.cos(angle), math.sin(angle)
         local = [(-width, depth, low), (width, depth, low), (width, depth, high), (-width, depth, high)]
         points = [(c*x-s*y, s*x+c*y, z) for x, y, z in local]
-        normal = (-s, c, 0)
+        normal = (-s, c, 0) if floor else (s, -c, 0)
         uvs = [(0, 1), (1, 1), (1, 0), (0, 0)]
-        # +Y normal; winding agrees with the opaque MD3 engine convention.
-        for indices in [(0, 2, 1), (0, 3, 2)]:
+        # Engine-native CW: geometric cross is opposite the outward normal.
+        for indices in ([(0, 1, 2), (0, 2, 3)] if floor else [(0, 2, 1), (0, 3, 2)]):
             triangles.append([(points[i], uvs[i], normal) for i in indices])
         quads.append({'positions': points, 'uvs': uvs, 'normal': normal})
     companion = write_md3(triangles, SHADER)
@@ -48,7 +48,8 @@ def append_glow(data, floor):
     assert parsed['surfaces'][:-len(glow['surfaces'])] == original['surfaces']
     return result, {'source_model_sha256': hashlib.sha256(data).hexdigest(),
                     'derived_model_sha256': hashlib.sha256(result).hexdigest(),
-                    'opaque_surface_bytes_identical': True, 'bounds': parsed['bounds'], 'quads': quads}
+                    'opaque_surface_bytes_identical': True, 'winding': 'Q3 CW',
+                    'bounds': parsed['bounds'], 'quads': quads}
 
 
 def derive(root, asset, floor):
@@ -59,7 +60,7 @@ def derive(root, asset, floor):
     fx = root / 'assets/remaster/runtime/effect-environment-lamp-v1-candidate.pk3'
     if hashlib.sha256(fx.read_bytes()).hexdigest() != '5b6e8030ca2a09936760b44d7b0ea51d312253e82521f9b9683d1d2c33b5f42b':
         raise ValueError('Unreviewed FX source')
-    derived_id = asset.replace('-v1', '-glow-v1')
+    derived_id = asset.replace('-v1', '-cw-glow-v1')
     output = root / 'assets/remaster/work' / derived_id
     output.mkdir(exist_ok=True)
     with zipfile.ZipFile(source) as z:

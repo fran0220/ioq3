@@ -1,12 +1,13 @@
 # Environment material candidate v1 — not a complete level remake
 
-**2026-09-11 static-mesh release blocker:** the original Blender static exporter
+**2026-09-11 winding correction:** the original Blender static exporter
 retained CCW indices while Q3's front-sided MD3 path requires CW. Real WASM
 lantern probes changing only triangle indices exposed the true black backplate
 where earlier captures had shown the distant ivory face through the culled
-near shell. Consequently earlier crest/lantern/relief front/yaw and material
-readability conclusions are provisional and must be repeated after corrected
-export. Loading/grouping logs remain observations, not exterior-art approval.
+near shell. Earlier crest/lantern/relief front/yaw and material conclusions are
+withdrawn. Scene-v6-cw re-exports all four paid sources with corrected winding
+and has 26 actual WASM placement checks; see `environment-v6-cw-review.md` for
+scope, hashes and outstanding gates. This is not full-level art acceptance.
 See `environment-winding-review.md`. Do not ship the old scene-v1–v4 candidates.
 
 Original Painter 2D artwork is integrated into real q3dm1 WASM rendering, not a
@@ -51,9 +52,10 @@ color does not guarantee adequate illumination; runtime art acceptance remains
 separate from the byte-invariant checks.
 
 **Do not publish the derived Demo BSP or the fixture directory.** Only original
-material assets live here. The complete authorized source data and editable map
-sources are still missing. No geometry rebuilding, statue replacement, new
-collision, prop placement or compiled release map is claimed.
+material assets and generated prop candidates live here. The complete authorized
+source data and editable map sources are still missing. Scene-v6-cw binds thirteen
+props, but does not claim full geometry rebuilding, statue replacement, new
+collision or a compiled release map.
 
 ## Reproduction
 
@@ -104,7 +106,11 @@ physical-GPU performance and all-map acceptance remain outstanding. LDR loading
 was tested, but its bright window panels need art refinement. The existing pillar
 was not purchased again.
 
-## Wall crest: generated model and measured placement candidate
+## Historical wall crest candidate — superseded by scene-v6-cw
+
+The following records the old CCW experiment, not a currently valid front-facing
+art judgment. Correct CW export uses yaw180 and the placement in
+`environment-wall-crest-placement-cw.json`; see `environment-v6-cw-review.md`.
 
 `environment-wall-crest-q3dm1-v1.pk3` combines the existing approved Painter
 prototype → one Hunyuan3D task → Blender 3.4.1 cleanup/bake → decoded MD3 pipeline

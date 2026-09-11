@@ -42,9 +42,18 @@ class SceneFitTests(unittest.TestCase):
         model = read_md3(result)
         self.assertEqual(model['surfaces'][0], read_md3(source)['surfaces'][0])
         self.assertEqual(model['surfaces'][-1]['shader'], SHADER)
-        self.assertEqual(model['bounds'], [-10, 0, 0, 10, 4.03125, 55])
+        self.assertEqual(model['bounds'], [-10, -4.078125, 0, 10, 0, 55])
         self.assertEqual(len(model['surfaces'][-1]['triangles']), 2)
         self.assertTrue(report['opaque_surface_bytes_identical'])
+        for floor in [False, True]:
+            derived, _ = append_glow(source, floor)
+            surface = read_md3(derived)['surfaces'][-1]
+            for a, b, c in surface['triangles']:
+                p, q, r = [surface['positions'][i] for i in (a, b, c)]
+                u = [q[i]-p[i] for i in range(3)]
+                v = [r[i]-p[i] for i in range(3)]
+                cross = [u[1]*v[2]-u[2]*v[1], u[2]*v[0]-u[0]*v[2], u[0]*v[1]-u[1]*v[0]]
+                self.assertLess(sum(x*n for x, n in zip(cross, surface['normals'][a])), 0)
 
 
 if __name__ == '__main__':

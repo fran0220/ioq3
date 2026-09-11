@@ -5,7 +5,7 @@
   "lamp_glow_sha256": "5b6e8030ca2a09936760b44d7b0ea51d312253e82521f9b9683d1d2c33b5f42b",
   "assets": [
     {
-      "asset_id": "environment-floor-lantern-glow-v1",
+      "asset_id": "environment-floor-lantern-cw-glow-v1",
       "model": "models/remaster/environment_floor_lantern.md3",
       "instances": [
         {"surfaces":[2063,2064],"fit_surfaces":[2063],"yaw":0},
@@ -17,15 +17,15 @@
       "runtime_accepted": false
     },
     {
-      "asset_id": "environment-wall-lantern-glow-v1",
+      "asset_id": "environment-wall-lantern-cw-glow-v1",
       "model": "models/remaster/environment_wall_lantern.md3",
       "instances": [
-        {"surfaces":[2044,2045,2046],"fit_surfaces":[2045,2046],"yaw":-90},
-        {"surfaces":[2047,2048,2049],"fit_surfaces":[2048,2049],"yaw":90},
-        {"surfaces":[2051,2052,2053],"fit_surfaces":[2052,2053],"yaw":90},
-        {"surfaces":[2054,2055,2056],"fit_surfaces":[2055,2056],"yaw":-90},
-        {"surfaces":[2057,2058,2059],"fit_surfaces":[2058,2059],"yaw":135},
-        {"surfaces":[2060,2061,2062],"fit_surfaces":[2061,2062],"yaw":-135}
+        {"surfaces":[2044,2045,2046],"fit_surfaces":[2045,2046],"yaw":90},
+        {"surfaces":[2047,2048,2049],"fit_surfaces":[2048,2049],"yaw":-90},
+        {"surfaces":[2051,2052,2053],"fit_surfaces":[2052,2053],"yaw":-90},
+        {"surfaces":[2054,2055,2056],"fit_surfaces":[2055,2056],"yaw":90},
+        {"surfaces":[2057,2058,2059],"fit_surfaces":[2058,2059],"yaw":-45},
+        {"surfaces":[2060,2061,2062],"fit_surfaces":[2061,2062],"yaw":45}
       ],
       "fit_margin": 0.98,
       "runtime_accepted": false
@@ -34,16 +34,16 @@
       "asset_id": "environment-lion-relief-v1",
       "model": "models/remaster/environment_lion_relief.md3",
       "instances": [
-        {"surfaces":[2071,2072],"fit_surfaces":[2071,2072],"yaw":-90},
-        {"surfaces":[2073,2074],"fit_surfaces":[2073,2074],"yaw":90}
+        {"surfaces":[2071,2072],"fit_surfaces":[2071,2072],"yaw":90},
+        {"surfaces":[2073,2074],"fit_surfaces":[2073,2074],"yaw":-90}
       ],
       "fit_margin": 0.98,
       "runtime_accepted": false
     }
   ],
-  "existing_crest_placement": "assets/remaster/environment/environment-wall-crest-placement.json",
+  "existing_crest_placement": "assets/remaster/environment/environment-wall-crest-placement-cw.json",
   "pending_groups": {
     "statues": [[2033,2034,2035],[2036,2037,2038,2039,2040,2041,2042,2043]]
   },
-  "note": "Groups include original flames, suppressed atomically only with successful model and companion material load. Fit uses solid members only and includes new quad bounds. Wall yaw passed six-location HDR/LDR front inspection; new glow companion requires repeated review."
+  "note": "CW re-export from original paid sources; old inside-shell front/yaw approval withdrawn. Corrected wall/crest/lion front -Y, glow on -Y exterior. Fit uses solid-source envelopes and updated model bounds; all corrected runtime appearances require new review."
 }

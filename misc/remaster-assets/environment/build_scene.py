@@ -40,8 +40,12 @@ def build(root, spec_path, measurements_path, output):
     measurements = {s['surface_index']: s for s in json.loads(measurements_path.read_text())[spec['map']]}
     placement = json.loads((root / spec['existing_crest_placement']).read_text())
     used = {s['surface'] for s in placement['replacements']}
-    with zipfile.ZipFile(root / 'assets/remaster/environment/environment-wall-crest-q3dm1-v1.pk3') as archive:
-        files = {name: archive.read(name) for name in archive.namelist() if name != 'maps/q3dm1.remaster.json'}
+    crest = json.loads((root / 'assets/remaster/receipts/environment-wall-crest-v1.json').read_text())
+    crest_package = root / 'assets/remaster/work/environment-wall-crest-v1' / crest['package']['path']
+    if hashlib.sha256(crest_package.read_bytes()).hexdigest() != crest['package']['sha256']:
+        raise ValueError('Crest receipt hash mismatch')
+    with zipfile.ZipFile(crest_package) as archive:
+        files = {name: archive.read(name) for name in archive.namelist()}
     if spec.get('lamp_glow_package'):
         fx = root / spec['lamp_glow_package']
         if hashlib.sha256(fx.read_bytes()).hexdigest() != spec['lamp_glow_sha256']:
