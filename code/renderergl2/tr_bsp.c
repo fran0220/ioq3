@@ -2542,8 +2542,8 @@ static qboolean R_ReplacementModelFits(const refEntity_t *entity, vec3_t targetB
 	else
 		return qfalse;
 
-	// Stay inside the original visibility owner's AABB. A model reaching into
-	// another leaf would need newly compiled visibility, not this substitution.
+	// Stay inside the union envelope of the original visibility owners.
+	// This does not recompute visibility or permit arbitrary world placement.
 	for (corner = 0; corner < 8; corner++)
 	{
 		vec3_t point;
@@ -2585,24 +2585,45 @@ static void R_LoadSurfaceReplacements(world_t *world)
 	{
 		worldSurfaceReplacement_t replacement = {0};
 		char shaderName[MAX_QPATH], modelName[MAX_QPATH];
-		vec3_t bounds[2], angles;
+		vec3_t bounds[2], envelope[2], angles;
 		float surfaceIndex, scale;
-		const char *corners[2];
-		int axis;
+		const char *corners[2], *members, *member;
+		int axis, j, k, *indices = NULL;
 		entry = JSON_ArrayGetValue(array, end, i);
-		if (!R_ReplacementNumber(JSON_ObjectGetNamedValue(entry, end, "surface"), end, &surfaceIndex)
-			|| surfaceIndex < 0 || surfaceIndex >= world->numWorldSurfaces || floorf(surfaceIndex) != surfaceIndex
-			|| !R_ReplacementString(entry, end, "shader", shaderName)
-			|| !R_ReplacementString(entry, end, "model", modelName)
-			|| JSON_ArrayGetIndex(JSON_ObjectGetNamedValue(entry, end, "bounds"), end, corners, 2) != 2
-			|| !R_ReplacementVector(corners[0], end, bounds[0]) || !R_ReplacementVector(corners[1], end, bounds[1])
+		if (!R_ReplacementString(entry, end, "model", modelName)
 			|| !R_ReplacementVector(JSON_ObjectGetNamedValue(entry, end, "origin"), end, replacement.entity.origin)
 			|| !R_ReplacementVector(JSON_ObjectGetNamedValue(entry, end, "angles"), end, angles)
 			|| !R_ReplacementNumber(JSON_ObjectGetNamedValue(entry, end, "scale"), end, &scale) || scale <= 0)
 			goto rejected;
-		replacement.surfaceIndex = (int)surfaceIndex;
-		if (!R_ReplacementTargetMatches(world, replacement.surfaceIndex, shaderName, bounds))
+		members = JSON_ObjectGetNamedValue(entry, end, "surfaces");
+		if (members && (JSON_ValueGetType(members, end) != JSONTYPE_ARRAY
+			|| JSON_ObjectGetNamedValue(entry, end, "surface")))
 			goto rejected;
+		replacement.numSurfaces = members ? JSON_ArrayGetIndex(members, end, NULL, 0) : 1;
+		if (replacement.numSurfaces < 1 || replacement.numSurfaces > world->numWorldSurfaces)
+			goto rejected;
+		indices = ri.Malloc(replacement.numSurfaces * sizeof(*indices));
+		if (!indices)
+			goto rejected;
+		ClearBounds(envelope[0], envelope[1]);
+		for (j = 0; j < replacement.numSurfaces; j++)
+		{
+			member = members ? JSON_ArrayGetValue(members, end, j) : entry;
+			if (!R_ReplacementNumber(JSON_ObjectGetNamedValue(member, end, "surface"), end, &surfaceIndex)
+				|| surfaceIndex < 0 || surfaceIndex >= world->numWorldSurfaces || floorf(surfaceIndex) != surfaceIndex
+				|| !R_ReplacementString(member, end, "shader", shaderName)
+				|| JSON_ArrayGetIndex(JSON_ObjectGetNamedValue(member, end, "bounds"), end, corners, 2) != 2
+				|| !R_ReplacementVector(corners[0], end, bounds[0]) || !R_ReplacementVector(corners[1], end, bounds[1]))
+				goto rejected;
+			indices[j] = (int)surfaceIndex;
+			if (!R_ReplacementTargetMatches(world, indices[j], shaderName, bounds))
+				goto rejected;
+			for (k = 0; k < j; k++)
+				if (indices[k] == indices[j])
+					goto rejected;
+			AddPointToBounds(bounds[0], envelope[0], envelope[1]);
+			AddPointToBounds(bounds[1], envelope[0], envelope[1]);
+		}
 		replacement.entity.hModel = RE_RegisterModel(modelName);
 		if (!replacement.entity.hModel)
 			goto rejected;
@@ -2612,14 +2633,23 @@ static void R_LoadSurfaceReplacements(world_t *world)
 			VectorScale(replacement.entity.axis[axis], scale, replacement.entity.axis[axis]);
 		replacement.entity.nonNormalizedAxes = (scale != 1);
 		memset(replacement.entity.shaderRGBA, 255, sizeof(replacement.entity.shaderRGBA));
-		if (!R_ReplacementModelFits(&replacement.entity, bounds))
+		if (!R_ReplacementModelFits(&replacement.entity, envelope))
 			goto rejected;
+		replacement.surfaceIndices = ri.Hunk_Alloc(replacement.numSurfaces * sizeof(*indices), h_low);
+		memcpy(replacement.surfaceIndices, indices, replacement.numSurfaces * sizeof(*indices));
 		replacement.entityNum = -1;
 		world->surfaceReplacements[world->numSurfaceReplacements++] = replacement;
-		world->surfaces[replacement.surfaceIndex].replacementIndex = world->numSurfaceReplacements;
-		ri.Printf(PRINT_ALL, "Surface replacement %s:%d -> %s\n", world->baseName, replacement.surfaceIndex, modelName);
+		// Publish all bindings only after every member and the model passed.
+		for (j = 0; j < replacement.numSurfaces; j++)
+		{
+			world->surfaces[indices[j]].replacementIndex = world->numSurfaceReplacements;
+			ri.Printf(PRINT_ALL, "Surface replacement %s:%d -> %s\n", world->baseName, indices[j], modelName);
+		}
+		ri.Free(indices);
 		continue;
 	rejected:
+		if (indices)
+			ri.Free(indices);
 		ri.Printf(PRINT_WARNING, "Rejected %s replacement %d; retaining original BSP surface\n", filename, i);
 	}
 	ri.FS_FreeFile(buffer.v);

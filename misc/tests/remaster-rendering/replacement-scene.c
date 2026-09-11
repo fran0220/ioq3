@@ -16,13 +16,12 @@ int main(void)
     ri.Printf = quiet;
     tr.registered = qtrue; tr.world = &world;
     world.numSurfaceReplacements = 2; world.surfaceReplacements = replacements;
-    replacements[0].surfaceIndex = 7; replacements[1].surfaceIndex = 21;
     replacements[0].entity.reType = replacements[1].entity.reType = RT_MODEL;
     r_numentities = 5; r_firstSceneEntity = 3;
     R_AddWorldReplacementsToScene();
     assert(r_numentities == 7);
     assert(replacements[0].entityNum == 2 && replacements[1].entityNum == 3);
-    assert(storage.entities[5].worldSurface == 7 && storage.entities[6].worldSurface == 21);
+    assert(storage.entities[5].worldReplacement == 0 && storage.entities[6].worldReplacement == 1);
     r_numentities = MAX_REFENTITIES - 1; r_firstSceneEntity = 0;
     R_AddWorldReplacementsToScene();
     assert(r_numentities == MAX_REFENTITIES);
@@ -31,7 +30,7 @@ int main(void)
     R_InitNextFrame();
     entity.reType = RT_MODEL;
     RE_AddRefEntityToScene(&entity);
-    assert(r_numentities == 1 && storage.entities[0].worldSurface == -1);
+    assert(r_numentities == 1 && storage.entities[0].worldReplacement == -1);
     RE_ClearScene();
     R_AddWorldReplacementsToScene();
     assert(replacements[0].entityNum == 0 && replacements[1].entityNum == 1);

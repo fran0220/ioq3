@@ -91,7 +91,7 @@ typedef struct dlight_s {
 // the client game, as well as some locally derived info
 typedef struct {
 	refEntity_t	e;
-	int         worldSurface;	// -1 for cgame entities, otherwise original BSP visibility owner
+	int         worldReplacement;	// -1 for cgame entities, otherwise replacement group index
 
 	float		axisLength;		// compensate for non-normalized axis
 
@@ -1153,7 +1153,8 @@ typedef struct {
 } bmodel_t;
 
 typedef struct {
-	int surfaceIndex;
+	int numSurfaces;
+	int *surfaceIndices;
 	int entityNum;	// current scene-relative backend entity, -1 if allocation failed
 	refEntity_t entity;
 } worldSurfaceReplacement_t;

@@ -172,7 +172,23 @@ each view and normal model lighting; their lightgrid lighting can differ from
 the source surface lightmap. Existing depth-shadow views bypass PVS. This is
 bounded static visual substitution, not a general placement/animation system.
 
-Compile `surface-replacements.c` and `replacement-scene.c` using the native
+Schema 1 also accepts atomic groups: replace the root `surface`, `shader`,
+`bounds` fields with `surfaces: [{surface, shader, bounds}, ...]`; keep
+`model`, `origin`, `angles`, `scale` at the replacement root. Do not mix both
+forms. The complete static opaque model must fit the union AABB envelope.
+Every member is validated before any binding is published. Empty groups,
+duplicate members, conflicting accepted groups, invalid members/models and
+scene entity capacity failure retain the whole group's original surfaces.
+Only one backend entity is allocated per group. Any member's leaf visibility
+permits rendering the model for that view; unrelated same-shader surfaces are
+never suppressed. Source members may be transparent (for example old flames),
+but replacement model materials remain opaque. General engine fatal hunk OOM
+is not made recoverable by this feature. A union AABB is not a recomputed PVS
+or proof of physical containment within disjoint member geometry: content must
+select the actual original visibility owners, not unrelated remote surfaces.
+
+Compile `surface-replacements.c`, `replacement-scene.c` and
+`replacement-visibility.c` using the native
 test command above. `placement-run.mjs CDP PRIVATE_HOST_URL OUTPUT` requires a
 private host with startup `activeAction` noclip/setviewpos and explicit
 hdr/noReplacement/missingModel/noEntities/far query variants. It checks

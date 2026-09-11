@@ -25,17 +25,20 @@ int main(void)
     mnode_t leaf = {0};
     trRefEntity_t entities[2] = {0};
     int marks[] = {1}, views[2] = {0}, lights[2] = {0}, shadows[2] = {0};
+    int owners[] = {0, 1};
+    worldSurfaceReplacement_t group = { .numSurfaces = 2, .surfaceIndices = owners };
     cvar_t draw = { .integer = 1 }, nocull = { .integer = 0 };
     tr.world = &world; tr.refdef.entities = entities;
+    world.numSurfaceReplacements = 1; world.surfaceReplacements = &group;
     r_drawworld = &draw; r_nocull = &nocull;
     world.marksurfaces = marks; world.surfacesViewCount = views;
     world.surfacesDlightBits = lights; world.surfacesPshadowBits = shadows;
     leaf.nummarksurfaces = 1; leaf.visCounts[0] = 7;
     VectorSet(leaf.mins, -10, -20, -30); VectorSet(leaf.maxs, 10, 20, 30);
     tr.visCounts[0] = 7; tr.viewCount = 11;
-    entities[0].worldSurface = 1; entities[0].e.reType = RT_MODEL;
+    entities[0].worldReplacement = 0; entities[0].e.reType = RT_MODEL;
     AxisClear(entities[0].e.axis);
-    entities[1] = entities[0]; entities[1].worldSurface = -1;
+    entities[1] = entities[0]; entities[1].worldReplacement = -1;
 
     R_RecursiveWorldNode(&leaf, 0, 2, 4);
     assert(views[1] == 11 && views[0] == 0);
@@ -76,10 +79,16 @@ int main(void)
     R_RecursiveWorldNode(&leaf, 1, 0, 0);
     R_AddEntitySurface(0); assert(submitted == 5);
 
+    // The other member alone must also own visibility (not first-only/last-only).
+    tr.viewCount++; marks[0] = 0;
+    R_RecursiveWorldNode(&leaf, 0, 0, 0);
+    R_AddEntitySurface(0); assert(submitted == 6);
+
     // Actual scene capacity failure must submit the original draw surface,
     // not merely set a sentinel that nobody consumes.
     {
-        worldSurfaceReplacement_t replacement = { .surfaceIndex = 1 };
+        worldSurfaceReplacement_t replacement = { .numSurfaces = 2, .surfaceIndices = owners };
+        int bothMarks[] = {0, 1};
         msurface_t surfaces[2] = {0};
         surfaceType_t surface = SF_FACE;
         shader_t shader = {0};
@@ -87,9 +96,11 @@ int main(void)
         cvar_t yes = { .integer = 1 }, no = {0};
         ri.Printf = quiet; tr.registered = qtrue;
         world.nodes = &leaf; world.numWorldSurfaces = 2; world.surfaces = surfaces;
+        world.marksurfaces = bothMarks; leaf.nummarksurfaces = 2;
         world.numSurfaceReplacements = 1; world.surfaceReplacements = &replacement;
         replacement.entity = entities[0].e;
         surfaces[1].replacementIndex = 1; surfaces[1].data = &surface; surfaces[1].shader = &shader;
+        surfaces[0] = surfaces[1];
         tr.refdef.drawSurfs = draws;
         r_nocull = r_lockpvs = r_drawentities = &yes;
         r_novis = r_showcluster = r_nocurves = r_facePlaneCull = &no;
@@ -97,7 +108,7 @@ int main(void)
         R_AddWorldReplacementsToScene();
         assert(replacement.entityNum == -1);
         R_AddWorldSurfaces();
-        assert(tr.refdef.numDrawSurfs == 1 && draws[0].surface == &surface);
+        assert(tr.refdef.numDrawSurfs == 2 && draws[0].surface == &surface && draws[1].surface == &surface);
         r_numentities = 0;
         R_AddWorldReplacementsToScene();
         assert(replacement.entityNum == 0);
@@ -106,7 +117,7 @@ int main(void)
         assert(tr.refdef.numDrawSurfs == 0);
         r_drawentities = &no;
         R_AddWorldSurfaces();
-        assert(tr.refdef.numDrawSurfs == 1 && draws[0].surface == &surface);
+        assert(tr.refdef.numDrawSurfs == 2 && draws[0].surface == &surface && draws[1].surface == &surface);
     }
     puts("PASS: production PVS exit/reentry, per-view ownership, masks, world disable and depth shadows");
     puts("PASS: frustum turn and actual original draw submission on capacity failure/entities disabled");

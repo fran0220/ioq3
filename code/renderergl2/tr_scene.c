@@ -223,7 +223,7 @@ void RE_AddRefEntityToScene( const refEntity_t *ent ) {
 	}
 
 	backEndData->entities[r_numentities].e = *ent;
-	backEndData->entities[r_numentities].worldSurface = -1;
+	backEndData->entities[r_numentities].worldReplacement = -1;
 	backEndData->entities[r_numentities].lightingCalculated = qfalse;
 
 	CrossProduct(ent->axis[0], ent->axis[1], cross);
@@ -468,7 +468,7 @@ static void R_AddWorldReplacementsToScene(void)
 		if (r_numentities != before)
 		{
 			replacement->entityNum = before - r_firstSceneEntity;
-			backEndData->entities[before].worldSurface = replacement->surfaceIndex;
+			backEndData->entities[before].worldReplacement = i;
 		}
 	}
 }

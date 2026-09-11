@@ -1555,14 +1555,24 @@ static void R_AddEntitySurface (int entityNum)
 
 	ent = tr.currentEntity = &tr.refdef.entities[tr.currentEntityNum];
 
-	// Replacement models inherit their original world surface's leaf/PVS and
-	// per-view visibility. Projected shadow-only views deliberately bypass PVS,
+	// Replacement models inherit the union of their owners' per-view leaf/PVS
+	// visibility. Projected shadow-only views deliberately bypass PVS,
 	// just like the original world depth-shadow traversal.
-	if (ent->worldSurface >= 0 && (!r_drawworld->integer
-		|| (tr.refdef.rdflags & RDF_NOWORLDMODEL)
-		|| (!(tr.viewParms.flags & VPF_DEPTHSHADOW)
-			&& tr.world->surfacesViewCount[ent->worldSurface] != tr.viewCount)))
-		return;
+	if (ent->worldReplacement >= 0)
+	{
+		worldSurfaceReplacement_t *replacement = &tr.world->surfaceReplacements[ent->worldReplacement];
+		int i;
+		if (!r_drawworld->integer || (tr.refdef.rdflags & RDF_NOWORLDMODEL))
+			return;
+		if (!(tr.viewParms.flags & VPF_DEPTHSHADOW))
+		{
+			for (i = 0; i < replacement->numSurfaces; i++)
+				if (tr.world->surfacesViewCount[replacement->surfaceIndices[i]] == tr.viewCount)
+					break;
+			if (i == replacement->numSurfaces)
+				return;
+		}
+	}
 
 	ent->needDlights = qfalse;
 
