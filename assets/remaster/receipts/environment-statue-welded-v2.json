@@ -1,0 +1,108 @@
+{
+  "asset_id": "environment-statue-welded-v2",
+  "derivation": {
+    "source_blend_sha256": "6499e2558b63dab69a00dcc604d322673d8e8d0a1e3b1000e62568d91292022c",
+    "source_rig": "SargeRig",
+    "source_mesh": "SargeBody",
+    "source_welded_boundary_edges": 0,
+    "boundary_measurement_grid_m": 1e-05,
+    "action": "walk",
+    "frame": 2,
+    "derived_role": "static-environment-sculpture-not-character",
+    "pose_selection": "Frame2 minimizes sampled left/right ankle height difference (.0094m); re-ground evaluated mesh",
+    "new_generation_charge": 0,
+    "source_paid_generation": "task_4Yklp9dnD3eQcKosUVthynuw71MEi0rK",
+    "source_rig_task": "01a089c0-12f3-773d-b222-d45eda78da34",
+    "grounding_translation_m": [
+      -0.08837030827999115,
+      0.02703024446964264,
+      0.6032527089118958
+    ],
+    "original_body_texture_reused": false,
+    "shading": "Clear character custom split normals after pose evaluation; smooth stone normals",
+    "material": "original two-tone matte stone; no commercial textures",
+    "runtime_accepted": false,
+    "exact_original_statue_replica": false,
+    "files": {
+      "posed-sculpture.blend": "4550c755bcc62494879904715d63b3bef64d72ee9f03f3216eb0f24b79108e9e",
+      "sculpture.glb": "c4c0af200846f44cb96524b47146a8484f522dfb929ed8cac023131b0f8c3eef"
+    }
+  },
+  "processing": {
+    "blender_version": "3.4.1",
+    "source_sha256": "c4c0af200846f44cb96524b47146a8484f522dfb929ed8cac023131b0f8c3eef",
+    "input_polygons": 9964,
+    "output_triangles": 3000,
+    "output_vertices": 3437,
+    "surfaces": 4,
+    "bounds_q3": [
+      -24.453125,
+      -32.0625,
+      -0.03125,
+      24.46875,
+      32.078125,
+      119.9375
+    ],
+    "surface_counts": [
+      {
+        "vertices": 999,
+        "triangles": 870,
+        "indices": 2610
+      },
+      {
+        "vertices": 999,
+        "triangles": 879,
+        "indices": 2637
+      },
+      {
+        "vertices": 999,
+        "triangles": 855,
+        "indices": 2565
+      },
+      {
+        "vertices": 440,
+        "triangles": 396,
+        "indices": 1188
+      }
+    ],
+    "runtime_surface_limits": {
+      "vertices": 999,
+      "indices": 5999
+    },
+    "md3_sha256": "878cdbbf7c97de915260eee90a5e100f296f8d53da4e53eb6a8cd428774ad79d",
+    "frames": 1,
+    "render_source": "decoded exported MD3 + baked runtime TGA",
+    "runtime_accepted": false,
+    "winding": {
+      "source": "Blender CCW",
+      "runtime": "Q3 CW",
+      "decoded_preview": "Blender CCW"
+    },
+    "material_limitations": "Diffuse only; no PBR/emission preservation claim",
+    "units_per_meter": 40,
+    "quantized_cleaning": {
+      "input_triangles": 3000,
+      "output_triangles": 3000,
+      "removed_triangle_indices": [],
+      "coordinate_step_q3": 0.015625,
+      "source": "Pre-export triangulated cleaned.blend; indices are polygon indices"
+    }
+  },
+  "decoded_topology": {
+    "boundary_edges": 0,
+    "nonmanifold_edges": 0,
+    "measurement": "Exact decoded MD3 1/64 coordinate lattice; geometric seams identified, UVs unchanged"
+  },
+  "new_paid_submissions": 0,
+  "runtime_accepted": false,
+  "files": {
+    "models/remaster/environment_sarge_statue.md3": "878cdbbf7c97de915260eee90a5e100f296f8d53da4e53eb6a8cd428774ad79d",
+    "models/remaster/environment_sarge_statue.tga": "edf9e38dee8117009254e38cf32fbaf71bc3d281642c5a4f6fd3cbf2966a68a2",
+    "scripts/remaster_environment_sarge_statue.shader": "1cfd82834b57dabbfa9005f3c231e8a79e045934cab015fb9860b451fd222bbc"
+  },
+  "package": {
+    "path": "environment-statue-welded-v2.pk3",
+    "sha256": "8742ecf67cc4e3d3f4e8d86ebf73c776685e461c8b9dcb26eca5999ea5924b48",
+    "bytes": 169057
+  }
+}

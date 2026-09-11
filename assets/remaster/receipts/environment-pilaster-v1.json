@@ -1,0 +1,142 @@
+{
+  "asset_id": "environment-pilaster-v1",
+  "classification": "original-generated-environment-portal-pilaster-q3dm1",
+  "manifest_sha256": "e02cdc43da1a8265e18d3f35293271cea5cb9b38bcca6c614bcdc5d5c6dfbef1",
+  "prototype_review": {
+    "at": 1789095560,
+    "note": "Inspected revised Painter full pilaster. Connected shallow graphite structure, three ivory insets, no floating pieces; corrected aspect near1:9. Approve one 3D candidate; generated depth, orthogonal views, runtime CW and measured fit still require review.",
+    "reviewer": "environment-production-thread",
+    "sha256": "c7d521b4690702d9987a637fa2c2c48644df0a20b553c6fa5d2247d8216352b7"
+  },
+  "runtime_accepted": false,
+  "stages": {
+    "image": {
+      "operation_id": null,
+      "task_id": null,
+      "request_id": null,
+      "request_sha256": null,
+      "response_sha256": null,
+      "generator_identity": null,
+      "model": "amp-painter",
+      "status": "downloaded",
+      "submissions": 0,
+      "artifact": {
+        "bytes": 1154270,
+        "path": "prototype.png",
+        "sha256": "c7d521b4690702d9987a637fa2c2c48644df0a20b553c6fa5d2247d8216352b7"
+      },
+      "image": {
+        "height": 1983,
+        "mime": "image/png",
+        "width": 793
+      },
+      "report": null,
+      "error_code": null,
+      "cost": {
+        "actual_usd": null,
+        "status": "not-exposed-by-tool"
+      }
+    },
+    "shape": {
+      "operation_id": "e7ae43a2-6dfe-4453-a553-042cf9b43448",
+      "task_id": "task_6ZmyFVL4BZwnzRXkkcKcdo87NLGdQkup",
+      "request_id": "202609110259214950685768268d9d6bhRMlul5",
+      "request_sha256": "437c569bc43aeb922525c569be198cd9f179272db6528b33916a6469a6cd7734",
+      "response_sha256": "c45d57a62389ec6d98989e7de26344e551818a839c9f4a220f2804a51d2fbd6c",
+      "generator_identity": {
+        "id": 1,
+        "username": "xiaomao"
+      },
+      "model": "hunyuan3d-2",
+      "status": "downloaded",
+      "submissions": 1,
+      "artifact": {
+        "bytes": 4129832,
+        "path": "generated.glb",
+        "sha256": "2f4ff79285f3e55cce791972e12214cb54ad920c4894cc567f003445c4f893c3"
+      },
+      "image": null,
+      "report": {
+        "timings": {
+          "download_and_input_seconds": 0.934925432,
+          "paint_load_and_generate_seconds": 71.47662881600002,
+          "shape_load_and_generate_seconds": 32.10950218700002,
+          "texture_bake_seconds": 0.37853946300000985,
+          "texture_delight_seconds": 1.8888360219999925,
+          "texture_export_verify_seconds": 0.8459084300000086,
+          "texture_inpaint_seconds": 36.04969142499999,
+          "texture_load_seconds": 12.720589840000002,
+          "texture_mesh_preparation_seconds": 0.5286522300000058,
+          "texture_multiview_seconds": 6.0159295200000145,
+          "texture_normal_render_seconds": 0.1545342519999906,
+          "texture_position_render_seconds": 0.1036705869999821,
+          "texture_uv_seconds": 13.824858638000023
+        }
+      },
+      "error_code": null,
+      "cost": {
+        "actual_usd": 0.5,
+        "quota": 250000,
+        "records": [
+          {
+            "created_at": 1789095562,
+            "model_name": "hunyuan3d-2",
+            "quota": 250000,
+            "request_id": "202609110259214950685768268d9d6bhRMlul5",
+            "type": 2
+          }
+        ],
+        "status": "matched_request_id"
+      }
+    }
+  },
+  "processing": {
+    "files": [
+      {
+        "bytes": 6149824,
+        "path": "processed/cleaned.blend",
+        "sha256": "c01840d5b37822117b129b8ffb010536c283b9ddd4b3ea4ce1e9a6633ececa13"
+      },
+      {
+        "bytes": 1948156,
+        "path": "processed/diffuse.tga",
+        "sha256": "98a74bc9e5ab5862e9959a96bd14e873a43541f3d3b11754d7aac86c89a36f4e"
+      },
+      {
+        "bytes": 1328,
+        "path": "processed/geometry-report.json",
+        "sha256": "270935c71e1d4dbe7c6c77658c90cee7857cbbf6ced670b1646e0196ca26c24c"
+      },
+      {
+        "bytes": 105236,
+        "path": "processed/model.md3",
+        "sha256": "458c70d116d1bc2685166bc36d8e3fabd9bc990713fc6bbb00b0aac488793954"
+      },
+      {
+        "bytes": 137,
+        "path": "processed/remaster.shader",
+        "sha256": "d4853a589a0ac9757821d8a6a99f69685df6cea7ef5381df8a5e6bf0d0ee5b72"
+      },
+      {
+        "bytes": 432235,
+        "path": "processed/review-back.png",
+        "sha256": "265ef1af1ce9bcdbde08ed6462c31a9e2ea006f916d7218c204fe16bcb707da8"
+      },
+      {
+        "bytes": 432035,
+        "path": "processed/review-front.png",
+        "sha256": "f693dc3bcfbeda0574deb5a74c515ba6043a71c3ae8102ab7625a6d239ccdb77"
+      }
+    ],
+    "scripts": {
+      "blender_static.py": "d23f16a7f7f003b92ab890b204699097c305871ee8c05f8e921e92016729dfad",
+      "md3_static.py": "3dedd7d9b05889969dce495804cff4b4c8fbf3e0d8c72b3d0c8d00813fa27e94"
+    },
+    "source_sha256": "2f4ff79285f3e55cce791972e12214cb54ad920c4894cc567f003445c4f893c3"
+  },
+  "package": {
+    "bytes": 1045716,
+    "path": "environment-pilaster-v1.pk3",
+    "sha256": "da16a39dd2f9b03b7b98e21dfbbbdd56379b879c9b4177bb6f972d9c691be70a"
+  }
+}

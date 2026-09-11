@@ -4,10 +4,13 @@ import assert from 'node:assert/strict';
 import { connect, sleep } from '../../tests/gameplay/browser.mjs';
 
 const [cdp, out, batch = 'lamps'] = process.argv.slice(2);
-assert.ok(['lamps', 'reliefs', 'cw'].includes(batch));
+assert.ok(['lamps', 'reliefs', 'cw', 'statues'].includes(batch));
 mkdirSync(out, { recursive: true });
 const b = await connect(cdp, `${out}/journal.jsonl`);
-const cameras = batch === 'reliefs' ? [
+const cameras = batch === 'statues' ? [
+    ['statue-w', 650, 2088, 145, 180], ['statue-e', 700, 2088, 145, 0],
+    ['statue-w-oblique', 520, 1880, 145, 130], ['statue-e-oblique', 830, 1880, 145, 50],
+] : batch === 'reliefs' ? [
     ['relief-w', 620, 221, 80, 180], ['relief-e', 724, 221, 80, 0],
 ] : [
     ['floor-ne', 825, 1510, 40, 90], ['floor-nw', 521, 1510, 40, 90],
@@ -26,7 +29,7 @@ try {
         await sleep(500);
         await b.waitFor(() => b.evaluate('window.readEngine?.()'), s => s?.state === 8 && s.snap.valid, 60000);
         const bindings = await b.evaluate('testLogs.filter(x=>x.startsWith("Surface replacement q3dm1:"))');
-        assert.equal(bindings.length, batch === 'lamps' ? 27 : 31);
+        assert.equal(bindings.length, batch === 'statues' ? 42 : batch === 'lamps' ? 27 : 31);
         await b.evaluate('document.querySelector("canvas").focus()');
         for (const [name, x, y, z, yaw] of cameras) {
             await b.command(`setviewpos ${x} ${y} ${z} ${yaw}`);

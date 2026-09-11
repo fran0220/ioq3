@@ -39,11 +39,18 @@
       ],
       "fit_margin": 0.98,
       "runtime_accepted": false
+    },
+    {
+      "asset_id": "environment-statue-welded-v2",
+      "model": "models/remaster/environment_sarge_statue.md3",
+      "instances": [
+        {"surfaces":[2033,2034,2035],"fit_surfaces":[2033,2034,2035],"yaw":180,"grounded":true},
+        {"surfaces":[2036,2037,2038,2039,2040,2041,2042,2043],"fit_surfaces":[2036,2037,2038,2039,2040,2041,2042,2043],"yaw":0,"grounded":true}
+      ],
+      "fit_margin": 0.98,
+      "runtime_accepted": false
     }
   ],
   "existing_crest_placement": "assets/remaster/environment/environment-wall-crest-placement-cw.json",
-  "pending_groups": {
-    "statues": [[2033,2034,2035],[2036,2037,2038,2039,2040,2041,2042,2043]]
-  },
   "note": "CW re-export from original paid sources; old inside-shell front/yaw approval withdrawn. Corrected wall/crest/lion front -Y, glow on -Y exterior. Fit uses solid-source envelopes and updated model bounds; all corrected runtime appearances require new review."
 }

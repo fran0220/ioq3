@@ -20,7 +20,7 @@ def rotated_bounds(bounds, yaw):
     return [min(p[a] for p in points) for a in range(3)] + [max(p[a] for p in points) for a in range(3)]
 
 
-def fit(bounds, target, margin):
+def fit(bounds, target, margin, grounded=False):
     if not 0 < margin < 1:
         raise ValueError('Strict envelope margin required')
     spans = [bounds[3 + a] - bounds[a] for a in range(3)]
@@ -30,8 +30,10 @@ def fit(bounds, target, margin):
     if scale <= 0:
         raise ValueError('Cannot replace zero-thickness source with solid geometry')
     origin = [(target[0][a] + target[1][a] - scale * (bounds[a] + bounds[a + 3])) / 2 for a in range(3)]
+    if grounded:
+        origin[2] = target[0][2] - scale * bounds[2]
     actual = [[origin[a] + scale * bounds[c * 3 + a] for a in range(3)] for c in range(2)]
-    assert all(target[0][a] < actual[0][a] < actual[1][a] < target[1][a] for a in range(3))
+    assert all(target[0][a] <= actual[0][a] < actual[1][a] < target[1][a] for a in range(3))
     return origin, scale, actual
 
 
@@ -84,7 +86,8 @@ def build(root, spec_path, measurements_path, output):
             target = [[min(m['bounds'][0][a] for m in fitted) for a in range(3)],
                       [max(m['bounds'][1][a] for m in fitted) for a in range(3)]]
             yaw = instance['yaw']
-            origin, scale, actual = fit(rotated_bounds(model['bounds'], yaw), target, asset['fit_margin'])
+            origin, scale, actual = fit(rotated_bounds(model['bounds'], yaw), target, asset['fit_margin'],
+                                        instance.get('grounded', False))
             entry = {'model': asset['model'], 'origin': origin, 'angles': [0, yaw, 0], 'scale': scale}
             entry.update(members[0] if len(members) == 1 else {'surfaces': members})
             placement['replacements'].append(entry)

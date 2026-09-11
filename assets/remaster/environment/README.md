@@ -10,6 +10,11 @@ and has 26 actual WASM placement checks; see `environment-v6-cw-review.md` for
 scope, hashes and outstanding gates. This is not full-level art acceptance.
 See `environment-winding-review.md`. Do not ship the old scene-v1–v4 candidates.
 
+Scene-v7-statues adds two closed, bottom-aligned sculpture candidates from the
+character owner's corrected source; see `environment-v7-statues-review.md`.
+Eight actual HDR/LDR front/oblique checks pass, but pale material and soft detail
+remain art work. This is not exact Visor/Major statue identity coverage.
+
 Original Painter 2D artwork is integrated into real q3dm1 WASM rendering, not a
 testmodel or Blender preview. The package has 16 × 512² TGA materials and unique
 `textures/remaster_environment/*` shaders. It contains no original map, model,

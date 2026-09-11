@@ -15,10 +15,10 @@
     "E4-paired-wall-reliefs": 4,
     "E8-hazard-surface-art": 16
   },
-  "original_geometry_surface_count": 2066,
+  "original_geometry_surface_count": 2055,
   "full_map_complete": false,
   "full_game_complete": false,
-  "scene_sha256": "df217c6ddbb90b1d0a566f1df07469ae732b84479cb2e87329c2b2d23f5a4c9c",
+  "scene_sha256": "6aebc7e04cb521b8c96932aad5bbb285ef8ebcd4458308981dfa40b867f3cb48",
   "note": "Material candidates do not count as geometry remakes. Bound candidates are not full visibility or art acceptance. Flame ownership requires explicit handoff; existing original effects must not be credited as new.",
   "surfaces": [
     {
@@ -28491,8 +28491,8 @@
       "indices": 288,
       "batch": "E6-statues-owner-coordination",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -28505,8 +28505,8 @@
       "indices": 1062,
       "batch": "E6-statues-owner-coordination",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -28519,8 +28519,8 @@
       "indices": 1062,
       "batch": "E6-statues-owner-coordination",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -28533,8 +28533,8 @@
       "indices": 576,
       "batch": "E6-statues-owner-coordination",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -28547,8 +28547,8 @@
       "indices": 288,
       "batch": "E6-statues-owner-coordination",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -28561,8 +28561,8 @@
       "indices": 282,
       "batch": "E6-statues-owner-coordination",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -28575,8 +28575,8 @@
       "indices": 42,
       "batch": "E6-statues-owner-coordination",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -28589,8 +28589,8 @@
       "indices": 42,
       "batch": "E6-statues-owner-coordination",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -28603,8 +28603,8 @@
       "indices": 690,
       "batch": "E6-statues-owner-coordination",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -28617,8 +28617,8 @@
       "indices": 540,
       "batch": "E6-statues-owner-coordination",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false
@@ -28631,8 +28631,8 @@
       "indices": 288,
       "batch": "E6-statues-owner-coordination",
       "material_candidate": "panel",
-      "original_geometry_retained": true,
-      "geometry_status": "original-reference-remains",
+      "original_geometry_retained": false,
+      "geometry_status": "generated-candidate-bound-not-final-art",
       "material_status": "candidate-not-full-room-approved",
       "moving_visibility_accepted": false,
       "final_art_accepted": false

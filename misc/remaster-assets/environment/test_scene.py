@@ -10,6 +10,21 @@ class SceneFitTests(unittest.TestCase):
         self.assertEqual(scale, 4)
         self.assertEqual(bounds, [[12, 23, 34], [28, 47, 66]])
 
+    def test_grounding_uses_decoded_minimum_not_assumed_zero_or_center(self):
+        origin, scale, bounds = fit([-1, -2, -1, 3, 4, 7], [[10, 20, 30], [30, 50, 90]], .8, True)
+        self.assertEqual(scale, 4)
+        self.assertEqual(origin, [16, 31, 34])
+        self.assertEqual(bounds, [[12, 23, 30], [28, 47, 62]])
+
+    def test_closed_seams_and_missing_face_are_distinguished(self):
+        from package_statue import topology
+        points = [(0, 0, 0), (3, 0, 0), (0, 5, 0), (0, 0, 7)]
+        faces = [(0, 1, 2), (0, 3, 1), (0, 2, 3), (1, 3, 2)]
+        surfaces = [{'positions': [points[i] for i in face], 'triangles': [(0, 1, 2)]} for face in faces]
+        self.assertEqual(topology({'surfaces': surfaces})['boundary_edges'], 0)
+        self.assertEqual(topology({'surfaces': surfaces[:-1]})['boundary_edges'], 3)
+        self.assertEqual(topology({'surfaces': surfaces + surfaces[:1]})['nonmanifold_edges'], 3)
+
     def test_yaw_direction_and_off_center_pivot(self):
         for yaw, expected in [(90, [-4, -1, 0, 2, 3, 8]), (-90, [-2, -3, 0, 4, 1, 8])]:
             with self.subTest(yaw=yaw):

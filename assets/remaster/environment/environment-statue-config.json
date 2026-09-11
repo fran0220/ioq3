@@ -1,0 +1,9 @@
+{
+  "height_meters": 3,
+  "units_per_meter": 40,
+  "target_triangles": 3000,
+  "drop_quantized_degenerates": true,
+  "texture_edge": 1024,
+  "rotation_z_degrees": 0,
+  "shader": "models/remaster/environment_sarge_statue"
+}
