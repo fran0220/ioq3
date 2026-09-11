@@ -6,6 +6,11 @@ import { createPlay } from './play.mjs';
 
 export function createMenu(canvas) {
     const root = document.querySelector('#menu');
+    // The toolbar wraps at short PC widths. Reserve its measured height so
+    // scrolling/focused fields never disappear behind fixed controls.
+    new ResizeObserver(([entry]) => {
+        document.documentElement.style.setProperty('--controls-height', `${entry.target.getBoundingClientRect().height}px`);
+    }).observe(document.querySelector('#controls'));
     const hud = createHUD(document.querySelector('#hud'));
     const lobby = createLobby(window.OG);
     const tell = text => { for (const node of root.querySelectorAll('.edit-status')) node.textContent = text; };
@@ -259,6 +264,18 @@ export function createMenu(canvas) {
             event.preventDefault(); event.stopImmediatePropagation();
             if (type === 'keydown' && !event.repeat && hold !== undefined) holdAction(hold);
             if (type === 'keyup') releaseAction();
+        } else if (!root.hidden && event.key === 'Tab' && type === 'keydown') {
+            // Keep keyboard navigation in the visible menu and persistent
+            // toolbar; never send focus into the covered canvas or live HUD.
+            const focusable = [...document.querySelectorAll('#menu button, #menu input, #menu select, #menu [tabindex="0"], #controls button')]
+                .filter(node => !node.disabled && node.getClientRects().length);
+            const first = focusable[0], last = focusable.at(-1);
+            if (event.shiftKey && (document.activeElement === first || !focusable.includes(document.activeElement))) {
+                event.preventDefault(); last?.focus();
+            } else if (!event.shiftKey && (document.activeElement === last || !focusable.includes(document.activeElement))) {
+                event.preventDefault(); first?.focus();
+            }
+            event.stopImmediatePropagation();
         } else if (event.key === 'F10' || (!root.hidden && event.key === 'Escape')) {
             event.preventDefault(); event.stopImmediatePropagation();
             if (type === 'keydown' && !event.repeat) root.hidden ? open() : close();

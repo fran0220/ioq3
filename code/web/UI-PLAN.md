@@ -185,3 +185,20 @@ shell must close all old transports before obtaining a fresh session and
 starting a new engine instance. Until integrated, the entry button stays
 disabled and local play remains available. Reconnect/409/expiry and actual
 multi-client matches must be tested on that real lifecycle, not this fixture.
+
+### PC layout/accessibility follow-through (2026-09-11)
+
+`ui-quality-browser.sh` passes on the production WASM fixture at 1024×600,
+1280×720, 1920×1080 and 2560×1080, DPR2. The menu/status scroll viewport reserves
+the actual wrapping toolbar height. Forward/reverse Tab cycles through visible,
+enabled menu and toolbar controls without reaching the covered canvas. Focused
+Launch remains unobscured at every size; there is no horizontal page overflow.
+Ultrawide HUD vitals stay within a central 1600px span without altering the
+engine viewport. Match phase changes have a polite atomic status region; rapidly
+changing health/ammo/clock are not live announcements. Short-height score rows
+and high-contrast preferences retain labels and non-color team markers.
+
+Inspected 2560×1080 Play/live HUD and corrected 1024×600 scrolled Play screenshots.
+Physical GPU, screen-reader output, non-US keyboards and other browser engines
+still require separate acceptance. This supersedes the earlier ultrawide gate
+only for the tested Chromium configuration, not every display/browser.

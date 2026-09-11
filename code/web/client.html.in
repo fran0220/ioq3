@@ -17,7 +17,7 @@
   <section id="hud" aria-label="Live match" hidden>
     <div class="match-strip"><div><span data-hud="mode"></span><small data-hud="map"></small></div><strong data-hud="clock"></strong><div><span data-hud="team"></span><small>SCORE <b data-hud="score"></b></small></div></div>
     <div class="team-scores" data-hud="teams" hidden><span>▲ RED <b data-hud="red"></b></span><span>■ BLUE <b data-hud="blue"></b></span></div>
-    <div class="phase-panel" data-hud="phasePanel" hidden><h2 data-hud="phase"></h2><p data-hud="phaseNote"></p></div>
+    <div class="phase-panel" data-hud="phasePanel" role="status" aria-live="polite" aria-atomic="true" hidden><h2 data-hud="phase"></h2><p data-hud="phaseNote"></p></div>
     <section class="scoreboard" data-hud="scoreboard" aria-label="Match standings" hidden>
       <h3 data-hud="boardTitle"></h3>
       <table><thead><tr><th scope="col">Player</th><th scope="col">Team</th><th scope="col">Score</th><th scope="col">Ping</th><th scope="col">Min</th></tr></thead><tbody data-hud="rows"></tbody></table>
@@ -56,8 +56,8 @@
           <p class="eyebrow" id="menu-context">ARENA SYSTEMS / ONLINE</p>
           <h2 id="menu-title" tabindex="-1">MAKE EVERY<br>MOVE COUNT.</h2>
           <p class="intro">Precision in motion. No shortcuts.</p>
-          <button class="primary" id="play">Open engine Play menu →</button>
-          <p class="note" id="play-note">Map, bot and match selection currently use the original engine menu.</p>
+          <button class="primary" id="play">Choose your arena →</button>
+          <p class="note" id="play-note">Select an installed arena, game mode, opponents and character. Local play needs no online account.</p>
           <div class="availability"><span>Multiplayer</span><p>Room entry requires a platform-issued session. No public lobby is configured in this build.</p></div>
         </section>
         <section data-page="play" class="config-page" hidden>

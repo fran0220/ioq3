@@ -128,3 +128,37 @@ body[data-state="failed"] #status { color: #efac7b; }
 #match-setup button[data-apply-model] { padding: 8px 14px; }
 .launch-actions { display: flex; align-items: baseline; gap: 12px; }
 #arena-rule-note { margin-bottom: 0; }
+
+/* PC safe area: keep peripheral telemetry within a readable central span on
+ * ultrawide displays without resizing the engine viewport or its crosshair. */
+#menu, #status-panel { bottom: var(--controls-height, 72px); padding-bottom: 32px; scroll-padding-block: 20px; }
+#hud { --hud-edge: max(4vw, calc((100vw - 1600px) / 2)); }
+.vitals { left: var(--hud-edge); right: var(--hud-edge); }
+.hud-help { left: var(--hud-edge); }
+.weapon-inventory { right: var(--hud-edge); max-width: min(65vw, 1000px); }
+.match-strip small { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.menu-layout { max-width: 1100px; }
+select:disabled { opacity: .65; cursor: not-allowed; }
+.scoreboard thead { position: sticky; top: -18px; background: #10191d; }
+.scoreboard td:first-child { word-break: break-word; }
+@media (min-width: 1920px) {
+    #menu { padding-inline: max(4vw, calc((100vw - 1760px) / 2)); }
+}
+@media (max-width: 1100px) {
+    #match-setup { grid-template-columns: minmax(0, 1fr); }
+    .bot-roster { grid-column: 1; grid-row: auto; }
+    #match-setup > .setting-row { max-width: none; }
+}
+@media (max-height: 650px) {
+    .phase-panel { top: 15%; }
+    .phase-panel h2 { font-size: 24px; margin-block: 5px; }
+    .phase-panel p { margin-block: 5px; }
+    .scoreboard { top: 34%; max-height: 46%; padding: 12px 20px; }
+    .scoreboard td { padding-block: 7px; }
+    .vitals strong { font-size: 36px; }
+}
+@media (prefers-contrast: more) {
+    .setting-row, .binding-row { border-color: #a8c4c7; }
+    button, .menu-nav button { border-color: #a8c4c7; }
+    .note, .badge, #menu footer { color: #edece4; }
+}
